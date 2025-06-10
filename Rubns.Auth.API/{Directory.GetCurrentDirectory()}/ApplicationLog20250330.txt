@@ -1,0 +1,7 @@
+2025-03-30 10:03:20.100 -06:00 [ERR] LogIn an error occurred: The entity type 'SessionUser' was not found. Ensure that the entity type has been added to the model.
+System.InvalidOperationException: The entity type 'SessionUser' was not found. Ensure that the entity type has been added to the model.
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.GetOrCreateEntry(Object entity)
+   at Microsoft.EntityFrameworkCore.DbContext.EntryWithoutDetectChanges[TEntity](TEntity entity)
+   at Microsoft.EntityFrameworkCore.DbContext.AddAsync[TEntity](TEntity entity, CancellationToken cancellationToken)
+   at Rubns.Infrastructure.Persistence.Repositories.DB_Auth.SessionUserRepository.AddSessionAsync(Int32 userId, String token) in D:\Cluster-0\Documentos\proyects\C#\API-Auth\Rubns.Infrastructure\Persistence\Repositories\DB_Auth\SessionUserRepository.cs:line 21
+   at Rubns.Application.Login.Post.LogInUseCase.LogIn(LoginRequestDTO login) in D:\Cluster-0\Documentos\proyects\C#\API-Auth\Rubns.Application\Login\Post\LogInUseCase.cs:line 46
