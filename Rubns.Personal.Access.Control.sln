@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rubns.IoC", "Rubns.IoC\Rubn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rubns.Application", "Rubns.Application\Rubns.Application.csproj", "{BF58A334-854A-4208-B826-23EC3188B6B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rubns.WebUI", "Rubns.WebUI\Rubns.WebUI.csproj", "{B63C4B75-BF01-439E-9CA8-46019F5AC23B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{BF58A334-854A-4208-B826-23EC3188B6B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF58A334-854A-4208-B826-23EC3188B6B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF58A334-854A-4208-B826-23EC3188B6B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B63C4B75-BF01-439E-9CA8-46019F5AC23B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B63C4B75-BF01-439E-9CA8-46019F5AC23B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B63C4B75-BF01-439E-9CA8-46019F5AC23B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B63C4B75-BF01-439E-9CA8-46019F5AC23B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +77,7 @@ Global
 		{F59DBD8D-0E2C-4C6C-9B17-A773C4874EDC} = {2F87E516-CFEE-44ED-BADB-1A4B48A80953}
 		{DA8A730E-C293-4A37-80D6-59105720FF09} = {F04A7994-4BAF-4F5D-91D6-8393132FD4EC}
 		{BF58A334-854A-4208-B826-23EC3188B6B0} = {3B39BEAF-36BA-404A-9A16-BBE1E97032C9}
+		{B63C4B75-BF01-439E-9CA8-46019F5AC23B} = {2F87E516-CFEE-44ED-BADB-1A4B48A80953}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {49780B10-1616-45DA-ACBE-335B9624C7CE}
