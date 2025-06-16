@@ -7,15 +7,6 @@ namespace Rubns.Infrastructure.Services
         private readonly RequestDelegate _next;
         private readonly IConfiguration _config;
 
-        // Lista de rutas públicas (sin autenticación)
-        private readonly List<string> _publicRoutes = new()
-        {
-            "/api/v1/login",
-            "/scalar",
-            "/openapi",
-            "/api/v1/auth/refresh"
-        };
-
         public JwtValidationMiddleware(RequestDelegate next, IConfiguration config)
         {
             _next = next;
@@ -26,8 +17,7 @@ namespace Rubns.Infrastructure.Services
         {
             var path = context.Request.Path.Value?.ToLower();
 
-            // Si la ruta es pública, pasa directo al siguiente middleware
-            if (_publicRoutes.Any(r => path.StartsWith(r)))
+            if (path == "/api/v1/login" || path == "/api/v1/auth/refresh")
             {
                 await _next(context);
                 return;

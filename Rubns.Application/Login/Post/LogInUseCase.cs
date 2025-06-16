@@ -1,7 +1,4 @@
-﻿
-using Microsoft.Extensions.Configuration;
-
-namespace Rubns.Application.Login.Post
+﻿namespace Rubns.Application.Login.Post
 {
     internal class LogInUseCase : ILogInPort<AuthResponseDTO>
     {

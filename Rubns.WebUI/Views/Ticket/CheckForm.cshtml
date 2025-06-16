@@ -1,0 +1,42 @@
+﻿@model CheckFormViewModel
+@{
+    ViewData["Title"] = "Validar Entrada";
+}
+<h2>@Model.EventName - <small>@Model.EventDate.ToString("dd MMM yyyy")</small></h2>
+<form asp-action="CheckAsync" method="post" id="check-form">
+    <input type="hidden" asp-for="TicketId" />
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div>
+        <label asp-for="RegistrationCode"></label>
+        <input asp-for="RegistrationCode" />
+        <span asp-validation-for="RegistrationCode"></span>
+    </div>
+    <input type="hidden" id="latitude" name="Latitude" />
+    <input type="hidden" id="longitude" name="Longitude" />
+    <button type="submit">Validar</button>
+</form>
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => {
+                        $('#latitude').val(pos.coords.latitude);
+                        $('#longitude').val(pos.coords.longitude);
+                    },
+                    err => console.warn('Ubicación no disponible:', err.message),
+                    { enableHighAccuracy: true, timeout: 5000 }
+                );
+            }
+        });
+    </script>
+}

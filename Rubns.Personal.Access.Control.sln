@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rubns.Personal.Access.Control", "Rubns.Auth.API\Rubns.Personal.Access.Control.csproj", "{ED448182-E5AE-4AFA-89D1-6007AEF70D8D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{3B39BEAF-36BA-404A-9A16-BBE1E97032C9}"
@@ -27,7 +25,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rubns.IoC", "Rubns.IoC\Rubn
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rubns.Application", "Rubns.Application\Rubns.Application.csproj", "{BF58A334-854A-4208-B826-23EC3188B6B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rubns.WebUI", "Rubns.WebUI\Rubns.WebUI.csproj", "{B63C4B75-BF01-439E-9CA8-46019F5AC23B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Personnel.Client.Client", "Personnel.Client\Client\Personnel.Client.Client.csproj", "{A1C5535D-1631-19FE-7178-CD9E5F1FE840}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Personnel.Client.Server", "Personnel.Client\Server\Personnel.Client.Server.csproj", "{D38E01FE-D80B-2A05-0A08-5E05984FDC0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Personnel.Client.Shared", "Personnel.Client\Shared\Personnel.Client.Shared.csproj", "{36E55103-BECB-FB7F-60D1-53ABEDD63759}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +37,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ED448182-E5AE-4AFA-89D1-6007AEF70D8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED448182-E5AE-4AFA-89D1-6007AEF70D8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED448182-E5AE-4AFA-89D1-6007AEF70D8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED448182-E5AE-4AFA-89D1-6007AEF70D8D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1DBCC7CA-22C8-4906-800E-647E2BDD9E03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1DBCC7CA-22C8-4906-800E-647E2BDD9E03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DBCC7CA-22C8-4906-800E-647E2BDD9E03}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -63,10 +61,18 @@ Global
 		{BF58A334-854A-4208-B826-23EC3188B6B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF58A334-854A-4208-B826-23EC3188B6B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF58A334-854A-4208-B826-23EC3188B6B0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B63C4B75-BF01-439E-9CA8-46019F5AC23B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B63C4B75-BF01-439E-9CA8-46019F5AC23B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B63C4B75-BF01-439E-9CA8-46019F5AC23B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B63C4B75-BF01-439E-9CA8-46019F5AC23B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1C5535D-1631-19FE-7178-CD9E5F1FE840}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1C5535D-1631-19FE-7178-CD9E5F1FE840}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1C5535D-1631-19FE-7178-CD9E5F1FE840}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1C5535D-1631-19FE-7178-CD9E5F1FE840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D38E01FE-D80B-2A05-0A08-5E05984FDC0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D38E01FE-D80B-2A05-0A08-5E05984FDC0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D38E01FE-D80B-2A05-0A08-5E05984FDC0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D38E01FE-D80B-2A05-0A08-5E05984FDC0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36E55103-BECB-FB7F-60D1-53ABEDD63759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36E55103-BECB-FB7F-60D1-53ABEDD63759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36E55103-BECB-FB7F-60D1-53ABEDD63759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36E55103-BECB-FB7F-60D1-53ABEDD63759}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,7 +83,6 @@ Global
 		{F59DBD8D-0E2C-4C6C-9B17-A773C4874EDC} = {2F87E516-CFEE-44ED-BADB-1A4B48A80953}
 		{DA8A730E-C293-4A37-80D6-59105720FF09} = {F04A7994-4BAF-4F5D-91D6-8393132FD4EC}
 		{BF58A334-854A-4208-B826-23EC3188B6B0} = {3B39BEAF-36BA-404A-9A16-BBE1E97032C9}
-		{B63C4B75-BF01-439E-9CA8-46019F5AC23B} = {2F87E516-CFEE-44ED-BADB-1A4B48A80953}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {49780B10-1616-45DA-ACBE-335B9624C7CE}
