@@ -1,4 +1,6 @@
-﻿namespace Rubns.Infrastructure.Persistence
+﻿using Personnel.Client.Shared.POCO.Users;
+
+namespace Rubns.Infrastructure.Persistence
 {
     public class AuthDbContextEFC : DbContext
     {

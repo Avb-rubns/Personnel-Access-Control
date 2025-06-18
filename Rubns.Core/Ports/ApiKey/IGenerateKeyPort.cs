@@ -1,6 +1,4 @@
-﻿using Rubns.Core.DTOs.ApiKey;
-
-namespace Rubns.Core.Ports.ApiKey
+﻿namespace Rubns.Core.Ports.ApiKey
 {
     public interface IGenerateKeyPort<T>
     {

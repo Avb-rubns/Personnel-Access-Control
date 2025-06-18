@@ -1,6 +1,4 @@
-﻿using Rubns.Core.DTOs.ApiKey;
-
-namespace Rubns.Core.Services
+﻿namespace Rubns.Core.Services
 {
     public interface IEncryptionService
     {

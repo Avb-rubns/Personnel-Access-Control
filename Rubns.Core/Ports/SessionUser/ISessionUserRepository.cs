@@ -1,6 +1,4 @@
-﻿using Rubns.Core.DTOs.LogOut;
-
-namespace Rubns.Core.Ports.SessionUser
+﻿namespace Rubns.Core.Ports.SessionUser
 {
     public interface ISessionUserRepository
     {

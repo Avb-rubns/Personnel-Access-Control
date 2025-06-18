@@ -1,7 +1,4 @@
-﻿using Rubns.Core.DTOs.ApiKey;
-using Rubns.Core.Ports.ApiKey.Register;
-
-namespace Rubns.Infrastructure.Persistence.Repositories.DB_Apps
+﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Apps
 {
     internal class RegisterRepository : IRegisterRepository
     {

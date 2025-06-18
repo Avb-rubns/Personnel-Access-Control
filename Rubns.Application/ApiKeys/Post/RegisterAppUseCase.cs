@@ -1,5 +1,4 @@
-﻿
-namespace Rubns.Application.Register.Post
+﻿namespace Rubns.Application.ApiKeys.Post
 {
     internal class RegisterAppUseCase : IRegisterInputPort
     {

@@ -1,11 +1,12 @@
 ﻿global using Asp.Versioning;
 global using Microsoft.AspNetCore.Mvc;
-global using Rubns.Core.DTOs.Login;
-global using Rubns.Core.DTOs.LogIn;
-global using Rubns.Core.DTOs.QR;
-global using Rubns.Core.DTOs.Users;
-global using Rubns.Core.POCO.ResponseAPI;
+global using Personnel.Client.Shared.DTOs.ApiKey;
+global using Personnel.Client.Shared.DTOs.LogIn;
+global using Personnel.Client.Shared.DTOs.QR;
+global using Personnel.Client.Shared.DTOs.Users;
+global using Personnel.Client.Shared.POCO.ResponseAPI;
 global using Rubns.Core.Ports.ApiKey;
+global using Rubns.Core.Ports.ApiKey.Register;
 global using Rubns.Core.Ports.Login;
 global using Rubns.Core.Ports.QR;
 global using Rubns.Core.Ports.User;

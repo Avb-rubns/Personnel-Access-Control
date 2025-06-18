@@ -1,7 +1,6 @@
-﻿using Rubns.Core.DTOs.ApiKey;
-using Rubns.Core.Ports.ApiKey.Register;
+﻿
 
-namespace Rubns.WebAPI.Controllers.V1.Auth
+namespace Rubns.WebAPI.Controllers.V1
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]

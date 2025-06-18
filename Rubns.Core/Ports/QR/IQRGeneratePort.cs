@@ -1,6 +1,4 @@
-﻿using Rubns.Core.DTOs.QR;
-
-namespace Rubns.Core.Ports.QR
+﻿namespace Rubns.Core.Ports.QR
 {
     public interface IQRGeneratePort<T>
     {

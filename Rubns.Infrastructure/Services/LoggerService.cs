@@ -17,7 +17,7 @@ namespace Rubns.Infrastructure.Services
                         AutoCreateSqlTable = true
                     }
                     , restrictedToMinimumLevel: LevelAlias.Minimum)
-                .WriteTo.File("{Directory.GetCurrentDirectory()}\\ApplicationLog.txt"
+                .WriteTo.File($"{Directory.GetCurrentDirectory()}\\ApplicationLog.txt"
                         , rollingInterval: RollingInterval.Day
                         , retainedFileCountLimit: 7)
                 .CreateLogger()

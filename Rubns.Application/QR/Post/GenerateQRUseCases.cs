@@ -1,4 +1,5 @@
-﻿namespace Rubns.Application.QR.Post
+﻿
+namespace Rubns.Application.QR.Post
 {
     internal class GenerateQRUseCases : IQRGeneratePort<MemoryStream>
     {

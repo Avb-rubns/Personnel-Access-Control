@@ -1,6 +1,4 @@
-﻿using Rubns.Core.DTOs.LogOut;
-
-namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal class SessionUserRepository : ISessionUserRepository
     {

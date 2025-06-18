@@ -1,4 +1,6 @@
-﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿using Personnel.Client.Shared.POCO.Users;
+
+namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal sealed class UserRepository : IUserRepository
     {
