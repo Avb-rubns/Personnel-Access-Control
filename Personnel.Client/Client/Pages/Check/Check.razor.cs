@@ -1,5 +1,4 @@
-﻿
-using Microsoft.JSInterop;
+﻿using Microsoft.AspNetCore.Components.Forms;
 
 namespace Personnel.Client.Client.Pages.Check
 {
@@ -7,12 +6,14 @@ namespace Personnel.Client.Client.Pages.Check
     {
 
         [Inject] public IJSRuntime JS { get; set; } = default!;
+        [Inject] public IProxy Proxy { get; set; } = default!;
+
+
+
 
         CheckDTO model = new();
-        private bool _firstRender = true;
         private DotNetObjectReference<Check>? _dotnetRef;
-
-
+        private bool _processing = false;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -38,6 +39,24 @@ namespace Personnel.Client.Client.Pages.Check
             Console.WriteLine($"Geolocation error: {err.message}");
         }
 
+        private async Task OnValidSubmit(EditContext context)
+        {
+            _processing = true;
+            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(model));
+
+            var response = await Proxy.PostAsync<Response, CheckDTO>("api/v1/ticket/check", model);
+
+            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(response));
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                Console.WriteLine("Ticket checked successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Failed to check ticket.");
+            }
+            _processing = false;
+        }
 
         public void Dispose()
         {

@@ -5,16 +5,36 @@
     }
 
     navigator.geolocation.getCurrentPosition(
-        pos => {
+        position => {
             dotnetHelper.invokeMethodAsync("SetPosition", {
-                latitude: pos.coords.latitude,
-                longitude: pos.coords.longitude
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
             });
         },
-        err => {
-            console.warn("Error geolocalización:", err.message);
-            dotnetHelper.invokeMethodAsync("SetError", { message: err.message });
+        error => {
+
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("Permiso denegado para obtener tu ubicación.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("No se pudo determinar tu ubicación.");
+                    break;
+                case error.TIMEOUT:
+                    alert("La solicitud de ubicación tardó demasiado.");
+                    break;
+                default:
+                    alert("Error desconocido al obtener ubicación.");
+            }
+
+            console.warn("Error geolocalización:", error.message);
+            dotnetHelper.invokeMethodAsync("SetError", { message: error.message });
         },
-        { enableHighAccuracy: true, timeout: 5000 }
+        {
+            enableHighAccuracy: true,
+            timeout: 7000,
+            maximumAge: 0
+        }
     );
+
 };

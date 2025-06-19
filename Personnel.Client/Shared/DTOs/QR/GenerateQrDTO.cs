@@ -2,13 +2,13 @@
 {
     public class GenerateQrDTO
     {
-        [Required(ErrorMessage = "Content is required.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         [StringLength(500, ErrorMessage = "Content cannot exceed 500 characters.", MinimumLength = 10)]
         public string Content { get; set; }
-        [Required(ErrorMessage = "Width in QR Code type is required.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         [Range(100, 1000, ErrorMessage = "Width must be between 100 and 1000 pixels.")]
         public int Width { get; set; } = 100;
-        [Required(ErrorMessage = "Height in QR Code type is required.")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         [Range(100, 1000, ErrorMessage = "Width must be between 100 and 1000 pixels.")]
         public int Height { get; set; } = 100;
 

@@ -1,0 +1,23 @@
+﻿@inherits LayoutComponentBase
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" />
+<MudSnackbarProvider />
+
+<div class="check-layout">
+    <MudAppBar Elevation="1">
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="@((e) => DarkMode())" Color="Color.Inherit" />
+    </MudAppBar>
+    <MudMainContent Class="h-100">
+            @Body
+    </MudMainContent>
+
+</div>
+
+@code{
+    private bool _isDarkMode;
+    void DarkMode()
+    {
+        _isDarkMode = !_isDarkMode;
+    }
+
+}

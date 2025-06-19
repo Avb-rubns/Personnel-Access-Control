@@ -1,2 +1,11 @@
 ﻿global using Microsoft.AspNetCore.Components;
+global using Microsoft.AspNetCore.Components.Web;
+global using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+global using Microsoft.Extensions.DependencyInjection.Extensions;
+global using Microsoft.JSInterop;
+global using MudBlazor.Services;
+global using Personnel.Client.Client;
+global using Personnel.Client.Client.Services;
+global using Personnel.Client.Shared.Abstractions;
 global using Personnel.Client.Shared.DTOs.Ticket;
+global using Personnel.Client.Shared.POCO.ResponseAPI;

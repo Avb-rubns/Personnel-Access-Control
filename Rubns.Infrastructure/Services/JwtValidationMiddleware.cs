@@ -17,7 +17,7 @@ namespace Rubns.Infrastructure.Services
         {
             var path = context.Request.Path.Value?.ToLower();
 
-            if (path == "/api/v1/login" || path == "/api/v1/auth/refresh")
+            if (path == "/api/v1/login" || path == "/api/v1/auth/refresh" || path == "/api/v1/ticket/check")
             {
                 await _next(context);
                 return;

@@ -1,17 +1,28 @@
 ﻿@page "/check"
+@layout CheckLayout
 
-<EditForm Model="@model">
-    <DataAnnotationsValidator />
-    <MudCard>
-        <MudCardHeader>
-            <MudText Typo="Typo.h5">Registrar Entrada</MudText>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudTextField  Label="Correo" Class="mt-3"
+<section class="d-flex align-center justify-center h-100 w-100 check-section">
+    <div class="w-100 check-registration">
+        <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+            <MudText Typo="Typo.h5" Align="Align.Center">Registrar Entrada</MudText>
+            <MudTextField Label="Correo" Class="mt-3"
                           @bind-Value="model.Email" For="@(() => model.Email)" />
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Color="Color.Primary" Variant="Variant.Filled">Enviar</MudButton>
-        </MudCardActions>
-    </MudCard>
-</EditForm>
+            <MudTextField Label="Teléfono" Class="mt-3"
+                          @bind-Value="model.Phone" For="@(() => model.Phone)" />
+            <MudButton Disabled="@_processing" Class="mt-3" Color="Color.Primary" FullWidth="true" Variant="Variant.Filled" ButtonType="ButtonType.Submit">
+                @if (_processing)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Registrando</MudText>
+                }
+                else
+                {
+                    <MudText>Registrar</MudText>
+                }
+            </MudButton>
+        </EditForm>
+
+    </div>
+</section>
+

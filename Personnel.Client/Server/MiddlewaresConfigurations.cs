@@ -13,21 +13,22 @@ namespace Personnel.Client.Server
             app.MapRazorPages();
 
             app.MapWhen(
-                context =>
-                {
-                    var path = context.Request.Path.Value?.ToLower() ?? "";
-                    return path.StartsWith("/api");
-                },
-                apiApp =>
-                {
-                    apiApp.UseMiddleware<JwtValidationMiddleware>();
-                    apiApp.UseRouting();
-                    apiApp.UseEndpoints(endpoints =>
-                    {
-                        endpoints.MapControllers();
-                    });
-                }
-            );
+               context =>
+               {
+                   var path = context.Request.Path.Value?.ToLower() ?? "";
+                   return path.StartsWith("/api");
+               },
+               apiApp =>
+               {
+                   apiApp.UseMiddleware<JwtValidationMiddleware>();
+                   apiApp.UseRouting();
+                   apiApp.UseEndpoints(endpoints =>
+                   {
+                       endpoints.MapControllers();
+                   });
+               }
+           );
+
 
             app.UseRouting();
             app.UseCors(option =>
