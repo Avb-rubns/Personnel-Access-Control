@@ -7,10 +7,19 @@ namespace Personnel.Client.Server
     {
         public static WebApplication ConfigureMiddlewares(this WebApplication app)
         {
-            app.UseBlazorFrameworkFiles();
-            app.UseStaticFiles();
-            app.UseHttpsRedirection();
-            app.MapRazorPages();
+            if (app.Environment.IsDevelopment())
+            {
+
+                app.UseDeveloperExceptionPage();
+                app.UseWebAssemblyDebugging();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+
+            }
 
             app.MapWhen(
                context =>
@@ -43,19 +52,12 @@ namespace Personnel.Client.Server
             app.MapOpenApi();
             app.MapScalarApiReference();
 
-            if (app.Environment.IsDevelopment())
-            {
 
-                app.UseDeveloperExceptionPage();
-                app.UseWebAssemblyDebugging();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
 
-            }
+            app.UseBlazorFrameworkFiles();
+            app.UseStaticFiles();
+            app.UseHttpsRedirection();
+            app.MapRazorPages();
 
             app.MapFallbackToFile("index.html");
             return app;

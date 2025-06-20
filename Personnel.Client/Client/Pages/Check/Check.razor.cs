@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
+using MudBlazor;
 
 namespace Personnel.Client.Client.Pages.Check
 {
@@ -7,18 +8,18 @@ namespace Personnel.Client.Client.Pages.Check
 
         [Inject] public IJSRuntime JS { get; set; } = default!;
         [Inject] public IProxy Proxy { get; set; } = default!;
-
-
-
+        [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
         CheckDTO model = new();
         private DotNetObjectReference<Check>? _dotnetRef;
         private bool _processing = false;
+        private bool _loader = true;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
+                _loader = false;
                 _dotnetRef = DotNetObjectReference.Create(this);
                 await JS.InvokeVoidAsync("getGeoLocation", _dotnetRef);
             }
@@ -36,25 +37,21 @@ namespace Personnel.Client.Client.Pages.Check
         [JSInvokable]
         public void SetError(LocationError err)
         {
-            Console.WriteLine($"Geolocation error: {err.message}");
+            Snackbar.Add($"Fallo el checkin: {err.message}", Severity.Error);
         }
 
         private async Task OnValidSubmit(EditContext context)
         {
             _processing = true;
-            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(model));
-
             var response = await Proxy.PostAsync<Response, CheckDTO>("api/v1/ticket/check", model);
 
-            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(response));
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            _ = response.StatusCode switch
             {
-                Console.WriteLine("Ticket checked successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Failed to check ticket.");
-            }
+                System.Net.HttpStatusCode.OK => Snackbar.Add("Registro exitoso", Severity.Success),
+                System.Net.HttpStatusCode.NotFound => Snackbar.Add("Compruebe su correo y télefono", Severity.Error),
+                System.Net.HttpStatusCode.BadRequest => Snackbar.Add("Intente de nuevo", Severity.Error),
+                _ => Snackbar.Add("Ocurrió un error inesperado, informe a su jefe", Severity.Error)
+            };
             _processing = false;
         }
 

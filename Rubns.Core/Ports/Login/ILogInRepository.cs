@@ -5,5 +5,6 @@
 
         Task<UserDTO> GetUserByEmailAsync(string email);
         Task<UserDTO> GetUserByIDAsync(int ID);
+        Task<UserDTO> GetUserByPhoneAsync(string number);
     }
 }

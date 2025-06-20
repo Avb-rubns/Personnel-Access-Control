@@ -1,6 +1,4 @@
-﻿using Personnel.Client.Shared.DTOs.Ticket;
-
-namespace Rubns.WebAPI.Controllers.V1
+﻿namespace Rubns.WebAPI.Controllers.V1
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
@@ -8,21 +6,27 @@ namespace Rubns.WebAPI.Controllers.V1
     public class TicketController : ControllerBase
     {
 
-        [HttpPost("check")]
-        public IActionResult CheckTicket([FromBody] CheckDTO checkTicket)
+        ICheckInPort<Response> CheckInUseCase { get; }
+
+        public TicketController(ICheckInPort<Response> checkInUseCase)
         {
-            // Aquí iría la lógica para verificar el ticket
-            // Por ejemplo, consultar una base de datos o un servicio externo
-            // Simulación de verificación exitosa
-            var isValid = true; // Esto debería ser el resultado de la verificación real
-            if (isValid)
+            CheckInUseCase = checkInUseCase;
+        }
+
+
+        [HttpPost("check")]
+        public async Task<IActionResult> CheckTicket([FromBody] CheckDTO checkTicket)
+        {
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            checkTicket.IP = ip;
+            var checkInResult = await CheckInUseCase.CheckIn(checkTicket);
+            return checkInResult.StatusCode switch
             {
-                return Ok(new { message = "Registrada la entrada" });
-            }
-            else
-            {
-                return BadRequest(new { message = "No se registrada la entrada" });
-            }
+                System.Net.HttpStatusCode.OK => Ok(checkInResult),
+                System.Net.HttpStatusCode.NotFound => NotFound(checkInResult),
+                System.Net.HttpStatusCode.BadRequest => BadRequest(checkInResult),
+                _ => StatusCode((int)checkInResult.StatusCode, checkInResult)
+            };
         }
     }
 }

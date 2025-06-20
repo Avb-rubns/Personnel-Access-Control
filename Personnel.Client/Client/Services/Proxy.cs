@@ -114,9 +114,6 @@ namespace Personnel.Client.Client.Services
 
             var response = await Client.PostAsJsonAsync(url, postData);
 
-            Console.WriteLine("Proxy");
-            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(response));
-            Console.WriteLine("Proxy");
             var content = await response.Content.ReadAsStringAsync();
             bool hasContent = !string.IsNullOrWhiteSpace(content);
 
@@ -131,17 +128,19 @@ namespace Personnel.Client.Client.Services
 
                     if (result != null)
                     {
-                        return result;
+                        return (R)(object)new Response
+                        {
+                            StatusCode = response.StatusCode,
+
+                        };
                     }
                 }
                 catch (JsonException)
                 {
-                    // Manejar si la deserialización falla
                     throw new InvalidOperationException("No se pudo deserializar la respuesta del servidor.");
                 }
             }
 
-            // Si no hay contenido, construye un ApiResponseDTO genérico si aplica
             if (typeof(R) == typeof(Response))
             {
                 return (R)(object)new Response

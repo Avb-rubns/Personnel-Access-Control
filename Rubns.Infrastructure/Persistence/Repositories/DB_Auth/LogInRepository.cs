@@ -62,5 +62,32 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 
             return result;
         }
+
+        public async Task<UserDTO> GetUserByPhoneAsync(string number)
+        {
+            UserDTO result = new();
+            try
+            {
+                await using var connection = new SqlConnection(AuthDbContextEFC.Database.GetConnectionString());
+                await connection.OpenAsync();
+
+                var proc = "p_UserByPhone";
+
+                var user = await connection.QuerySingleOrDefaultAsync<UserDTO>(proc, new { Phone = number }, commandType: CommandType.StoredProcedure);
+                await connection.CloseAsync();
+
+                if (user is not null)
+                {
+                    result = user;
+                }
+
+            }
+            catch
+            {
+                throw;
+            }
+
+            return result;
+        }
     }
 }
