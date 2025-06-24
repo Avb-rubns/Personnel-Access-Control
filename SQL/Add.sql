@@ -180,6 +180,23 @@ BEGIN
 
     SELECT @Result AS Result;
 END
+GO
+IF OBJECT_ID(N'p_CheckUserToday', N'P') IS NOT NULL
+    DROP PROCEDURE p_CheckUserToday;
+GO
+CREATE PROCEDURE [dbo].[p_CheckUserToday]
+AS
+BEGIN
+	SELECT 
+		checkUser.Registed as 'Entrada'
+		,usr.Name
+		,rol.Name
+	FROM  [dbo].[CheckPersonal]  as checkUser
+	INNER JOIN Users as usr on checkUser.UserID = usr.UserID
+	INNER JOIN Rols as rol on rol.RolID = usr.RolID
+	WHERE CAST(checkUser.Registed as DATE) = CAST(GETDATE() as DATE);
+END
+
 
 GO
 IF NOT EXISTS(SELECT 1

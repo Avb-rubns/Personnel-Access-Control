@@ -13,9 +13,16 @@
         {
             if (firstRender)
             {
-                await JS.InvokeVoidAsync("detectColorScheme");
-                var theme = await JS.InvokeAsync<string>("getFromLocalStorage","theme");
-                _isDarkMode = theme.Equals("dark")? true:  false ;
+                var theme = await JS.InvokeAsync<string>("getFromLocalStorage", "theme");
+
+                if (string.IsNullOrEmpty(theme))
+                {
+                    await JS.InvokeVoidAsync("detectColorScheme");
+                    theme = await JS.InvokeAsync<string>("getFromLocalStorage", "theme");
+                }
+
+                _isDarkMode = theme == "dark";
+
                 StateHasChanged();
             }
         }
