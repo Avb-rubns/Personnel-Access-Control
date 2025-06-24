@@ -26,14 +26,8 @@
         }
         async Task DarkModeAsync()
         {
-            if (_isDarkMode)
-            {
-                await JS.InvokeVoidAsync("setToLocalStorage", "theme", "light");
-            }
-            else
-            {
-                await JS.InvokeVoidAsync("setToLocalStorage", "theme", "dark");
-            }
+            var newTheme = _isDarkMode ? "light" : "dark";
+            await JS.InvokeVoidAsync("setToLocalStorage", "theme", newTheme);
             _isDarkMode = !_isDarkMode;
 
         }
