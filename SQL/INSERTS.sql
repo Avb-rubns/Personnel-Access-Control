@@ -12,4 +12,5 @@ GO
 INSERT INTO ROLS(Name,Value,LevelPermission,Status)
 VALUES('User','usuario',2,1)
 GO
-INSERT INTO Users VALUES('Rubén','rubns@test.com','41a59384d89b017f47a7edd702baee5696dbfad3b2aeaf1676df040e85c1d731',1)
+INSERT INTO Users(Name,Email,Password,Phone,RolId,Status) VALUES('Rubén','rubns@test.com','41a59384d89b017f47a7edd702baee5696dbfad3b2aeaf1676df040e85c1d731','2211538571',1,1)
+

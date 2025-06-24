@@ -8,7 +8,7 @@ namespace Personnel.Client.Client.Shared
     {
         private bool _isDarkMode;
         private MudThemeProvider _mudThemeProvider;
-        bool _drawerOpen = true;
+        bool _drawerOpen = false;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

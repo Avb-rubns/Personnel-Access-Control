@@ -1,0 +1,53 @@
+﻿@page "/check-in"
+@layout CheckLayout
+
+@if (_loader)
+{
+    <section class="d-none d-md-flex align-center justify-center h-100 w-100 check-section">
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="320px" Height="220px" />
+    </section>
+    <section class="d-md-none d-flex flex-column gap-2  align-center justify-center h-100 w-100 check-section">
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="32px" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="42px" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="42px" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="24px" />
+    </section>
+}
+else
+{
+    if (!_checinSuccess)
+    {
+        <section class="d-flex align-center justify-center h-100 w-100 check-section">
+            <div class="w-100 check-registration">
+                <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+                    <DataAnnotationsValidator />
+                    <MudText Typo="Typo.h5" Align="Align.Center">Registrar Entrada</MudText>
+                    <MudTextField Label="Correo" Class="mt-3" Disabled="@_processing"
+                                  @bind-Value="model.Email" For="@(() => model.Email)" />
+                    <MudTextField Label="Teléfono" Class="mt-3" Disabled="@_processing"
+                                  @bind-Value="model.Phone" For="@(() => model.Phone)" />
+                    <MudButton Disabled="@_processing" Class="mt-3" Color="Color.Primary" FullWidth="true" Variant="Variant.Filled" ButtonType="ButtonType.Submit">
+                        @if (_processing)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Registrando</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Registrar</MudText>
+                        }
+                    </MudButton>
+                </EditForm>
+
+            </div>
+        </section>
+    }
+    else
+    {
+        <section class="d-flex align-center justify-center h-100 w-100 check-section">
+            <CheckInSuccess User="@userName"/>
+        </section>
+    }
+
+}
+

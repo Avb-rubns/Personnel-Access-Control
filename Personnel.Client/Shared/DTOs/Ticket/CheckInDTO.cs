@@ -1,6 +1,6 @@
 ﻿namespace Personnel.Client.Shared.DTOs.Ticket
 {
-    public class CheckDTO
+    public class CheckInDTO
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo correo es obligatorio")]
         [EmailAddress(ErrorMessage = "Ingrese un correo valido")]

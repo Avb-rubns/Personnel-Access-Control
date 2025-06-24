@@ -153,8 +153,8 @@ BEGIN
 	usr.UserID = @ID;
 END
 GO
-IF OBJECT_ID(N'p_InsertCheckPersona', N'P') IS NOT NULL
-    DROP PROCEDURE p_InsertCheckPersona;
+IF OBJECT_ID(N'p_InsertCheckPersonal', N'P') IS NOT NULL
+    DROP PROCEDURE p_InsertCheckPersonal;
 GO
 CREATE PROCEDURE [dbo].[p_InsertCheckPersonal]
     @UserID INT,
@@ -196,6 +196,8 @@ BEGIN
 	-- Otorgar roles básicos (lectura y escritura)
 	ALTER ROLE db_datareader ADD MEMBER [auth];
 	ALTER ROLE db_datawriter ADD MEMBER [auth];
+	ALTER ROLE db_ddladmin ADD MEMBER [auth];
+	GRANT EXECUTE TO [auth];
 
 	-- (Opcional) Si quieres que tenga control total dentro de la base de datos:
 	-- ALTER ROLE db_owner ADD MEMBER [auth];

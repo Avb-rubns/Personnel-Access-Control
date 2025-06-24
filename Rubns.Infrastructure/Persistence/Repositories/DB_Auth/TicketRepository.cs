@@ -8,7 +8,7 @@
         {
             AuthDbContextEFC = authDbContext;
         }
-        public async Task<int> InsertCheckAsync(CheckDTO check, int userID)
+        public async Task<int> InsertCheckAsync(CheckInDTO check, int userID)
         {
             try
             {

@@ -112,8 +112,7 @@ namespace Personnel.Client.Client.Services
                     Client.DefaultRequestHeaders.Add("User", userName);
             }
 
-            var response = await Client.PostAsJsonAsync(url, postData);
-
+            var response = await Client.PostAsJsonAsync(url, postData, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             var content = await response.Content.ReadAsStringAsync();
             bool hasContent = !string.IsNullOrWhiteSpace(content);
 
@@ -127,30 +126,60 @@ namespace Personnel.Client.Client.Services
                     });
 
                     if (result != null)
-                    {
-                        return (R)(object)new Response
-                        {
-                            StatusCode = response.StatusCode,
-
-                        };
-                    }
+                        return result!;
                 }
-                catch (JsonException)
+                catch (JsonException ex)
                 {
-                    throw new InvalidOperationException("No se pudo deserializar la respuesta del servidor.");
+                    // Si esperabas ResponseData<T> pero vino un Response
+                    if (typeof(R).IsGenericType && typeof(R).GetGenericTypeDefinition() == typeof(ResponseData<>))
+                    {
+                        try
+                        {
+                            var fallback = JsonSerializer.Deserialize<Response>(content, new JsonSerializerOptions
+                            {
+                                PropertyNameCaseInsensitive = true
+                            });
+
+                            // Crear una instancia vacía de R y asignar valores
+                            var instance = Activator.CreateInstance<R>();
+                            var statusCodeProp = typeof(R).GetProperty(nameof(Response.StatusCode));
+                            var messageProp = typeof(R).GetProperty(nameof(Response.Message));
+
+                            statusCodeProp?.SetValue(instance, fallback?.StatusCode ?? response.StatusCode);
+                            messageProp?.SetValue(instance, fallback?.Message ?? "Deserialización parcial");
+
+                            return instance!;
+                        }
+                        catch { }
+                    }
+
+                    throw new InvalidOperationException($"Error al deserializar el contenido JSON: {ex.Message}");
                 }
             }
 
+            // Si no hubo contenido, pero R es Response o ResponseData<T>, devuelve uno básico
             if (typeof(R) == typeof(Response))
             {
                 return (R)(object)new Response
                 {
                     StatusCode = response.StatusCode,
-                    Message = "Operación completada sin respuesta de contenido"
+                    Message = "Operación completada sin contenido"
                 };
             }
 
-            throw new InvalidOperationException("No se pudo obtener una respuesta válida.");
+            if (typeof(R).IsGenericType && typeof(R).GetGenericTypeDefinition() == typeof(ResponseData<>))
+            {
+                var instance = Activator.CreateInstance<R>();
+                var statusCodeProp = typeof(R).GetProperty(nameof(Response.StatusCode));
+                var messageProp = typeof(R).GetProperty(nameof(Response.Message));
+
+                statusCodeProp?.SetValue(instance, response.StatusCode);
+                messageProp?.SetValue(instance, "Operación completada sin contenido");
+
+                return instance!;
+            }
+
+            throw new InvalidOperationException("No se pudo deserializar la respuesta.");
         }
 
         public Task<R> PostFileAsync<R, S>(string url, S PostFile, string userName = null)
