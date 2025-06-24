@@ -1,38 +1,41 @@
-﻿using MudBlazor;
-
-namespace Personnel.Client.Client.Shared
+﻿namespace Personnel.Client.Client.Shared
 {
 
 
     public partial class MainLayout
     {
+
+        [Inject] public IJSRuntime JS { get; set; } = default!;
         private bool _isDarkMode;
-        private MudThemeProvider _mudThemeProvider;
         bool _drawerOpen = false;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                await _mudThemeProvider.WatchSystemDarkModeAsync(OnSystemDarkModeChanged);
+                await JS.InvokeVoidAsync("detectColorScheme");
+                var theme = await JS.InvokeAsync<string>("getFromLocalStorage","theme");
+                _isDarkMode = theme.Equals("dark")? true:  false ;
                 StateHasChanged();
             }
-        }
-
-        private Task OnSystemDarkModeChanged(bool newValue)
-        {
-            _isDarkMode = newValue;
-            StateHasChanged();
-            return Task.CompletedTask;
         }
 
         void DrawerToggle()
         {
             _drawerOpen = !_drawerOpen;
         }
-        void DarkMode()
+        async Task DarkModeAsync()
         {
+            if (_isDarkMode)
+            {
+                await JS.InvokeVoidAsync("setToLocalStorage", "theme", "light");
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("setToLocalStorage", "theme", "dark");
+            }
             _isDarkMode = !_isDarkMode;
+
         }
     }
 }
