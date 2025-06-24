@@ -14,7 +14,7 @@
         }
 
 
-        public async Task<Response> CheckIn(CheckDTO checkTicket)
+        public async Task<Response> CheckIn(CheckInDTO checkTicket)
         {
             Response response = new();
 
@@ -33,12 +33,13 @@
                     return response;
                 }
                 int userID = userEmail.UserID > 0 ? userEmail.UserID : userPhone.UserID;
+                string name = userEmail.UserID > 0 ? userEmail.UserName : userPhone.UserName;
                 var checkInResult = await TicketRepository.InsertCheckAsync(checkTicket, userID);
 
                 if (checkInResult > 0)
                 {
-                    response.StatusCode = System.Net.HttpStatusCode.OK;
-                    response.Message = "Check-in successful.";
+                    response.StatusCode = System.Net.HttpStatusCode.Created;
+                    response.Message = $"Check-in realizado para {name}";
                 }
                 else
                 {

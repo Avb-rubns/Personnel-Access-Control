@@ -14,15 +14,16 @@
         }
 
 
-        [HttpPost("check")]
-        public async Task<IActionResult> CheckTicket([FromBody] CheckDTO checkTicket)
+        [HttpPost("check-in")]
+        public async Task<IActionResult> CheckTicket([FromBody] CheckInDTO checkTicket)
         {
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
             checkTicket.IP = ip;
             var checkInResult = await CheckInUseCase.CheckIn(checkTicket);
+
             return checkInResult.StatusCode switch
             {
-                System.Net.HttpStatusCode.OK => Ok(checkInResult),
+                System.Net.HttpStatusCode.Created => CreatedAtAction(nameof(CheckTicket), new { user = checkInResult.Message }, checkInResult),
                 System.Net.HttpStatusCode.NotFound => NotFound(checkInResult),
                 System.Net.HttpStatusCode.BadRequest => BadRequest(checkInResult),
                 _ => StatusCode((int)checkInResult.StatusCode, checkInResult)
