@@ -10,6 +10,7 @@ global using Personnel.Client.Shared.POCO.ResponseAPI;
 global using QRCoder;
 global using Rubns.Core.Ports.ApiKey;
 global using Rubns.Core.Ports.ApiKey.Register;
+global using Rubns.Core.Ports.Auth;
 global using Rubns.Core.Ports.Login;
 global using Rubns.Core.Ports.QR;
 global using Rubns.Core.Ports.SessionUser;
