@@ -1,7 +1,4 @@
-﻿using System.Net.Http.Json;
-using System.Text.Json;
-
-namespace Personnel.Client.Client.Services
+﻿namespace Personnel.Client.Client.Services
 {
     public class Proxy : IProxy
     {
@@ -60,126 +57,252 @@ namespace Personnel.Client.Client.Services
 
         }
 
-        public async Task<ResponseData<T>> GetAsync<T>(string url, string userName = null)
+        public async Task<R> DeleteAsync<R>(string url, string userName) where R : IApiResponse
         {
-            if (!string.IsNullOrEmpty(userName))
+            if (!string.IsNullOrEmpty(userName) &&
+                !Client.DefaultRequestHeaders.Contains("User"))
             {
-                if (!Client.DefaultRequestHeaders.Contains("User"))
-                    Client.DefaultRequestHeaders.Add("User", userName);
+                Client.DefaultRequestHeaders.Add("User", userName);
             }
 
-            var response = await Client.GetAsync(url);
+            using var httpResponse = await Client.DeleteAsync(url);
+            var content = await httpResponse.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var status = httpResponse.StatusCode;
 
-            var result = new ResponseData<T>
-            {
-                StatusCode = response.StatusCode,
-                Message = response.IsSuccessStatusCode ? "Operación exitosa" : "Error en la operación"
-            };
+            Type returnType = typeof(R);
 
-            if (response.IsSuccessStatusCode)
+            // Manejar ResponseData<T>
+            if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(ResponseData<>))
             {
-                var content = await response.Content.ReadAsStringAsync();
-                if (!string.IsNullOrWhiteSpace(content))
+                var dataType = returnType.GetGenericArguments()[0];
+                var wrapperType = typeof(ResponseData<>).MakeGenericType(dataType);
+
+                using var doc = JsonDocument.Parse(content);
+                // Si viene el envoltorio completo
+                if (doc.RootElement.TryGetProperty("data", out _))
                 {
-                    try
+                    var wrapper = JsonSerializer.Deserialize(content, wrapperType, options);
+                    if (wrapper is R rWrapped)
                     {
-                        var deserialized = JsonSerializer.Deserialize<T>(content, new JsonSerializerOptions
-                        {
-                            PropertyNameCaseInsensitive = true
-                        });
-
-                        result.Data = deserialized;
-                    }
-                    catch (JsonException)
-                    {
-                        result.Message = "No se pudo deserializar la respuesta.";
+                        rWrapped.StatusCode = status;
+                        return rWrapped;
                     }
                 }
-                else
-                {
-                    result.Message = "Respuesta sin contenido.";
-                }
+
+                // Si viene solo el objeto T, lo deserializamos y envolvemos
+                var data = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
+                var instance = (IApiResponse)Activator.CreateInstance(wrapperType)!;
+                wrapperType.GetProperty(nameof(ResponseData<object>.Data))?.SetValue(instance, data);
+                wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?.SetValue(instance, status);
+                wrapperType.GetProperty(nameof(ResponseData<object>.Message))?.SetValue(instance, "Operación exitosa");
+                return (R)instance;
             }
 
-            return result;
-        }
-
-        public async Task<R> PostAsync<R, S>(string url, S postData, string userName = null)
-        {
-            if (!string.IsNullOrEmpty(userName))
+            // Manejar Response simple
+            if (returnType == typeof(Response))
             {
-                if (!Client.DefaultRequestHeaders.Contains("User"))
-                    Client.DefaultRequestHeaders.Add("User", userName);
-            }
-
-            var response = await Client.PostAsJsonAsync(url, postData, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            var content = await response.Content.ReadAsStringAsync();
-            bool hasContent = !string.IsNullOrWhiteSpace(content);
-
-            if (hasContent)
-            {
+                Response simple;
                 try
                 {
-                    var result = JsonSerializer.Deserialize<R>(content, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-
-                    if (result != null)
-                        return result!;
+                    simple = JsonSerializer.Deserialize<Response>(content, options) ?? new Response();
                 }
-                catch (JsonException ex)
+                catch
                 {
-                    // Si esperabas ResponseData<T> pero vino un Response
-                    if (typeof(R).IsGenericType && typeof(R).GetGenericTypeDefinition() == typeof(ResponseData<>))
+                    simple = new Response();
+                }
+                simple.StatusCode = status;
+                simple.Message ??= "Operación completada";
+                return (R)(object)simple;
+            }
+
+            throw new InvalidOperationException($"El tipo de retorno {returnType} no está soportado.");
+        }
+
+        public async Task<R> GetAsync<R>(string url, string userName = null) where R : IApiResponse
+        {
+            if (!string.IsNullOrEmpty(userName))
+            {
+                if (!Client.DefaultRequestHeaders.Contains("User"))
+                    Client.DefaultRequestHeaders.Add("User", userName);
+            }
+
+            using var httpResponse = await Client.GetAsync(url);
+            var content = await httpResponse.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var status = httpResponse.StatusCode;
+
+            Type returnType = typeof(R);
+
+            // Manejar ResponseData<T>
+            if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(ResponseData<>))
+            {
+                var dataType = returnType.GetGenericArguments()[0];
+                var wrapperType = typeof(ResponseData<>).MakeGenericType(dataType);
+
+                using var doc = JsonDocument.Parse(content);
+                // Si viene el envoltorio completo
+                if (doc.RootElement.TryGetProperty("data", out _))
+                {
+                    var wrapper = JsonSerializer.Deserialize(content, wrapperType, options);
+                    if (wrapper is R rWrapped)
                     {
-                        try
-                        {
-                            var fallback = JsonSerializer.Deserialize<Response>(content, new JsonSerializerOptions
-                            {
-                                PropertyNameCaseInsensitive = true
-                            });
-
-                            // Crear una instancia vacía de R y asignar valores
-                            var instance = Activator.CreateInstance<R>();
-                            var statusCodeProp = typeof(R).GetProperty(nameof(Response.StatusCode));
-                            var messageProp = typeof(R).GetProperty(nameof(Response.Message));
-
-                            statusCodeProp?.SetValue(instance, fallback?.StatusCode ?? response.StatusCode);
-                            messageProp?.SetValue(instance, fallback?.Message ?? "Deserialización parcial");
-
-                            return instance!;
-                        }
-                        catch { }
+                        rWrapped.StatusCode = status;
+                        return rWrapped;
                     }
-
-                    throw new InvalidOperationException($"Error al deserializar el contenido JSON: {ex.Message}");
                 }
+
+                // Si viene solo el objeto T, lo deserializamos y envolvemos
+                var data = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
+                var instance = (IApiResponse)Activator.CreateInstance(wrapperType)!;
+                wrapperType.GetProperty(nameof(ResponseData<object>.Data))?.SetValue(instance, data);
+                wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?.SetValue(instance, status);
+                wrapperType.GetProperty(nameof(ResponseData<object>.Message))?.SetValue(instance, "Operación exitosa");
+                return (R)instance;
             }
 
-            // Si no hubo contenido, pero R es Response o ResponseData<T>, devuelve uno básico
-            if (typeof(R) == typeof(Response))
+            // Manejar Response simple
+            if (returnType == typeof(Response))
             {
-                return (R)(object)new Response
+                Response simple;
+                try
                 {
-                    StatusCode = response.StatusCode,
-                    Message = "Operación completada sin contenido"
-                };
+                    simple = JsonSerializer.Deserialize<Response>(content, options) ?? new Response();
+                }
+                catch
+                {
+                    simple = new Response();
+                }
+                simple.StatusCode = status;
+                simple.Message ??= "Operación completada";
+                return (R)(object)simple;
             }
 
-            if (typeof(R).IsGenericType && typeof(R).GetGenericTypeDefinition() == typeof(ResponseData<>))
+            throw new InvalidOperationException($"El tipo de retorno {returnType} no está soportado.");
+        }
+
+        public async Task<R> PostAsync<R, S>(string url, S postData, string userName = null) where R : IApiResponse
+        {
+            if (!string.IsNullOrEmpty(userName) &&
+                !Client.DefaultRequestHeaders.Contains("User"))
             {
-                var instance = Activator.CreateInstance<R>();
-                var statusCodeProp = typeof(R).GetProperty(nameof(Response.StatusCode));
-                var messageProp = typeof(R).GetProperty(nameof(Response.Message));
-
-                statusCodeProp?.SetValue(instance, response.StatusCode);
-                messageProp?.SetValue(instance, "Operación completada sin contenido");
-
-                return instance!;
+                Client.DefaultRequestHeaders.Add("User", userName);
             }
 
-            throw new InvalidOperationException("No se pudo deserializar la respuesta.");
+            using var httpResponse = await Client.PostAsJsonAsync(url, postData);
+            var content = await httpResponse.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var status = httpResponse.StatusCode;
+
+            Type returnType = typeof(R);
+
+            // Manejar ResponseData<T>
+            if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(ResponseData<>))
+            {
+                var dataType = returnType.GetGenericArguments()[0];
+                var wrapperType = typeof(ResponseData<>).MakeGenericType(dataType);
+
+                using var doc = JsonDocument.Parse(content);
+                // Si viene el envoltorio completo
+                if (doc.RootElement.TryGetProperty("data", out _))
+                {
+                    var wrapper = JsonSerializer.Deserialize(content, wrapperType, options);
+                    if (wrapper is R rWrapped)
+                    {
+                        rWrapped.StatusCode = status;
+                        return rWrapped;
+                    }
+                }
+
+                // Si viene solo el objeto T, lo deserializamos y envolvemos
+                var data = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
+                var instance = (IApiResponse)Activator.CreateInstance(wrapperType)!;
+                wrapperType.GetProperty(nameof(ResponseData<object>.Data))?.SetValue(instance, data);
+                wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?.SetValue(instance, status);
+                wrapperType.GetProperty(nameof(ResponseData<object>.Message))?.SetValue(instance, "Operación exitosa");
+                return (R)instance;
+            }
+
+            // Manejar Response simple
+            if (returnType == typeof(Response))
+            {
+                Response simple;
+                try
+                {
+                    simple = JsonSerializer.Deserialize<Response>(content, options) ?? new Response();
+                }
+                catch
+                {
+                    simple = new Response();
+                }
+                simple.StatusCode = status;
+                simple.Message ??= "Operación completada";
+                return (R)(object)simple;
+            }
+
+            throw new InvalidOperationException($"El tipo de retorno {returnType} no está soportado.");
+        }
+
+        public async Task<R> PostAsync<R>(string url, string userName = null) where R : IApiResponse
+        {
+            if (!string.IsNullOrEmpty(userName) &&
+                !Client.DefaultRequestHeaders.Contains("User"))
+            {
+                Client.DefaultRequestHeaders.Add("User", userName);
+            }
+
+            using var httpResponse = await Client.PostAsync(url, null);
+            var content = await httpResponse.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var status = httpResponse.StatusCode;
+
+            Type returnType = typeof(R);
+
+            // Manejar ResponseData<T>
+            if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(ResponseData<>))
+            {
+                var dataType = returnType.GetGenericArguments()[0];
+                var wrapperType = typeof(ResponseData<>).MakeGenericType(dataType);
+
+                using var doc = JsonDocument.Parse(content);
+                // Si viene el envoltorio completo
+                if (doc.RootElement.TryGetProperty("data", out _))
+                {
+                    var wrapper = JsonSerializer.Deserialize(content, wrapperType, options);
+                    if (wrapper is R rWrapped)
+                    {
+                        rWrapped.StatusCode = status;
+                        return rWrapped;
+                    }
+                }
+
+                // Si viene solo el objeto T, lo deserializamos y envolvemos
+                var data = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
+                var instance = (IApiResponse)Activator.CreateInstance(wrapperType)!;
+                wrapperType.GetProperty(nameof(ResponseData<object>.Data))?.SetValue(instance, data);
+                wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?.SetValue(instance, status);
+                wrapperType.GetProperty(nameof(ResponseData<object>.Message))?.SetValue(instance, "Operación exitosa");
+                return (R)instance;
+            }
+
+            // Manejar Response simple
+            if (returnType == typeof(Response))
+            {
+                Response simple;
+                try
+                {
+                    simple = JsonSerializer.Deserialize<Response>(content, options) ?? new Response();
+                }
+                catch
+                {
+                    simple = new Response();
+                }
+                simple.StatusCode = status;
+                simple.Message ??= "Operación completada";
+                return (R)(object)simple;
+            }
+
+            throw new InvalidOperationException($"El tipo de retorno {returnType} no está soportado.");
         }
 
         public Task<R> PostFileAsync<R, S>(string url, S PostFile, string userName = null)

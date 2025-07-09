@@ -51,8 +51,7 @@
                     {
                         auth.RefreshToken = refreshToken;
                         auth.AccessToken = jwt;
-                        auth.Expiration = DateTimeOffset.UtcNow.AddMinutes(Convert.ToInt64(Configuration["JWT:Expiration"])).ToUnixTimeSeconds();
-
+                        auth.Expiration = DateTimeOffset.UtcNow.AddDays(Convert.ToInt64(Configuration["DaysRefresh"])).ToUnixTimeSeconds();
                     }
                 }
 

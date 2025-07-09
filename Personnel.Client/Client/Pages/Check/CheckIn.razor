@@ -7,7 +7,7 @@
         <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="320px" Height="220px" />
     </section>
     <section class="d-md-none d-flex flex-column gap-2  align-center justify-center h-100 w-100 check-section">
-        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="32px" />
+        <MudSkeleton SkeletonType="SkeletonType.Text" Width="100%" Height="32px" />
         <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="42px" />
         <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="42px" />
         <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="24px" />
@@ -26,7 +26,8 @@ else
                                   @bind-Value="model.Email" For="@(() => model.Email)" />
                     <MudTextField Label="Teléfono" Class="mt-3" Disabled="@_processing"
                                   @bind-Value="model.Phone" For="@(() => model.Phone)" />
-                    <MudButton Disabled="@_processing" Class="mt-3" Color="Color.Primary" FullWidth="true" Variant="Variant.Filled" ButtonType="ButtonType.Submit">
+                    <MudButton Disabled="@_processing" Class="mt-3" Color="Color.Primary" FullWidth="true"
+                        Variant="Variant.Filled" ButtonType="ButtonType.Submit">
                         @if (_processing)
                         {
                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />

@@ -1,0 +1,17 @@
+﻿.log-in-section {
+    max-width: 320px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+@media (width <= 600px) {
+    .log-in-section {
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .log-in-form {
+        padding:1rem;
+    }
+}

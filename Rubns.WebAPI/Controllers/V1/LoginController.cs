@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.Http;
+
 namespace Rubns.WebAPI.Controllers.V1
 {
     [ApiController]
@@ -7,13 +9,9 @@ namespace Rubns.WebAPI.Controllers.V1
     public class LoginController : ControllerBase
     {
         ILogInPort<AuthResponseDTO> PostLogIn { get; }
-        ILogOutPort LogOutPort { get; }
-
-        public LoginController(ILogInPort<AuthResponseDTO> postLogIn
-            , ILogOutPort logOut)
+        public LoginController(ILogInPort<AuthResponseDTO> postLogIn)
         {
             PostLogIn = postLogIn;
-            LogOutPort = logOut;
         }
 
         [HttpPost]
@@ -22,20 +20,34 @@ namespace Rubns.WebAPI.Controllers.V1
 
             var result = await PostLogIn.LogIn(loginRequest);
 
+            var accessTokenCookie = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(result.AccessToken.ExpiresIn)),
+                Path = "/"
+            };
+
+            var refreshTokenCookie = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.FromUnixTimeSeconds(result.Expiration),
+                Path = "/api/v1/auth/refresh"
+            };
+
+            Response.Cookies.Append("accessToken", result.AccessToken.AccessToken, accessTokenCookie);
+
+            Response.Cookies.Append("refreshToken", result.RefreshToken, refreshTokenCookie);
+
+
             if (result is not null)
-                return Ok(result);
+                return Ok(new { message = "Login exitoso" });
 
             return Unauthorized(new { message = "Credenciales incorrectas o usuario no registrado." });
         }
-        [HttpDelete("logout")]
-        public async Task<IActionResult> LogOut()
-        {
-            var refreshToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            if (await LogOutPort.LogOut(refreshToken))
-            {
-                return Ok(new { message = "Sesión cerrada." });
-            }
-            return BadRequest();
-        }
+
     }
 }

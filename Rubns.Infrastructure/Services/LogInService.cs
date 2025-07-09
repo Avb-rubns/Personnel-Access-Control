@@ -46,7 +46,7 @@
                 { "exp", DateTimeOffset.UtcNow.AddMinutes(Convert.ToInt64(Configuration["JWT:Expiration"])).ToUnixTimeSeconds() },
                 { "role", new List<string> { user.Value } },
                 { "levelPermission", user.LevelPermission.ToString() },
-                { "status", user.Status },
+                { "status", user.Status.ToString() },
                 { "userId", user.UserID }
             };
             if (Configuration["Enviroment"] == "dev")

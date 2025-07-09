@@ -1,0 +1,46 @@
+﻿@page "/login"
+
+@if (_loader)
+{
+    <section class="d-none d-md-flex align-center justify-center vh-100 w-100">
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="320px" Height="220px" />
+    </section>
+    <section class="d-md-none d-flex flex-column gap-2 align-center justify-center vh-100 p-1 w-100">
+        <MudSkeleton SkeletonType="SkeletonType.Text" Width="100%" Height="32px" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="42px" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="42px" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="28px" />
+    </section>
+}
+else
+{
+    <section class="d-flex align-center justify-content-center g-1 vh-100 log-in-section">
+        <div class="w-100 log-in-form ">
+            <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator />
+                <MudText Typo="Typo.h5" Align="Align.Center">@Resource.LogInTitle</MudText>
+                <MudTextField 
+                    Label="Correo"
+                    Class="mt-4"
+                    Disabled="@_processing"
+                    @bind-Value="model.Email"
+                    For="@(() => model.Email)"
+                    Variant="Variant.Text"/>
+                <MudTextField Class="mt-4" Label="Contraseña" @bind-Value="model.Password" Disabled="@_processing" For="@(() => model.Password)"
+                    Variant="Variant.Text" InputType="@PasswordInput" Adornment="Adornment.End"
+                    AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="ver" />
+                <MudButton Variant="Variant.Filled" DropShadow="false" FullWidth="true" Color="Color.Primary" Class="mt-4" ButtonType="ButtonType.Submit">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudText Class="ms-2">Validando</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Continuar</MudText>
+                    }
+                </MudButton>
+            </EditForm>
+        </div>
+    </section>
+}

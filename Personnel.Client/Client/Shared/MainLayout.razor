@@ -5,22 +5,41 @@
 <MudDialogProvider CloseButton="true" MaxWidth="MaxWidth.Large" />
 <MudSnackbarProvider />
 
-<MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="DrawerToggle" />
-        <MudSpacer />
-        <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="@((e) => DarkModeAsync())" Color="Color.Inherit" />
-    </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen" Elevation="1" Breakpoint="Breakpoint.Sm" Variant="DrawerVariant.Responsive">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h6">My App</MudText>
-        </MudDrawerHeader>
-        <NavMenu/>
-    </MudDrawer>
-    <MudMainContent>
-        <Space>
-            @Body
-        </Space>
-    </MudMainContent>
-</MudLayout>
+<AuthorizeView>
+     <Authorized>
+        <MudLayout>
+            <MudAppBar Elevation="1">
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="DrawerToggle" />
+                <MudSpacer />
+                <MudToolBar Class="d-none d-md-flex align-center">
+                    <MudDivider Vertical="true" FlexItem="true" Style="margin: 1rem 0 1rem 1.5rem;" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="@((e) => DarkModeAsync())" Color="Color.Inherit" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Logout" OnClick="@Logout" Color="Color.Inherit" />
+                </MudToolBar>
+                <MudMenu Class="d-md-none" Dense="true" Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit" >
+                    <MudMenuItem OnClick="@((e) => DarkModeAsync())">
+                            <MudIcon Variant="Variant.Text" Color="Color.Inherit" Style="align-items:center;" Icon="@Icons.Material.Filled.Brightness4"/>
+                    </MudMenuItem>
+                    <MudMenuItem OnClick="@Logout">
+                            <MudIcon Color="Color.Inherit" Icon="@Icons.Material.Filled.Logout" />
+                    </MudMenuItem>
+                </MudMenu>
+            </MudAppBar>
+            <MudDrawer @bind-Open="@_drawerOpen" Elevation="1" Breakpoint="Breakpoint.Sm" Variant="DrawerVariant.Responsive">
+                <MudDrawerHeader>
+                    <MudText Typo="Typo.h6"></MudText>
+                </MudDrawerHeader>
+                <NavMenu/>
+            </MudDrawer>
+            <MudMainContent>
+                <Space>
+                    @Body
+                </Space>
+            </MudMainContent>
+        </MudLayout>
+    </Authorized>
+    <NotAuthorized>
+        <LogIn/>
+    </NotAuthorized>
+</AuthorizeView>
 

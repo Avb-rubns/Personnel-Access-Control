@@ -1,4 +1,4 @@
-﻿using Rubns.Infrastructure.Services;
+﻿using Rubns.Infrastructure.Middleware;
 using Scalar.AspNetCore;
 
 namespace Personnel.Client.Server

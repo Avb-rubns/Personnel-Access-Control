@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using MudBlazor;
-
-namespace Personnel.Client.Client.Pages.Check
+﻿namespace Personnel.Client.Client.Pages.Check
 {
     public partial class CheckIn : IDisposable
     {
@@ -44,8 +41,9 @@ namespace Personnel.Client.Client.Pages.Check
 
         private async Task OnValidSubmit(EditContext context)
         {
-            try {
-                _processing = true;
+            _processing = true;
+            try
+            {
                 var response = await Proxy.PostAsync<Response, CheckInDTO>("api/v1/ticket/check-in", model);
 
                 switch (response.StatusCode)
@@ -66,11 +64,13 @@ namespace Personnel.Client.Client.Pages.Check
                         Snackbar.Add("Ocurrió un error inesperado, informe a su jefe", Severity.Error);
                         break;
                 }
-                _processing = false;
-            } catch (Exception e) { 
-                Console.WriteLine(e.Message); 
             }
-            
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            _processing = false;
+
         }
 
         public void Dispose()

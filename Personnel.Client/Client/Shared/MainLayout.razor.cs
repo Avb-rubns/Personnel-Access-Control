@@ -1,11 +1,11 @@
 ﻿namespace Personnel.Client.Client.Shared
 {
-
-
-    public partial class MainLayout
+    public partial class MainLayout()
     {
 
         [Inject] public IJSRuntime JS { get; set; } = default!;
+        [Inject] public AuthService AuthService { get; set; } = default!;
+
         private bool _isDarkMode;
         bool _drawerOpen = false;
 
@@ -36,6 +36,11 @@
             var newTheme = _isDarkMode ? "light" : "dark";
             await JS.InvokeVoidAsync("setToLocalStorage", "theme", newTheme);
             _isDarkMode = !_isDarkMode;
+
+        }
+
+        void Logout()
+        {
 
         }
     }

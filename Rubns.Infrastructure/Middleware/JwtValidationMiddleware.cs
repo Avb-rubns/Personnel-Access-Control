@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Rubns.Infrastructure.Services
+namespace Rubns.Infrastructure.Middleware
 {
     public class JwtValidationMiddleware
     {
@@ -25,6 +25,11 @@ namespace Rubns.Infrastructure.Services
 
             // Verifica el token en el header
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            if (string.IsNullOrEmpty(token) && context.Request.Cookies.TryGetValue("accessToken", out var cookieToken))
+            {
+                token = cookieToken;
+            }
+
 
             if (string.IsNullOrEmpty(token))
             {
