@@ -46,7 +46,7 @@
                     case System.Net.HttpStatusCode.OK:
                         model = new();
                         AuthJWT.Login();
-                        NavigationManager.NavigateTo("");
+                        NavigationManager.NavigateTo("", true);
                         break;
                     case System.Net.HttpStatusCode.Unauthorized:
                         Snackbar.Add(response.Message, Severity.Error);
