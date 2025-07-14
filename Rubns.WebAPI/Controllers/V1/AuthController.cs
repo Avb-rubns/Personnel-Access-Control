@@ -30,12 +30,13 @@ namespace Rubns.WebAPI.Controllers.V1
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> RefreshToken(RefreshTokenRequestDTO refresh)
+        public async Task<IActionResult> RefreshToken()
         {
-            var update = await RefreshJWT.RefreshJWTAsync(refresh);
 
-            if (update.Token is not null)
+
+            if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
             {
+                var jwt = RefreshJWT.RefreshJWTAsync(refreshToken);
                 return Ok(new { message = "Tokens renovados" });
             }
             return Unauthorized(new { message = "Token inválido o expirado" });
@@ -56,9 +57,7 @@ namespace Rubns.WebAPI.Controllers.V1
         [HttpDelete("logout")]
         public async Task<IActionResult> LogOut()
         {
-            var refreshToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-
-
+            Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
             var accessTokenCookie = new CookieOptions
             {
                 HttpOnly = true,
