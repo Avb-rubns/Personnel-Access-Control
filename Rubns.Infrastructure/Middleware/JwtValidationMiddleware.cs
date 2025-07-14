@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Rubns.Infrastructure.Middleware
+﻿namespace Rubns.Infrastructure.Middleware
 {
     public class JwtValidationMiddleware
     {
