@@ -3,10 +3,12 @@
     public class Proxy : IProxy
     {
         HttpClient Client;
+        AuthService AuthService;
 
-        public Proxy(HttpClient client)
+        public Proxy(HttpClient client, AuthService authService)
         {
             Client = client ?? throw new ArgumentNullException(nameof(client));
+            AuthService = authService;
         }
 
         public async Task<R> DeleteAsync<R, S>(string url, S postData, string userName)
@@ -127,7 +129,8 @@
                     Client.DefaultRequestHeaders.Add("User", userName);
             }
 
-            using var httpResponse = await Client.GetAsync(url);
+
+            using var httpResponse = await SendAsync(() => Client.GetAsync(url));
             var content = await httpResponse.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var status = httpResponse.StatusCode;
@@ -313,6 +316,25 @@
         public Task<R> PutAsync<R, S>(string url, S postData, string userName = null)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<HttpResponseMessage> SendAsync(Func<Task<HttpResponseMessage>> sendRequest)
+        {
+            var response = await sendRequest();
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                var refreshSuccess = await AuthService.TryRefreshTokenAsync();
+                if (refreshSuccess)
+                {
+                    // Reintentar la petición original después del refresh
+                    response.Dispose();
+                    response = await sendRequest();
+                }
+            }
+
+
+            return response;
         }
     }
 }
