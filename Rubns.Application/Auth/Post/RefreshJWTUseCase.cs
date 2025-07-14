@@ -18,13 +18,15 @@ namespace Rubns.Application.Auth.Post
             LogInService = logInService;
             Configuration = configuration;
         }
-        public async Task<RefreshTokenResponseDTO> RefreshJWTAsync(RefreshTokenRequestDTO refreshRequest)
+        public async Task<RefreshTokenResponseDTO> RefreshJWTAsync(string refreshRequest)
         {
 
             var response = new RefreshTokenResponseDTO();
 
-            var session = await SessionUserRepository.FindAsyn(refreshRequest.RefreshToken);
-            if (session?.UserID <= 0 || session.Expiration <= DateTime.UtcNow)
+            var session = await SessionUserRepository.FindAsyn(refreshRequest);
+            var nzTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time (Mexico)");
+            DateTime nzDateTime = TimeZoneInfo.ConvertTime(new DateTime(), TimeZoneInfo.Utc, nzTimeZone);
+            if (session?.UserID <= 0 || session.Expiration <= nzDateTime)
             {
                 return response;
             }
