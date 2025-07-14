@@ -2,17 +2,16 @@
 {
     internal class TicketRepository : ITicketRepository
     {
-        private readonly AuthDbContextEFC AuthDbContextEFC;
-
-        public TicketRepository(AuthDbContextEFC authDbContext)
+        private readonly IConfiguration Configuration;
+        public TicketRepository(IConfiguration configuration)
         {
-            AuthDbContextEFC = authDbContext;
+            Configuration = configuration;
         }
         public async Task<int> InsertCheckAsync(CheckInDTO check, int userID)
         {
             try
             {
-                using var connection = new SqlConnection(AuthDbContextEFC.Database.GetConnectionString());
+                using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
                 await connection.OpenAsync();
                 var parameters = new { UserID = userID, Latitude = check.Latitude, Longitude = check.Longitude, Ip = check.IP?.ToString() };
 
