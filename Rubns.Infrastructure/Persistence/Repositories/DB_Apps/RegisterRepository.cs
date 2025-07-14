@@ -2,11 +2,12 @@
 {
     internal class RegisterRepository : IRegisterRepository
     {
-        AuthDbContextEFC Context { get; }
 
-        public RegisterRepository(AuthDbContextEFC context)
+        private readonly IConfiguration Configuration;
+
+        public RegisterRepository(IConfiguration configuration)
         {
-            Context = context;
+            Configuration = configuration;
         }
 
         public async Task<int> RegisterApplicationAsync(TokenRegisterDTO token)
@@ -20,7 +21,7 @@
                     new { Key = "UserName", Value = token.UserRegisted }
                 };
 
-                await using var connection = new SqlConnection(Context.Database.GetConnectionString());
+                await using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
                 await connection.OpenAsync();
 
                 string query = "usp_InsertApiKey_v1";
