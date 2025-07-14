@@ -3,19 +3,20 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     class LogInRepository : ILogInRepository
     {
-        AuthDbContextEFC AuthDbContextEFC { get; }
+        IConfiguration Configuration { get; }
 
-        public LogInRepository(AuthDbContextEFC authDbContextEFC)
+        public LogInRepository(IConfiguration configuration)
         {
-            AuthDbContextEFC = authDbContextEFC;
+            Configuration = configuration;
         }
         public async Task<UserDTO> GetUserByEmailAsync(string email)
         {
             UserDTO result = new();
             try
             {
-                await using var connection = new SqlConnection(AuthDbContextEFC.Database.GetConnectionString());
+                await using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
                 await connection.OpenAsync();
+
 
                 var proc = "p_UserByEmail";
 
@@ -41,7 +42,7 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
             UserDTO result = new();
             try
             {
-                await using var connection = new SqlConnection(AuthDbContextEFC.Database.GetConnectionString());
+                await using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
                 await connection.OpenAsync();
 
                 var proc = "p_UserByID";
@@ -68,7 +69,7 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
             UserDTO result = new();
             try
             {
-                await using var connection = new SqlConnection(AuthDbContextEFC.Database.GetConnectionString());
+                await using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
                 await connection.OpenAsync();
 
                 var proc = "p_UserByPhone";
