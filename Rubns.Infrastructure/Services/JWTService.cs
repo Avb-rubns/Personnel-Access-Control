@@ -11,7 +11,17 @@ namespace Rubns.Infrastructure.Services
         {
             var userinfo = ParseUserFromJWT(jwt);
 
-            return userinfo;
+            var nzTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time (Mexico)");
+            var expiration = DateTimeOffset.FromUnixTimeSeconds(userinfo.Expiration).DateTime;
+            DateTime nzDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, nzTimeZone);
+            DateTime expirationDateTime = TimeZoneInfo.ConvertTime(expiration, TimeZoneInfo.Utc, nzTimeZone);
+
+            if (expirationDateTime >= nzDateTime)
+            {
+                return userinfo;
+
+            }
+            return new UserInfoDTO();
         }
 
         private IEnumerable<Claim> ParseClaimsFromJWT(string jwt)

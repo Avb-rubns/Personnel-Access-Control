@@ -28,6 +28,7 @@ namespace Rubns.WebAPI.Controllers.V1
                 Expires = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(result.AccessToken.ExpiresIn)),
                 Path = "/"
             };
+            Response.Cookies.Append("accessToken", result.AccessToken.AccessToken, accessTokenCookie);
 
             var refreshTokenCookie = new CookieOptions
             {
@@ -35,11 +36,8 @@ namespace Rubns.WebAPI.Controllers.V1
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.FromUnixTimeSeconds(result.Expiration),
-                Path = "/api/v1/auth/refresh"
+                Path = "/api/v1/auth"
             };
-
-            Response.Cookies.Append("accessToken", result.AccessToken.AccessToken, accessTokenCookie);
-
             Response.Cookies.Append("refreshToken", result.RefreshToken, refreshTokenCookie);
 
 

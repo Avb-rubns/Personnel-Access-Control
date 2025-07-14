@@ -26,15 +26,7 @@
         {
             try
             {
-                using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
-                await connection.OpenAsync();
-                var parameters = new { Token = token };
-
-                int result = await connection.ExecuteScalarAsync<int>(
-                    "p_DeleteSessionUser",
-                    parameters,
-                    commandType: CommandType.StoredProcedure
-                );
+                var result = await AuthDbContextEFC.Database.ExecuteSqlAsync($"p_DeleteSessionUser @Token = {token}");
 
                 return result;
 

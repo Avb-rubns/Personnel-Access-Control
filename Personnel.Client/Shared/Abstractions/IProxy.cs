@@ -12,7 +12,6 @@ namespace Personnel.Client.Shared.Abstractions
         public Task<R> PutAsync<R, S>(string url, S postData, string userName = null);
         public Task<R> PostFileAsync<R, S>(string url, S PostFile, string userName = null);
 
-        Task<HttpResponseMessage> SendAsync(Func<Task<HttpResponseMessage>> sendRequest);
 
     }
 }

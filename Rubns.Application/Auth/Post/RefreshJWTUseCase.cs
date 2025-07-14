@@ -1,5 +1,4 @@
-﻿
-namespace Rubns.Application.Auth.Post
+﻿namespace Rubns.Application.Auth.Post
 {
     internal class RefreshJWTUseCase : IRefreshJWTPort<RefreshTokenResponseDTO>
     {
@@ -7,59 +6,52 @@ namespace Rubns.Application.Auth.Post
         private readonly ILogInRepository LogInRepository;
         private readonly ILogInService LogInService;
         private readonly IConfiguration Configuration;
+        private readonly ILogger Logger;
 
         public RefreshJWTUseCase(ISessionUserRepository sessionUserRepository,
             ILogInRepository logInRepository,
             ILogInService logInService,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ILogger logger)
         {
             SessionUserRepository = sessionUserRepository;
             LogInRepository = logInRepository;
             LogInService = logInService;
             Configuration = configuration;
+            Logger = logger;
         }
         public async Task<RefreshTokenResponseDTO> RefreshJWTAsync(string refreshRequest)
         {
-
             var response = new RefreshTokenResponseDTO();
-
-            var session = await SessionUserRepository.FindAsyn(refreshRequest);
-            var nzTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time (Mexico)");
-            DateTime nzDateTime = TimeZoneInfo.ConvertTime(new DateTime(), TimeZoneInfo.Utc, nzTimeZone);
-            if (session?.UserID <= 0 || session.Expiration <= nzDateTime)
+            try
             {
-                return response;
+                var session = await SessionUserRepository.FindAsyn(refreshRequest);
+                var nzTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time (Mexico)");
+                DateTime nzDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, nzTimeZone);
+                if (session?.UserID <= 0 || session.Expiration <= nzDateTime)
+                {
+                    return response;
+                }
+
+                var user = await LogInRepository.GetUserByIDAsync(session.UserID);
+                if (user?.UserID <= 0)
+                {
+                    return response;
+                }
+
+                var newJwt = LogInService.CreateJWT(user);
+
+
+                response.RefreshToken = refreshRequest;
+                response.Token = newJwt;
+                response.Expiration = new DateTimeOffset(session.Expiration, nzTimeZone.GetUtcOffset(session.Expiration)).ToUnixTimeSeconds();
+
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "An error ocurred:{error}", e.Message);
             }
 
-            var user = await LogInRepository.GetUserByIDAsync(session.UserID);
-            if (user?.UserID <= 0)
-            {
-                return response;
-            }
-
-            var newJwt = LogInService.CreateJWT(user);
-            var newRefreshToken = LogInService.CreateRefreshToken();
-            if (newJwt is null || string.IsNullOrEmpty(newRefreshToken))
-            {
-                return response;
-            }
-
-            if (!double.TryParse(Configuration["DaysRefresh"], out double daysRefresh))
-            {
-                daysRefresh = 7;
-            }
-
-            session.Token = newRefreshToken;
-            session.Expiration = DateTime.UtcNow.AddDays(daysRefresh);
-            var updateResult = await SessionUserRepository.UpdateSessionUserAsync(session);
-            if (updateResult <= 0)
-            {
-                return response;
-            }
-
-            response.RefreshToken = newRefreshToken;
-            response.Token = newJwt;
-            response.Expiration = DateTimeOffset.UtcNow.AddDays(daysRefresh).ToUnixTimeSeconds();
 
             return response;
         }

@@ -5,6 +5,7 @@
 
         [Inject] public IJSRuntime JS { get; set; } = default!;
         [Inject] public AuthService AuthService { get; set; } = default!;
+        [Inject] public NavigationManager NavigationManager { get; set; } = default!;
 
         private bool _isDarkMode;
         bool _drawerOpen = false;
@@ -39,9 +40,13 @@
 
         }
 
-        void Logout()
+        async Task Logout()
         {
-
+            var closedSession = await AuthService.MarkUserAsLoggedOutAsync();
+            if (closedSession)
+            {
+                NavigationManager.Refresh();
+            }
         }
     }
 }

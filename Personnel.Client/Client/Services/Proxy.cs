@@ -130,7 +130,7 @@
             }
 
 
-            using var httpResponse = await SendAsync(() => Client.GetAsync(url));
+            using var httpResponse = await Client.GetAsync(url);
             var content = await httpResponse.Content.ReadAsStringAsync();
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var status = httpResponse.StatusCode;
@@ -318,23 +318,5 @@
             throw new NotImplementedException();
         }
 
-        public async Task<HttpResponseMessage> SendAsync(Func<Task<HttpResponseMessage>> sendRequest)
-        {
-            var response = await sendRequest();
-
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                var refreshSuccess = await AuthService.TryRefreshTokenAsync();
-                if (refreshSuccess)
-                {
-                    // Reintentar la petición original después del refresh
-                    response.Dispose();
-                    response = await sendRequest();
-                }
-            }
-
-
-            return response;
-        }
     }
 }
