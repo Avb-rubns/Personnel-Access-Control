@@ -2,6 +2,6 @@
 {
     public interface IRefreshJWTPort<T>
     {
-        Task<T> RefreshJWTAsync(RefreshTokenRequestDTO refresh);
+        Task<T> RefreshJWTAsync(string refresh);
     }
 }
