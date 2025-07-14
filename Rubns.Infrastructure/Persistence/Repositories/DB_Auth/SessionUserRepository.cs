@@ -26,7 +26,7 @@
         {
             try
             {
-                using var connection = new SqlConnection(AuthDbContextEFC.Database.GetConnectionString());
+                using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
                 await connection.OpenAsync();
                 var parameters = new { Token = token };
 
