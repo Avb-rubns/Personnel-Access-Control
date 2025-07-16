@@ -1,8 +1,4 @@
-﻿
-using System.Security.Claims;
-using System.Text.Json;
-
-namespace Rubns.Infrastructure.Services
+﻿namespace Rubns.Infrastructure.Services
 {
     internal class JWTService : IJWTService
     {

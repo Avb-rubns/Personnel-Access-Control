@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Personnel.Client.Shared.DTOs.Users
+﻿namespace Personnel.Client.Shared.DTOs.Users
 {
     public class RegisterUserDTO
     {

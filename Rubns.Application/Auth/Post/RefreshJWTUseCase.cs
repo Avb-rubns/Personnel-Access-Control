@@ -5,19 +5,16 @@
         private readonly ISessionUserRepository SessionUserRepository;
         private readonly ILogInRepository LogInRepository;
         private readonly ILogInService LogInService;
-        private readonly IConfiguration Configuration;
         private readonly ILogger Logger;
 
         public RefreshJWTUseCase(ISessionUserRepository sessionUserRepository,
             ILogInRepository logInRepository,
             ILogInService logInService,
-            IConfiguration configuration,
             ILogger logger)
         {
             SessionUserRepository = sessionUserRepository;
             LogInRepository = logInRepository;
             LogInService = logInService;
-            Configuration = configuration;
             Logger = logger;
         }
         public async Task<RefreshTokenResponseDTO> RefreshJWTAsync(string refreshRequest)

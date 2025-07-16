@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Rubns.WebAPI.Controllers.V1
+﻿namespace Rubns.WebAPI.Controllers.V1
 {
 
     [ApiController]
@@ -72,12 +70,16 @@ namespace Rubns.WebAPI.Controllers.V1
         [HttpGet("me")]
         public IActionResult Me()
         {
-            Request.Cookies.TryGetValue("accessToken", out var cookieToken);
-            var user = UserInformationPort.UserInfo(cookieToken);
 
-            if (user is { Status: true })
+            if (Request.Cookies.TryGetValue("accessToken", out var cookieToken))
             {
-                return Ok(user);
+                var user = UserInformationPort.UserInfo(cookieToken);
+
+                if (user is { Status: true })
+                {
+                    return Ok(user);
+                }
+
             }
 
             return Unauthorized(new { message = "Token inválido o expirado" });

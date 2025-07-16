@@ -17,12 +17,8 @@
                     <MudIconButton Icon="@Icons.Material.Filled.Logout" OnClick="@Logout" Color="Color.Inherit" />
                 </MudToolBar>
                 <MudMenu Class="d-md-none" Dense="true" Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit" >
-                    <MudMenuItem OnClick="@((e) => DarkModeAsync())">
-                            <MudIcon Variant="Variant.Text" Color="Color.Inherit" Style="align-items:center;" Icon="@Icons.Material.Filled.Brightness4"/>
-                    </MudMenuItem>
-                    <MudMenuItem OnClick="@Logout">
-                            <MudIcon Color="Color.Inherit" Icon="@Icons.Material.Filled.Logout" />
-                    </MudMenuItem>
+                    <MudMenuItem OnClick="@((e) => DarkModeAsync())" Variant="Variant.Text" Color="Color.Inherit" Style="align-items:center;" Icon="@Icons.Material.Filled.Brightness4" />
+                    <MudMenuItem OnClick="@Logout" Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" />
                 </MudMenu>
             </MudAppBar>
             <MudDrawer @bind-Open="@_drawerOpen" Elevation="1" Breakpoint="Breakpoint.Sm" Variant="DrawerVariant.Responsive">

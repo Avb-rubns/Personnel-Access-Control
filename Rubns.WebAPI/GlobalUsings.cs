@@ -1,4 +1,5 @@
 ﻿global using Asp.Versioning;
+global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using Personnel.Client.Shared.DTOs.ApiKey;
 global using Personnel.Client.Shared.DTOs.LogIn;
@@ -13,4 +14,3 @@ global using Rubns.Core.Ports.Login;
 global using Rubns.Core.Ports.QR;
 global using Rubns.Core.Ports.User;
 global using Rubns.Core.Ticket;
-global using System.Security.Claims;

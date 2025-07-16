@@ -45,7 +45,7 @@
             var closedSession = await AuthService.MarkUserAsLoggedOutAsync();
             if (closedSession)
             {
-                NavigationManager.Refresh();
+                NavigationManager.NavigateTo("/", true);
             }
         }
     }
