@@ -1,4 +1,7 @@
-﻿namespace Personnel.Client.Server
+﻿using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
+
+namespace Personnel.Client.Server
 {
     internal static class ServiceConfigurations
     {
@@ -10,6 +13,24 @@
             builder.Services.AddOpenApi();
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+            builder.Services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+                options.Providers.Add<BrotliCompressionProvider>();
+                options.Providers.Add<GzipCompressionProvider>();
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes;
+            });
+
+
+            builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Optimal;
+            });
+
+            builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Optimal;
+            });
 
             builder.Services.AddApiVersioning(options =>
             {

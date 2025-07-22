@@ -7,7 +7,7 @@
             <MudText Typo="Typo.h5" Align="Align.Center">Registrar nuevo usuario</MudText>
         </TitleContent>
         <ChildContent>
-            <EditForm Model="UserDTO">
+            <EditForm Model="UserDTO" OnValidSubmit="RegisterUserAsync">
             <DataAnnotationsValidator/>
             <MudGrid>
                 <MudItem xs="12" sm="3">
@@ -38,18 +38,33 @@
                         Margin="Margin.Dense"
                         For="@(() => UserDTO.Email)" />
                 </MudItem>
-                    <MudItem xs="12" sm="3">
-                        <MudTextField @bind-Value="UserDTO.Phone"
-                            Label="Teléfono"
-                            Variant="Variant.Text"
-                            Required = "true"
-                            InputType="InputType.Telephone"
-                            onKeypress=" if (!(event.charCode >= 48 && event.charCode <= 57)) event.preventDefault()"
-                            Margin="Margin.Dense"
-                            For="@(() => UserDTO.Phone)" />
-                    </MudItem>
                 <MudItem xs="12" sm="3">
-                        <MudSelect T="bool"
+                    <MudTextField @bind-Value="UserDTO.Phone"
+                        Label="Teléfono"
+                        Variant="Variant.Text"
+                        Required = "true"
+                        InputType="InputType.Telephone"
+                        onKeypress=" if (!(event.charCode >= 48 && event.charCode <= 57)) event.preventDefault()"
+                        Margin="Margin.Dense"
+                        For="@(() => UserDTO.Phone)" />
+                </MudItem>
+                <MudItem xs="12" sm="3">
+                    <MudSelect T="int"
+                                Label="Rol"
+                                Required="true"
+                                @bind-Value="UserDTO.RolID"
+                                For="@(() => UserDTO.RolID)">
+                            @foreach (var v in RolDTOs)
+                            {
+                                <MudSelectItem Value="v.RolID">
+                                    @v.Name
+                                </MudSelectItem>
+                                
+                            }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" sm="3">
+                    <MudSelect T="bool"
                             Label="Estatus"
                             Required="true"
                             @bind-Value="UserDTO.Status"
@@ -61,25 +76,24 @@
                                 Activo
                             </MudSelectItem>
                     </MudSelect>
-                        
                 </MudItem>
-                    <MudItem xs="12" sm="12" Class="d-flex justify-content-end g-4">
-                        <MudButton Disabled="@_processing" Class="mr-3" Color="Color.Secondary"
-                                   Variant="Variant.Filled">
-                                <MudText>Limpiar</MudText>
-                        </MudButton>
-                        <MudButton Disabled="@_processing" Color="Color.Primary"
-                                   Variant="Variant.Filled" ButtonType="ButtonType.Submit" >
-                            @if (_processing)
-                            {
-                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                <MudText Class="ms-2">Registrando</MudText>
-                            }
-                            else
-                            {
-                                <MudText>Registrar</MudText>
-                            }
-                        </MudButton>
+                <MudItem xs="12" sm="12" Class="d-flex justify-content-end g-4">
+                    <MudButton Disabled="@_processing" Class="mr-3" Color="Color.Secondary"
+                                   Variant="Variant.Filled" OnClick="ClearFormUser">
+                            <MudText>Limpiar</MudText>
+                    </MudButton>
+                    <MudButton Disabled="@_processing" Color="Color.Primary"
+                                Variant="Variant.Filled" ButtonType="ButtonType.Submit" >
+                        @if (_processing)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Registrando</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Registrar</MudText>
+                        }
+                    </MudButton>
                 </MudItem>
             </MudGrid>
         </EditForm>

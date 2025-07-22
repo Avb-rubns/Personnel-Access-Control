@@ -12,5 +12,6 @@ global using Rubns.Core.Ports.ApiKey.Register;
 global using Rubns.Core.Ports.Auth;
 global using Rubns.Core.Ports.Login;
 global using Rubns.Core.Ports.QR;
+global using Rubns.Core.Ports.Rol;
 global using Rubns.Core.Ports.User;
 global using Rubns.Core.Ticket;

@@ -1,5 +1,4 @@
-﻿using Personnel.Client.Shared.POCO.Users;
-
+﻿
 namespace Rubns.Infrastructure.Persistence
 {
     public class AuthDbContextEFC : DbContext
@@ -11,7 +10,7 @@ namespace Rubns.Infrastructure.Persistence
 
         public DbSet<User> Users { get; set; }
         public DbSet<SessionUser> SessionUser { get; set; }
-
+        public DbSet<Rol> Rols { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(e =>
@@ -24,6 +23,12 @@ namespace Rubns.Infrastructure.Persistence
             {
                 e.ToTable("SessionUsers", schema: "dbo");
                 e.HasKey(k => k.ID);
+            });
+
+            modelBuilder.Entity<Rol>(e =>
+            {
+                e.ToTable("Rols", schema: "dbo");
+                e.HasKey(k => k.RolID);
             });
 
             base.OnModelCreating(modelBuilder);

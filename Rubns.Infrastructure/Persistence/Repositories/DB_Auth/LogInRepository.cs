@@ -1,7 +1,7 @@
 ﻿
 namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
-    class LogInRepository : ILogInRepository
+    internal class LogInRepository : ILogInRepository
     {
         IConfiguration Configuration { get; }
 

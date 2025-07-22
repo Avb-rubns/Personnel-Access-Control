@@ -58,7 +58,7 @@ namespace Personnel.Client.Server
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.MapRazorPages();
-
+            app.UseResponseCompression();
             app.MapFallbackToFile("index.html");
             return app;
         }

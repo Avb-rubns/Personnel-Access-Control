@@ -4,7 +4,7 @@ namespace Personnel.Client.Shared.Abstractions
 {
     public interface IProxy
     {
-        public Task<R> DeleteAsync<R, S>(string url, S PostData, string userName);
+        public Task<R> DeleteAsync<R, S>(string url, S PostData, string userName) where R : IApiResponse;
         public Task<R> DeleteAsync<R>(string url, string userName) where R : IApiResponse;
         public Task<R> PostAsync<R, S>(string url, S postData, string userName = null) where R : IApiResponse;
         public Task<R> PostAsync<R>(string url, string userName = null) where R : IApiResponse;

@@ -1,0 +1,342 @@
+{
+  "info": {
+    "name": "Personal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "local",
+      "item": [
+        {
+          "name": "Admin",
+          "item": [
+            {
+              "name": "Register",
+              "event": [],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "https://localhost:7170/api/v1/Register",
+                  "protocol": "https",
+                  "host": [
+                    "localhost:7170"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "Register"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\":\"rubns@mail.com\",\n  \"phone\":\"2211538571\",\n  \"LastName\":\"Sanchez\",\n  \"username\":\"Ruben\"\n  \n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth",
+          "item": [
+            {
+              "name": "logout",
+              "event": [],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "https://localhost:7170/api/v1/auth/logout",
+                  "protocol": "https",
+                  "host": [
+                    "localhost:7170"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "logout"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            },
+            {
+              "name": "Me",
+              "event": [],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "https://localhost:7170/api/v1/auth/me",
+                  "protocol": "https",
+                  "host": [
+                    "localhost:7170"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "me"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            },
+            {
+              "name": "refresh",
+              "event": [],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "https://localhost:7170/api/v1/auth/refresh",
+                  "protocol": "https",
+                  "host": [
+                    "localhost:7170"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "refresh"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "login",
+          "item": [
+            {
+              "name": "login",
+              "event": [],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "https://localhost:7170/api/v1/login",
+                  "protocol": "https",
+                  "host": [
+                    "localhost:7170"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "login"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\":\"rubns@test.com\",\n  \"password\":\"temporal1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Rols",
+          "item": [
+            {
+              "name": "Rols",
+              "event": [],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "https://localhost:7170/api/v1/Rols",
+                  "protocol": "https",
+                  "host": [
+                    "localhost:7170"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "Rols"
+                  ],
+                  "query": [],
+                  "variable": []
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "QR",
+          "item": [
+            {
+              "name": "Generate",
+              "event": [],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJSdWLDqW4iLCJlbWFpbCI6InJ1Ym5zQHRlc3QuY29tIiwiaXNzIjoiUlVCTlMtQVVUSCIsInZhbGlkQXVkaWVuY2UiOiJSVUJOUyIsImlhdCI6MTc1MDI2NzY0MiwiZXhwIjoxNzUwMjY4NTQyLCJyb2xlIjpbInJvb3QiXSwibGV2ZWxQZXJtaXNzaW9uIjoiMCIsInN0YXR1cyI6MSwidXNlcklkIjoxfQ.9y6doiX6QHNLyTsWOWId9tHzW2bxCzhpUB30Bo9jhQI",
+                    "disabled": false,
+                    "type": "default"
+                  }
+                ],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "https://localhost:7170/check-in",
+                  "protocol": "https",
+                  "host": [
+                    "localhost:7170"
+                  ],
+                  "path": [
+                    "check-in"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"Content\": \"https://localhost:444/check\",\n  \"Width\":100,\n  \"Height\":100\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ticket",
+          "item": [
+            {
+              "name": "CheckIn",
+              "event": [],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "https://localhost:7170/api/v1/ticket/check-in",
+                  "protocol": "https",
+                  "host": [
+                    "localhost:7170"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "ticket",
+                    "check-in"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "IIS",
+      "item": [
+        {
+          "name": "LogIn",
+          "item": [
+            {
+              "name": "LogIn",
+              "event": [],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "auth": {
+                  "type": "noauth"
+                },
+                "description": "",
+                "url": {
+                  "raw": "https://localhost:444/api/v1/login",
+                  "protocol": "https",
+                  "host": [
+                    "localhost:444"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "login"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\":\"rubns@test.com\",\n  \"password\":\"temporal1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": []
+}

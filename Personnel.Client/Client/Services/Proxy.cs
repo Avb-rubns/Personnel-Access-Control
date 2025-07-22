@@ -3,15 +3,12 @@
     public class Proxy : IProxy
     {
         HttpClient Client;
-        AuthService AuthService;
-
-        public Proxy(HttpClient client, AuthService authService)
+        public Proxy(HttpClient client)
         {
             Client = client ?? throw new ArgumentNullException(nameof(client));
-            AuthService = authService;
         }
 
-        public async Task<R> DeleteAsync<R, S>(string url, S postData, string userName)
+        public async Task<R> DeleteAsync<R, S>(string url, S postData, string userName) where R : IApiResponse
         {
             if (!string.IsNullOrEmpty(userName))
             {
@@ -19,43 +16,74 @@
                     Client.DefaultRequestHeaders.Add("User", userName);
             }
 
-            var response = await Client.PostAsJsonAsync(url, postData);
+            var httpResponse = await Client.PostAsJsonAsync(url, postData);
 
-            var content = await response.Content.ReadAsStringAsync();
-            bool hasContent = !string.IsNullOrWhiteSpace(content);
+            var content = await httpResponse.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var status = httpResponse.StatusCode;
 
-            if (hasContent)
+            Type returnType = typeof(R);
+
+            // Manejar ResponseData<T>
+            if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(ResponseData<>))
             {
+                var dataType = returnType.GetGenericArguments()[0];
+                var wrapperType = typeof(ResponseData<>).MakeGenericType(dataType);
+
+                using var doc = JsonDocument.Parse(content);
+                // Si viene el envoltorio completo
                 try
                 {
-                    var result = JsonSerializer.Deserialize<R>(content, new JsonSerializerOptions
+                    if (doc.RootElement.ValueKind == JsonValueKind.Object && doc.RootElement.TryGetProperty("data", out _))
                     {
-                        PropertyNameCaseInsensitive = true
-                    });
-
-                    if (result != null)
-                    {
-                        return result;
+                        var deserialized = JsonSerializer.Deserialize(content, wrapperType, options);
+                        if (deserialized is R rWrapped)
+                        {
+                            rWrapped.StatusCode = status;
+                            return rWrapped;
+                        }
                     }
+
+                    var rawData = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
+
+                    var instance = Activator.CreateInstance(wrapperType)!;
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.Data))?
+                               .SetValue(instance, rawData);
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?
+                               .SetValue(instance, status);
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.Message))?
+                               .SetValue(instance, "Operación exitosa");
+                    return (R)instance;
+
                 }
-                catch (JsonException)
+                catch (Exception ex)
                 {
-                    // Manejar si la deserialización falla
-                    throw new InvalidOperationException("No se pudo deserializar la respuesta del servidor.");
+                    throw new InvalidOperationException($"Error deserializando el contenido plano a tipo {dataType}: {ex.Message}\nContenido: {content}");
                 }
+
             }
 
-            // Si no hay contenido, construye un ApiResponseDTO genérico si aplica
-            if (typeof(R) == typeof(Response))
+            // Manejar Response simple
+            if (returnType == typeof(Response))
             {
-                return (R)(object)new Response
+                Response simple;
+                try
                 {
-                    StatusCode = response.StatusCode,
-                    Message = "Operación completada sin respuesta de contenido"
-                };
+                    simple = JsonSerializer.Deserialize<Response>(content, options) ?? new Response();
+                }
+                catch
+                {
+                    simple = new Response();
+                }
+                simple.StatusCode = status;
+                simple.Message ??= "Operación completada";
+                return (R)(object)simple;
             }
 
-            throw new InvalidOperationException("No se pudo obtener una respuesta válida.");
+            throw new InvalidOperationException($"El tipo de retorno {returnType} no está soportado.");
 
         }
 
@@ -82,23 +110,38 @@
 
                 using var doc = JsonDocument.Parse(content);
                 // Si viene el envoltorio completo
-                if (doc.RootElement.TryGetProperty("data", out _))
+                try
                 {
-                    var wrapper = JsonSerializer.Deserialize(content, wrapperType, options);
-                    if (wrapper is R rWrapped)
+                    if (doc.RootElement.ValueKind == JsonValueKind.Object && doc.RootElement.TryGetProperty("data", out _))
                     {
-                        rWrapped.StatusCode = status;
-                        return rWrapped;
+                        var deserialized = JsonSerializer.Deserialize(content, wrapperType, options);
+                        if (deserialized is R rWrapped)
+                        {
+                            rWrapped.StatusCode = status;
+                            return rWrapped;
+                        }
                     }
+
+                    var rawData = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
+
+                    var instance = Activator.CreateInstance(wrapperType)!;
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.Data))?
+                               .SetValue(instance, rawData);
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?
+                               .SetValue(instance, status);
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.Message))?
+                               .SetValue(instance, "Operación exitosa");
+                    return (R)instance;
+
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Error deserializando el contenido plano a tipo {dataType}: {ex.Message}\nContenido: {content}");
                 }
 
-                // Si viene solo el objeto T, lo deserializamos y envolvemos
-                var data = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
-                var instance = (IApiResponse)Activator.CreateInstance(wrapperType)!;
-                wrapperType.GetProperty(nameof(ResponseData<object>.Data))?.SetValue(instance, data);
-                wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?.SetValue(instance, status);
-                wrapperType.GetProperty(nameof(ResponseData<object>.Message))?.SetValue(instance, "Operación exitosa");
-                return (R)instance;
             }
 
             // Manejar Response simple
@@ -145,23 +188,38 @@
 
                 using var doc = JsonDocument.Parse(content);
                 // Si viene el envoltorio completo
-                if (doc.RootElement.TryGetProperty("data", out _))
+                try
                 {
-                    var wrapper = JsonSerializer.Deserialize(content, wrapperType, options);
-                    if (wrapper is R rWrapped)
+                    if (doc.RootElement.ValueKind == JsonValueKind.Object && doc.RootElement.TryGetProperty("data", out _))
                     {
-                        rWrapped.StatusCode = status;
-                        return rWrapped;
+                        var deserialized = JsonSerializer.Deserialize(content, wrapperType, options);
+                        if (deserialized is R rWrapped)
+                        {
+                            rWrapped.StatusCode = status;
+                            return rWrapped;
+                        }
                     }
+
+                    var rawData = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
+
+                    var instance = Activator.CreateInstance(wrapperType)!;
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.Data))?
+                               .SetValue(instance, rawData);
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?
+                               .SetValue(instance, status);
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.Message))?
+                               .SetValue(instance, "Operación exitosa");
+                    return (R)instance;
+
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Error deserializando el contenido plano a tipo {dataType}: {ex.Message}\nContenido: {content}");
                 }
 
-                // Si viene solo el objeto T, lo deserializamos y envolvemos
-                var data = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
-                var instance = (IApiResponse)Activator.CreateInstance(wrapperType)!;
-                wrapperType.GetProperty(nameof(ResponseData<object>.Data))?.SetValue(instance, data);
-                wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?.SetValue(instance, status);
-                wrapperType.GetProperty(nameof(ResponseData<object>.Message))?.SetValue(instance, "Operación exitosa");
-                return (R)instance;
             }
 
             // Manejar Response simple
@@ -207,23 +265,38 @@
 
                 using var doc = JsonDocument.Parse(content);
                 // Si viene el envoltorio completo
-                if (doc.RootElement.TryGetProperty("data", out _))
+                try
                 {
-                    var wrapper = JsonSerializer.Deserialize(content, wrapperType, options);
-                    if (wrapper is R rWrapped)
+                    if (doc.RootElement.ValueKind == JsonValueKind.Object && doc.RootElement.TryGetProperty("data", out _))
                     {
-                        rWrapped.StatusCode = status;
-                        return rWrapped;
+                        var deserialized = JsonSerializer.Deserialize(content, wrapperType, options);
+                        if (deserialized is R rWrapped)
+                        {
+                            rWrapped.StatusCode = status;
+                            return rWrapped;
+                        }
                     }
+
+                    var rawData = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
+
+                    var instance = Activator.CreateInstance(wrapperType)!;
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.Data))?
+                               .SetValue(instance, rawData);
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?
+                               .SetValue(instance, status);
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.Message))?
+                               .SetValue(instance, "Operación exitosa");
+                    return (R)instance;
+
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Error deserializando el contenido plano a tipo {dataType}: {ex.Message}\nContenido: {content}");
                 }
 
-                // Si viene solo el objeto T, lo deserializamos y envolvemos
-                var data = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
-                var instance = (IApiResponse)Activator.CreateInstance(wrapperType)!;
-                wrapperType.GetProperty(nameof(ResponseData<object>.Data))?.SetValue(instance, data);
-                wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?.SetValue(instance, status);
-                wrapperType.GetProperty(nameof(ResponseData<object>.Message))?.SetValue(instance, "Operación exitosa");
-                return (R)instance;
             }
 
             // Manejar Response simple
@@ -269,23 +342,38 @@
 
                 using var doc = JsonDocument.Parse(content);
                 // Si viene el envoltorio completo
-                if (doc.RootElement.TryGetProperty("data", out _))
+                try
                 {
-                    var wrapper = JsonSerializer.Deserialize(content, wrapperType, options);
-                    if (wrapper is R rWrapped)
+                    if (doc.RootElement.ValueKind == JsonValueKind.Object && doc.RootElement.TryGetProperty("data", out _))
                     {
-                        rWrapped.StatusCode = status;
-                        return rWrapped;
+                        var deserialized = JsonSerializer.Deserialize(content, wrapperType, options);
+                        if (deserialized is R rWrapped)
+                        {
+                            rWrapped.StatusCode = status;
+                            return rWrapped;
+                        }
                     }
+
+                    var rawData = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
+
+                    var instance = Activator.CreateInstance(wrapperType)!;
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.Data))?
+                               .SetValue(instance, rawData);
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?
+                               .SetValue(instance, status);
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.Message))?
+                               .SetValue(instance, "Operación exitosa");
+                    return (R)instance;
+
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Error deserializando el contenido plano a tipo {dataType}: {ex.Message}\nContenido: {content}");
                 }
 
-                // Si viene solo el objeto T, lo deserializamos y envolvemos
-                var data = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
-                var instance = (IApiResponse)Activator.CreateInstance(wrapperType)!;
-                wrapperType.GetProperty(nameof(ResponseData<object>.Data))?.SetValue(instance, data);
-                wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?.SetValue(instance, status);
-                wrapperType.GetProperty(nameof(ResponseData<object>.Message))?.SetValue(instance, "Operación exitosa");
-                return (R)instance;
             }
 
             // Manejar Response simple

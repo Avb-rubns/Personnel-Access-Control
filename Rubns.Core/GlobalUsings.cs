@@ -3,5 +3,6 @@ global using Personnel.Client.Shared.DTOs.ApiKey;
 global using Personnel.Client.Shared.DTOs.LogIn;
 global using Personnel.Client.Shared.DTOs.LogOut;
 global using Personnel.Client.Shared.DTOs.QR;
+global using Personnel.Client.Shared.DTOs.Rol;
 global using Personnel.Client.Shared.DTOs.Ticket;
 global using Personnel.Client.Shared.DTOs.Users;
