@@ -2,6 +2,6 @@
 {
     public interface IPostUserPort
     {
-        Task<bool> RegitserUserAsync(RegisterUserDTO registerUser);
+        Task<int> RegitserUserAsync(RegisterUserDTO registerUser);
     }
 }

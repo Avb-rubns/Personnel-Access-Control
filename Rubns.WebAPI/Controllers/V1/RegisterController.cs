@@ -13,16 +13,18 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterUserDTO registerUser)
+        public async Task<IActionResult> RegisterUserAsync(RegisterUserDTO registerUser)
         {
             if (ModelState.IsValid)
             {
                 var result = await PostUserPort.RegitserUserAsync(registerUser);
-                if (result)
+
+                return result switch
                 {
-                    return Created();
-                }
-                return BadRequest();
+                    (int)System.Net.HttpStatusCode.Created => CreatedAtAction(nameof(RegisterUserAsync), new { user = "Usuario registrado" }, result),
+                    (int)System.Net.HttpStatusCode.BadRequest => BadRequest(new { message = "Datos incorrectos o usuario ya registrado" }),
+                    _ => StatusCode((int)result, new { message = "Error en el servicio" })
+                };
 
             }
 

@@ -15,19 +15,27 @@ namespace Rubns.Application.User.Post
             Logger = logger;
         }
 
-        public async Task<bool> RegitserUserAsync(RegisterUserDTO registerUser)
+        public async Task<int> RegitserUserAsync(RegisterUserDTO registerUser)
         {
-            bool result = false;
+            int result = 400;
             try
             {
-                string passTemp = EncryptionService.GeneratePassTemp(registerUser);
-                int create = await UserRepository.RegisterAsync(registerUser, passTemp);
-                result = create > 0 ? true : false;
+
+                var UserFinded = await UserRepository.FindUserAsync(registerUser);
+                if (UserFinded is { UserID: <= 0 })
+                {
+                    string passTemp = EncryptionService.GeneratePassTemp(registerUser);
+                    int create = await UserRepository.RegisterAsync(registerUser, passTemp);
+                    result = create > 0 ? 201 : 500;
+
+                }
+
 
             }
             catch (Exception e)
             {
-                Logger.Error(e, "LogIn an error occurred: {ErrorMessage}", e.Message);
+                Logger.Error(e, "RegitserUserAsync an error occurred: {ErrorMessage}", e.Message);
+                result = 500;
             }
 
             return result;

@@ -12,6 +12,7 @@ global using Personnel.Client.Shared.DTOs.LogIn;
 global using Personnel.Client.Shared.DTOs.LogOut;
 global using Personnel.Client.Shared.DTOs.Ticket;
 global using Personnel.Client.Shared.DTOs.Users;
+global using Personnel.Client.Shared.POCO.Users;
 global using Rubns.Core.Ports.ApiKey.Register;
 global using Rubns.Core.Ports.Login;
 global using Rubns.Core.Ports.SessionUser;
