@@ -1,6 +1,6 @@
-﻿namespace Rubns.Core.Ports.Login
+﻿namespace Rubns.Core.Ports.User
 {
-    public interface ILogInRepository
+    public interface IUserRepositoryDapper
     {
 
         Task<UserDTO> GetUserByEmailAsync(string email);

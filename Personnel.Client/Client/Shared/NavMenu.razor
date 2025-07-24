@@ -1,6 +1,8 @@
 ﻿<MudNavMenu>
     <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.ChromeReaderMode">Dashboard</MudNavLink>
-    <MudNavGroup Icon="@Icons.Material.Filled.Settings" Title="Administración">
-        <MudNavLink Href="/users" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Person2">Usuarios</MudNavLink>
-    </MudNavGroup>
+    <AuthorizeView Roles="Administrador, root">
+        <MudNavGroup Icon="@Icons.Material.Filled.Settings" Title="Administración">
+            <MudNavLink Href="/users" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Person2">Usuarios</MudNavLink>
+        </MudNavGroup>
+    </AuthorizeView>
 </MudNavMenu>

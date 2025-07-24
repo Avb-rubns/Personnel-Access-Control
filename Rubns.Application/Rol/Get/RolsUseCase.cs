@@ -1,9 +1,9 @@
 ﻿namespace Rubns.Application.Rol.Get
 {
-    internal class RolsUseCase(IRolRepository rolRepository,
+    internal class RolsUseCase(IRolRepositoryEFC rolRepository,
         ILogger logger) : IGetRolsPort
     {
-        private readonly IRolRepository RolRepository = rolRepository;
+        private readonly IRolRepositoryEFC RolRepository = rolRepository;
         private readonly ILogger Logger = logger;
 
         public async Task<List<RolDTO>> GetRolsAsync()

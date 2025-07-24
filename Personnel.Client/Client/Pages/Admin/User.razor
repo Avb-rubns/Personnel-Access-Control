@@ -100,3 +100,54 @@
         </ChildContent>
     </MudExpansionPanel>
 </MudExpansionPanels>
+<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table" Class="mt-2" CanCancelEdit="true"
+          @bind-SelectedItem="selectedItem1" IsEditRowSwitchingBlocked="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Usuarios registrados</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortLabel="Nombre" T="UserRegistedDTO">Nombre</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Apellido" T="UserRegistedDTO">Apellido</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Teléfono" T="UserRegistedDTO">Teléfono</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Correo" T="UserRegistedDTO">Correo</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Rol" T="UserRegistedDTO">Rol</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="Estatus" T="UserRegistedDTO">Estatus</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nombre">@context.UserName</MudTd>
+        <MudTd DataLabel="Apellido">@context.LastName</MudTd>
+        <MudTd DataLabel="Teléfono">@context.Phone</MudTd>
+        <MudTd DataLabel="Correo">@context.Email</MudTd>
+        <MudTd DataLabel="Rol">@context.RolID</MudTd>
+        <MudTd DataLabel="Estatus">@context.Status</MudTd>
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Nombre">
+            <MudTextField @bind-Value="context.UserName" Required />
+        </MudTd>
+        <MudTd DataLabel="Apellido">
+            <MudTextField @bind-Value="context.LastName" Required />
+        </MudTd>
+        <MudTd DataLabel="Teléfono">
+            <MudTextField @bind-Value="context.Phone" Required Min="3" />
+        </MudTd>
+        <MudTd DataLabel="Correo">
+            <MudTextField @bind-Value="context.Email" Required />
+        </MudTd>
+    </RowEditingTemplate>
+    <EditButtonContent Context="button">
+        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+    </EditButtonContent>
+    <NoRecordsContent>
+        <MudText>No se encontro el registro</MudText>
+    </NoRecordsContent>
+    <LoadingContent>
+        <MudText>cargando...</MudText>
+    </LoadingContent>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>

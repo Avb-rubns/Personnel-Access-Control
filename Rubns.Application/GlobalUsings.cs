@@ -1,6 +1,7 @@
 ﻿global using Microsoft.AspNetCore.Http;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
+global using Personnel.Client.Shared.Abstractions;
 global using Personnel.Client.Shared.DTOs.ApiKey;
 global using Personnel.Client.Shared.DTOs.LogIn;
 global using Personnel.Client.Shared.DTOs.QR;
@@ -16,6 +17,7 @@ global using Rubns.Core.Ports.Login;
 global using Rubns.Core.Ports.QR;
 global using Rubns.Core.Ports.Rol;
 global using Rubns.Core.Ports.SessionUser;
+global using Rubns.Core.Ports.Template;
 global using Rubns.Core.Ports.User;
 global using Rubns.Core.Services;
 global using Rubns.Core.Ticket;

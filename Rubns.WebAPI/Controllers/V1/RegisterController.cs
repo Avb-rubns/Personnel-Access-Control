@@ -17,7 +17,7 @@
         {
             if (ModelState.IsValid)
             {
-                var result = await PostUserPort.RegitserUserAsync(registerUser);
+                var result = await PostUserPort.RegisterUserAsync(registerUser);
 
                 return result switch
                 {

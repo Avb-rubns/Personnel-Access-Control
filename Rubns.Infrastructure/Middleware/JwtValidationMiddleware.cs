@@ -47,6 +47,8 @@
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false,
+                    RoleClaimType = ClaimTypes.Role,
+                    NameClaimType = ClaimTypes.Name,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };

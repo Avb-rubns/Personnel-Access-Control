@@ -57,7 +57,7 @@
 
             userInfo.Email = keyValuesPairs["email"].ToString();
             userInfo.FirstName = keyValuesPairs["firstName"].ToString();
-            userInfo.Status = Convert.ToInt32(keyValuesPairs["status"].ToString()) > 0;
+            userInfo.Status = Convert.ToBoolean(keyValuesPairs["status"].ToString());
             userInfo.ID = Convert.ToInt32(keyValuesPairs["userId"].ToString());
             userInfo.Expiration = Convert.ToInt64(keyValuesPairs["exp"].ToString());
             var aux_role = keyValuesPairs["role"].ToString().Replace("[\"", "").Replace("\"]", "");

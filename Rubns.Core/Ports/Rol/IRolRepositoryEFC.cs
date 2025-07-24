@@ -1,6 +1,6 @@
 ﻿namespace Rubns.Core.Ports.Rol
 {
-    public interface IRolRepository
+    public interface IRolRepositoryEFC
     {
         Task<List<RolDTO>> GetRolsAsync();
     }

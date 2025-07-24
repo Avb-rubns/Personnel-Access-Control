@@ -11,20 +11,27 @@
             <MudAppBar Elevation="1">
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="DrawerToggle" />
                 <MudSpacer />
-                <MudToolBar Class="d-none d-md-flex align-center">
-                    <MudDivider Vertical="true" FlexItem="true" Style="margin: 1rem 0 1rem 1.5rem;" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="@((e) => DarkModeAsync())" Color="Color.Inherit" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Logout" OnClick="@Logout" Color="Color.Inherit" />
-                </MudToolBar>
-                <MudMenu Class="d-md-none" Dense="true" Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit" >
-                    <MudMenuItem OnClick="@((e) => DarkModeAsync())" Variant="Variant.Text" Color="Color.Inherit" Style="align-items:center;" Icon="@Icons.Material.Filled.Brightness4" />
-                    <MudMenuItem OnClick="@Logout" Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" />
+                <MudMenu  Dense="true" Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit" >
+                    <ActivatorContent>
+                        <div class="d-flex align-center flex-column">
+                            <MudAvatar Color="Color.Secondary" Variant="Variant.Outlined" Size="Size.Small">@context.User.Identity?.Name[0]</MudAvatar><MudText Typo="Typo.caption">
+                                @string.Join(", ", context.User.Claims
+                                                            .Where(c => c.Type == ClaimTypes.Role || c.Type == "role")
+                                                            .Select(c => c.Value)).ToUpper()
+                            </MudText>
+                        </div>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem 
+                            OnClick="@((e) => DarkModeAsync())"
+                            Variant="Variant.Text" Color="Color.Inherit"
+                            Icon="@Icons.Material.Filled.Brightness4"
+                            Label="Cambiar tema"/>
+                        <MudMenuItem OnClick="@Logout" Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" Label="Salir" />
+                    </ChildContent>
                 </MudMenu>
             </MudAppBar>
             <MudDrawer @bind-Open="@_drawerOpen" Elevation="1" Breakpoint="Breakpoint.Sm" Variant="DrawerVariant.Responsive">
-                <MudDrawerHeader>
-                    <MudText Typo="Typo.h6"></MudText>
-                </MudDrawerHeader>
                 <NavMenu/>
             </MudDrawer>
             <MudMainContent>

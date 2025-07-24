@@ -2,11 +2,11 @@
 {
     internal sealed class CheckInUseCase : ICheckInPort<Response>
     {
-        ILogInRepository LogInRepository { get; }
+        IUserRepositoryDapper LogInRepository { get; }
         ILogger Logger { get; }
         ITicketRepository TicketRepository { get; }
 
-        public CheckInUseCase(ILogInRepository logInRepository, ITicketRepository ticketRepository, ILogger logger)
+        public CheckInUseCase(IUserRepositoryDapper logInRepository, ITicketRepository ticketRepository, ILogger logger)
         {
             LogInRepository = logInRepository;
             TicketRepository = ticketRepository;

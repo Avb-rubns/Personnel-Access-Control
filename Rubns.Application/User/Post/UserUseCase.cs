@@ -1,21 +1,34 @@
-﻿
+﻿using Personnel.Client.Shared.DTOs.Maileroo;
+using System.Net;
+using System.Net.Http.Json;
+
 namespace Rubns.Application.User.Post
 {
     internal sealed class UserUseCase : IPostUserPort
     {
-        IUserRepository UserRepository { get; }
+        IUserRepositoryEFC UserRepository { get; }
         IEncryptionService EncryptionService { get; }
         ILogger Logger { get; }
+        ITemplateRepositoryDapper TemplateRepositoryDapper { get; }
+        IProxyServer ProxyServer { get; }
+        IConfiguration Configuration { get; }
+
         public UserUseCase(IEncryptionService encryptionService,
-            IUserRepository userRepository,
-            ILogger logger)
+            IUserRepositoryEFC userRepository,
+            ILogger logger,
+            ITemplateRepositoryDapper templateRepositoryDapper,
+            IProxyServer proxyServer,
+            IConfiguration configuration)
         {
             UserRepository = userRepository;
             EncryptionService = encryptionService;
             Logger = logger;
+            TemplateRepositoryDapper = templateRepositoryDapper;
+            ProxyServer = proxyServer;
+            Configuration = configuration;
         }
 
-        public async Task<int> RegitserUserAsync(RegisterUserDTO registerUser)
+        public async Task<int> RegisterUserAsync(RegisterUserDTO registerUser)
         {
             int result = 400;
             try
@@ -26,7 +39,36 @@ namespace Rubns.Application.User.Post
                 {
                     string passTemp = EncryptionService.GeneratePassTemp(registerUser);
                     int create = await UserRepository.RegisterAsync(registerUser, passTemp);
-                    result = create > 0 ? 201 : 500;
+
+                    if (create > 0)
+                    {
+                        var mail = await TemplateRepositoryDapper.GetMailRegistedAsync(registerUser);
+                        RequestMailDTO requestMail = new()
+                        {
+                            To = registerUser.Email,
+                            From = Configuration.GetSection("Maileroo")["Email"],
+                            Html = mail,
+                            Subject = "Registro de usuario",
+
+                        };
+                        var IsSendMail = await ProxyServer.PostAsFormDataAsync<HttpResponseMessage, RequestMailDTO>(
+                                                "maileroo",
+                                                "send",
+                                                requestMail);
+                        switch (IsSendMail.StatusCode)
+                        {
+                            case HttpStatusCode.OK:
+                                return 201;
+                            default:
+                                var content = await IsSendMail.Content.ReadFromJsonAsync<ResponseMailDTO>();
+                                Logger.Error("Error Send MailRegister:{error}", content.Message);
+                                return 201;
+
+                        }
+
+
+                    }
+
 
                 }
 

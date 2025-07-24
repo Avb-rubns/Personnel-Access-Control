@@ -47,6 +47,12 @@ namespace Personnel.Client.Server
             }
 
             builder.Services.AddServices(builder.Configuration);
+            builder.Services.AddHttpClient("maileroo", c =>
+            {
+                c.BaseAddress = new Uri("https://smtp.maileroo.com");
+                c.DefaultRequestHeaders.Add("X-API-Key", builder.Configuration.GetSection("Maileroo")["ApiKey"]);
+            });
+
 
             return builder.Build();
         }

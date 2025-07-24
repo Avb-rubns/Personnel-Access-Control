@@ -2,6 +2,15 @@
 {
     public partial class Index
     {
-        bool _loader = true;
+        bool _loader = false;
+
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _loader = false;
+            }
+        }
     }
 }

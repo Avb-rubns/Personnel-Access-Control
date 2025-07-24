@@ -3,13 +3,13 @@
     internal class LogInUseCase : ILogInPort<AuthResponseDTO>
     {
         IEncryptionService EncryptionService { get; }
-        ILogInRepository LogInRepository { get; }
+        IUserRepositoryDapper LogInRepository { get; }
         ILogInService LogInService { get; }
         ILogger Logger { get; }
         private readonly IConfiguration Configuration;
         ISessionUserRepository SessionUserRepository { get; }
         public LogInUseCase(IEncryptionService encryptionService,
-            ILogInRepository logInRepository,
+            IUserRepositoryDapper logInRepository,
             ILogInService logInService,
             ILogger logger,
             ISessionUserRepository sessionUserRepository,

@@ -1,20 +1,4 @@
-USE[RUBNS_AUTH]
-GO
-INSERT INTO ROLS(Name,Value,LevelPermission,Status)
-VALUES('Root','root',0,1)
-GO
-INSERT INTO ROLS(Name,Value,LevelPermission,Status)
-VALUES('Admin','Administrador',1,1)
-GO
-INSERT INTO ROLS(Name,Value,LevelPermission,Status)
-VALUES('Edit','Editar',2,1)
-GO
-INSERT INTO ROLS(Name,Value,LevelPermission,Status)
-VALUES('User','usuario',2,1)
-GO
-INSERT INTO Users(Name,Email,Password,Phone,RolId,Status) VALUES('Rubén','rubns@test.com','41a59384d89b017f47a7edd702baee5696dbfad3b2aeaf1676df040e85c1d731','2211538571',1,1)
-GO
-INSERT INTO Templates(Name,Value) VALUES('RegisterMail','<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -47,11 +31,10 @@ INSERT INTO Templates(Name,Value) VALUES('RegisterMail','<!DOCTYPE html>
         <div style="background-color: #d6d6d6; border-radius: 6px;">
             <p>Tus accesos son los siguientes:</p>
             <p>Correo:@mail</p>
-            <p>Contraseña:@password</p>
+            <p>ContraseÃ±a:@password</p>
         </div>
 
     </div>
 </body>
 
-</html>')
-
+</html>

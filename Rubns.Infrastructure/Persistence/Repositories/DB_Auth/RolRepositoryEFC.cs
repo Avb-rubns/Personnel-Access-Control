@@ -1,6 +1,6 @@
 ﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
-    internal sealed class RolRepository(AuthDbContextEFC contextEFC) : IRolRepository
+    internal sealed class RolRepositoryEFC(AuthDbContextEFC contextEFC) : IRolRepositoryEFC
     {
         AuthDbContextEFC Context { get; } = contextEFC;
 

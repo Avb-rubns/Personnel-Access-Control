@@ -50,6 +50,19 @@ CREATE TABLE Rols
 )
 END
 GO
+IF NOT EXISTS (
+	SELECT 1
+	FROM INFORMATION_SCHEMA.TABLES
+	WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Templates')
+BEGIN
+CREATE TABLE Templates
+(
+	TemplateID INT IDENTITY (1,1) NOT NULL CONSTRAINT PK_TEMPLATE_ID PRIMARY KEY CLUSTERED (TemplateID)
+	,Name NVARCHAR(100) NOT NULL
+	,Value NVARCHAR(MAX) NOT NULL
+	,Registed DATETIME NOT NULL DEFAULT (SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)')
+)
+END
 IF OBJECT_ID(N'p_UserByEmail', N'P') IS NOT NULL
     DROP PROCEDURE p_UserByEmail;
 GO
@@ -221,3 +234,33 @@ BEGIN
 
 END
 
+GO
+IF OBJECT_ID(N'p_CreateMailRegister', N'P') IS NOT NULL
+    DROP PROCEDURE p_CreateMailRegister;
+GO
+CREATE PROCEDURE p_CreateMailRegister @Name NVARCHAR(20), @Mail NVARCHAR(20), @Password NVARCHAR(20)
+AS
+BEGIN
+	SET LANGUAGE 'SPANISH';
+    DECLARE @template NVARCHAR(MAX);
+	SELECT @template = Value FROM Templates WHERE Name = 'RegisterMail';
+
+	SELECT FinalResult
+	FROM (
+		SELECT REPLACE(@template, '@user', @Name) AS Step1) AS s1
+		CROSS APPLY (SELECT REPLACE(Step1, '@mail', @mail) AS Step2) AS s2
+		CROSS APPLY (SELECT REPLACE(Step2, '@password', @Password) AS Step3) AS s3
+		CROSS APPLY (
+			SELECT REPLACE(
+				Step3,
+				'@date',
+				CONCAT(
+					DAY(GETDATE()), ' de ',
+					DATENAME(MONTH, GETDATE()), ' de ',
+					YEAR(GETDATE()), ' a las ',
+					FORMAT(GETDATE(), 'hh:mm tt', 'es-MX')
+				)
+			) AS Step4
+		) AS s4
+		CROSS APPLY( SELECT REPLACE(step4, '@day',DATENAME(WEEKDAY, GETDATE())) as FinalResult) as s5;
+END

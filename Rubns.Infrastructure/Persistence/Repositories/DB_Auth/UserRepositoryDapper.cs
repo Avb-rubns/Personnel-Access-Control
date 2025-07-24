@@ -1,11 +1,10 @@
-﻿
-namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
-    internal class LogInRepository : ILogInRepository
+    internal class UserRepositoryDapper : IUserRepositoryDapper
     {
         IConfiguration Configuration { get; }
 
-        public LogInRepository(IConfiguration configuration)
+        public UserRepositoryDapper(IConfiguration configuration)
         {
             Configuration = configuration;
         }
