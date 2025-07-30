@@ -42,30 +42,34 @@ namespace Rubns.Application.User.Post
 
                     if (create > 0)
                     {
-                        var mail = await TemplateRepositoryDapper.GetMailRegistedAsync(registerUser);
-                        RequestMailDTO requestMail = new()
+                        if (Configuration["Enviroment"] == "prod")
                         {
-                            To = registerUser.Email,
-                            From = Configuration.GetSection("Maileroo")["Email"],
-                            Html = mail,
-                            Subject = "Registro de usuario",
+                            var mail = await TemplateRepositoryDapper.GetMailRegistedAsync(registerUser);
+                            RequestMailDTO requestMail = new()
+                            {
+                                To = registerUser.Email,
+                                From = Configuration.GetSection("Maileroo")["Email"],
+                                Html = mail,
+                                Subject = "Registro de usuario",
 
-                        };
-                        var IsSendMail = await ProxyServer.PostAsFormDataAsync<HttpResponseMessage, RequestMailDTO>(
-                                                "maileroo",
-                                                "send",
-                                                requestMail);
-                        switch (IsSendMail.StatusCode)
-                        {
-                            case HttpStatusCode.OK:
-                                return 201;
-                            default:
-                                var content = await IsSendMail.Content.ReadFromJsonAsync<ResponseMailDTO>();
-                                Logger.Error("Error Send MailRegister:{error}", content.Message);
-                                return 201;
+                            };
+                            var IsSendMail = await ProxyServer.PostAsFormDataAsync<HttpResponseMessage, RequestMailDTO>(
+                                                    "maileroo",
+                                                    "send",
+                                                    requestMail);
+                            switch (IsSendMail.StatusCode)
+                            {
+                                case HttpStatusCode.OK:
+                                    return 201;
+                                default:
+                                    var content = await IsSendMail.Content.ReadFromJsonAsync<ResponseMailDTO>();
+                                    Logger.Error("Error Send MailRegister:{error}", content.Message);
+                                    return 201;
+
+                            }
 
                         }
-
+                        return 201;
 
                     }
 

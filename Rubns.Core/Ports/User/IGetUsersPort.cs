@@ -2,6 +2,6 @@
 {
     public interface IGetUsersPort
     {
-        Task<List<UserRegistedDTO>> GetAllUsersforPageAsync(int? page, int? pageSize);
+        Task<TableUserDTO> GetAllUsersforPageAsync(string search, int? page, int? pageSize);
     }
 }

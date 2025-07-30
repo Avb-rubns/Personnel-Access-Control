@@ -10,14 +10,16 @@
         private readonly IPatchUserPort _patchUserPort = patchUserPort;
 
         [HttpGet("users")]
-        public async Task<IActionResult> GetUsersforPageAsync(int? page, int? pageSize)
+        public async Task<IActionResult> GetUsersforPageAsync(string search = "", int? page = 0, int? pageSize = 10)
         {
-            var data = await _getUsersPort.GetAllUsersforPageAsync(page, pageSize);
+            TableUserDTO tableUser = new();
 
-            switch (data.Count)
+            tableUser = await _getUsersPort.GetAllUsersforPageAsync(search, page, pageSize);
+
+            switch (tableUser.Total)
             {
                 case > 0:
-                    return Ok(data);
+                    return Ok(tableUser);
                 case 0:
                     return NoContent();
             }
@@ -33,7 +35,7 @@
             var result = await _patchUserPort.PatchUserAsync(id, patchDoc);
             switch (result)
             {
-                case > 1: return Ok();
+                case >= 1: return Ok();
                 case 0: return NoContent();
                 default: return BadRequest();
             }

@@ -51,8 +51,8 @@
         public async Task<List<UserRegistedDTO>> GetAllUsersforPageAsync(int? page, int? pagesize)
         {
             List<UserRegistedDTO> users = new();
-            int pageSize = (pagesize.Value > 0 ? pagesize.Value : 25);
-            int pageNumber = (page.Value > 0 ? page.Value : 1);
+            int pageSize = ((pagesize.HasValue && pagesize.Value > 0) ? pagesize.Value : 25);
+            int pageNumber = ((page.HasValue && page.Value > 0) ? page.Value : 1);
 
             var data = await Context.Users.OrderBy(s => s.UserID)
                             .Skip((pageNumber - 1) * pageSize)
@@ -123,6 +123,52 @@
             Context.Entry(updateUser).Property(u => u.RolID).IsModified = true;
 
             return await Context.SaveChangesAsync();
+
+
+        }
+
+        public async Task<int> TotalUsersAsync()
+        {
+            int total = 0;
+
+            total = await Context.Users.CountAsync();
+
+            return total;
+        }
+
+        public async Task<TableUserDTO> FindUserAsync(string search, int? page, int? pagesize)
+        {
+            TableUserDTO tableUsers = new();
+            var query = Context.Users.AsQueryable();
+            int pageSize = ((pagesize.HasValue && pagesize.Value > 0) ? pagesize.Value : 25);
+            int pageNumber = ((page.HasValue && page.Value > 0) ? page.Value : 1);
+
+            var user = await query.Where(s => s.Name.Contains(search)
+                            || s.LastName.Contains(search)
+                            || s.Phone.Contains(search))
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .OrderBy(s => s.UserID)
+                .ToListAsync();
+
+            if (user.Count() > 0)
+            {
+                tableUsers.RegisteredUsers = user.Select(s => new UserRegistedDTO()
+                {
+                    UserID = s.UserID,
+                    UserName = s.Name,
+                    LastName = s.LastName,
+                    Phone = s.Phone,
+                    Email = s.Email,
+                    RolID = s.RolID,
+                    Status = s.Status,
+                }).ToList();
+
+                tableUsers.Total = user.Count();
+            }
+
+            return tableUsers;
 
 
         }

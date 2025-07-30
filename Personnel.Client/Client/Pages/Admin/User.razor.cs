@@ -46,11 +46,12 @@
                 var response = await Proxy.PostAsync<Response, RegisterUserDTO>("api/v1/register", UserDTO);
                 switch (response.StatusCode)
                 {
-                    case System.Net.HttpStatusCode.Created:
+                    case HttpStatusCode.Created:
                         Snackbar.Add("Registro exitoso", Severity.Success);
                         UserDTO = new RegisterUserDTO();
+                        await table.ReloadServerData();
                         break;
-                    case System.Net.HttpStatusCode.BadRequest:
+                    case HttpStatusCode.BadRequest:
                         Snackbar.Add(response.Message, Severity.Error);
                         break;
                     default:
@@ -77,17 +78,17 @@
 
         private async Task<TableData<UserRegistedDTO>> ServerReload(TableState state, CancellationToken token)
         {
-            var data = await Proxy.GetAsync<ResponseData<List<UserRegistedDTO>>>($"api/v1/user/users?page={state.Page}&pageSize={state.PageSize}");
+            var data = await Proxy.GetAsync<ResponseData<TableUserDTO>>($"api/v1/user/users?page={state.Page}&pageSize={state.PageSize}&search={searchString}");
 
             switch (data.StatusCode)
             {
                 case System.Net.HttpStatusCode.OK:
-                    Users = data.Data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+                    Users = data.Data.RegisteredUsers.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
                     Users.ForEach(s =>
                     {
                         s.LevelPermission = RolDTOs.Single(f => f.RolID == s.RolID).LevelPermission;
                     });
-                    totalItems = data.Data.Count();
+                    totalItems = data.Data.Total;
                     break;
                 case HttpStatusCode.NoContent:
                     IsFinishPage = true;
@@ -131,7 +132,19 @@
         {
             var data = await Proxy.PatchAsync<Response, UserRegistedDTO>($"api/v1/user/{selectedItem1.UserID}", selectedItem1);
 
-            Console.WriteLine(selectedItem1.UserName);
+            switch (data.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    Snackbar.Add("Cambios realizado", Severity.Success);
+                    break;
+                case HttpStatusCode.BadRequest:
+                    Snackbar.Add("Error al realizar cambio, intente de nuevo", Severity.Error);
+                    ResetItemToOriginalValues(selectedItem1);
+                    break;
+                case HttpStatusCode.NoContent:
+                    Snackbar.Add("Error el usuario no existe", Severity.Error);
+                    break;
+            }
         }
     }
 }

@@ -9,6 +9,7 @@
         {
             try
             {
+                int resulrUpdate = 0;
                 var userFind = await _repositoryEFC.FindUserforIDAsync(userID);
 
                 if (userFind is { UserID: <= 0 })
@@ -27,7 +28,9 @@
                 userFind.Email = userFind.Email != user.Email ? user.Email : null;
                 userFind.RolID = userFind.RolID == userFind.RolID ? user.RolID : userFind.RolID;
                 userFind.Status = userFind.Status == userFind.Status ? user.Status : userFind.Status;
-                return await _repositoryEFC.UpdateUserforIDAsync(userFind);
+
+                resulrUpdate = await _repositoryEFC.UpdateUserforIDAsync(userFind);
+                return resulrUpdate;
 
 
             }

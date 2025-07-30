@@ -21,9 +21,9 @@
 
                 return result switch
                 {
-                    (int)System.Net.HttpStatusCode.Created => CreatedAtAction(nameof(RegisterUserAsync), new { user = "Usuario registrado" }, result),
-                    (int)System.Net.HttpStatusCode.BadRequest => BadRequest(new { message = "Datos incorrectos o usuario ya registrado" }),
-                    _ => StatusCode((int)result, new { message = "Error en el servicio" })
+                    (int)System.Net.HttpStatusCode.Created => Created(),
+                    (int)System.Net.HttpStatusCode.BadRequest => BadRequest(new { message = "Datos incorrectos o usuario ya registrado." }),
+                    _ => StatusCode((int)result, new { message = "Error en el servicio." })
                 };
 
             }
