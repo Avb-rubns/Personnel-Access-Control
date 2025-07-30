@@ -1,4 +1,8 @@
-﻿namespace Personnel.Client.Client.Services
+﻿using Personnel.Client.Shared.DTOs.Patch;
+using System.Reflection;
+using System.Text;
+
+namespace Personnel.Client.Client.Services
 {
     public class Proxy : IProxy
     {
@@ -229,6 +233,98 @@
                 try
                 {
                     simple = JsonSerializer.Deserialize<Response>(content, options) ?? new Response();
+                }
+                catch
+                {
+                    simple = new Response();
+                }
+                simple.StatusCode = status;
+                simple.Message ??= "Operación completada";
+                return (R)(object)simple;
+            }
+
+            throw new InvalidOperationException($"El tipo de retorno {returnType} no está soportado.");
+        }
+
+        public async Task<R> PatchAsync<R, S>(string url, S pathData) where R : IApiResponse
+        {
+
+            List<PatchDTO> patchs = new();
+            var props = typeof(S).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var prop in props)
+            {
+                patchs.Add(new PatchDTO()
+                {
+                    Op = "replace",
+                    Path = $"/{prop.Name}",
+                    Value = prop.GetValue(pathData)?.ToString() ?? string.Empty
+                });
+            }
+
+            var json = JsonSerializer.Serialize(patchs, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json-patch+json");
+
+            var response = await Client.PatchAsync(url, content);
+            var contentResponse = await response.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var status = response.StatusCode;
+
+            Type returnType = typeof(R);
+
+            // Manejar ResponseData<T>
+            if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(ResponseData<>))
+            {
+                var dataType = returnType.GetGenericArguments()[0];
+                var wrapperType = typeof(ResponseData<>).MakeGenericType(dataType);
+
+                using var doc = JsonDocument.Parse(contentResponse);
+                // Si viene el envoltorio completo
+                try
+                {
+                    if (doc.RootElement.ValueKind == JsonValueKind.Object && doc.RootElement.TryGetProperty("data", out _))
+                    {
+                        var deserialized = JsonSerializer.Deserialize(contentResponse, wrapperType, options);
+                        if (deserialized is R rWrapped)
+                        {
+                            rWrapped.StatusCode = status;
+                            return rWrapped;
+                        }
+                    }
+
+                    var rawData = JsonSerializer.Deserialize(doc.RootElement.GetRawText(), dataType, options);
+
+                    var instance = Activator.CreateInstance(wrapperType)!;
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.Data))?
+                               .SetValue(instance, rawData);
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.StatusCode))?
+                               .SetValue(instance, status);
+
+                    wrapperType.GetProperty(nameof(ResponseData<object>.Message))?
+                               .SetValue(instance, "Operación exitosa");
+                    return (R)instance;
+
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Error deserializando el contenido plano a tipo {dataType}: {ex.Message}\nContenido: {content}");
+                }
+
+            }
+
+            // Manejar Response simple
+            if (returnType == typeof(Response))
+            {
+                Response simple;
+                try
+                {
+                    simple = JsonSerializer.Deserialize<Response>(contentResponse, options) ?? new Response();
                 }
                 catch
                 {

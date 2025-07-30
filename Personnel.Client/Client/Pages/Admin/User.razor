@@ -1,153 +1,196 @@
 ﻿@page "/users"
 
+@if (_loading)
+{
+    <section style="height:85dvh;"  class="d-none d-md-flex  flex-column gap-2 align-center w-100">
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="95%" Height="15%" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="95%" Height="90%" />
+    </section>
+    <section style="height:85dvh;" class="d-md-none d-flex flex-column gap-2  align-center w-100">
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="95%" Height="10%" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="95%" Height="90%" />
+    </section>
+}
+else
+{
+    <MudExpansionPanels>
+        <MudExpansionPanel Expanded="true">
+            <TitleContent>
+                <MudText Typo="Typo.h5" Align="Align.Center">Registrar nuevo usuario</MudText>
+            </TitleContent>
+            <ChildContent>
+                <EditForm Model="UserDTO" OnValidSubmit="RegisterUserAsync">
+                    <DataAnnotationsValidator />
+                    <MudGrid>
+                        <MudItem xs="12" sm="3">
+                            <MudTextField @bind-Value="UserDTO.UserName"
+                                          Label="Nombre"
+                                          Required="true"
+                                          Variant="Variant.Text"
+                                          InputType="InputType.Text"
+                                          Margin="Margin.Dense"
+                                          For="@(() => UserDTO.UserName)" />
+                        </MudItem>
+                        <MudItem xs="12" sm="3">
+                            <MudTextField @bind-Value="UserDTO.LastName"
+                                          Required="true"
+                                          Label="Apellido"
+                                          Variant="Variant.Text"
+                                          InputType="InputType.Text"
+                                          Margin="Margin.Dense"
+                                          For="@(() => UserDTO.LastName)" />
+                        </MudItem>
+                        <MudItem xs="12" sm="3">
+                            <MudTextField @bind-Value="UserDTO.Email"
+                                          Required="true"
+                                          Label="Correo"
+                                          InputType="InputType.Email"
+                                          Variant="Variant.Text"
+                                          Margin="Margin.Dense"
+                                          For="@(() => UserDTO.Email)" />
+                        </MudItem>
+                        <MudItem xs="12" sm="3">
+                            <MudTextField @bind-Value="UserDTO.Phone"
+                                          Label="Teléfono"
+                                          Variant="Variant.Text"
+                                          Required="true"
+                                          InputType="InputType.Telephone"
+                                          onKeypress=" if (!(event.charCode >= 48 && event.charCode <= 57)) event.preventDefault()"
+                                          Margin="Margin.Dense"
+                                          For="@(() => UserDTO.Phone)" />
+                        </MudItem>
+                        <MudItem xs="12" sm="3">
+                            <MudSelect T="int"
+                                       Label="Rol"
+                                       Required="true"
+                                       @bind-Value="UserDTO.RolID"
+                                       For="@(() => UserDTO.RolID)">
+                                @foreach (var v in RolDTOs)
+                                {
+                                    <MudSelectItem Value="v.RolID">
+                                        @v.Name
+                                    </MudSelectItem>
 
-<MudExpansionPanels>
-    <MudExpansionPanel Expanded="true">
-        <TitleContent>
-            <MudText Typo="Typo.h5" Align="Align.Center">Registrar nuevo usuario</MudText>
-        </TitleContent>
-        <ChildContent>
-            <EditForm Model="UserDTO" OnValidSubmit="RegisterUserAsync">
-            <DataAnnotationsValidator/>
-            <MudGrid>
-                <MudItem xs="12" sm="3">
-                    <MudTextField 
-                        @bind-Value="UserDTO.UserName"
-                        Label="Nombre"
-                        Required="true"
-                        Variant="Variant.Text"
-                        InputType="InputType.Text"
-                        Margin="Margin.Dense"
-                        For="@(() => UserDTO.UserName )" />
-                </MudItem>
-                <MudItem xs="12" sm="3">
-                    <MudTextField @bind-Value="UserDTO.LastName"
-                        Required="true"
-                        Label="Apellido"
-                        Variant="Variant.Text"
-                        InputType="InputType.Text"
-                        Margin="Margin.Dense"
-                        For="@(() => UserDTO.LastName)" />
-                </MudItem>
-                <MudItem xs="12" sm="3">
-                    <MudTextField @bind-Value="UserDTO.Email"
-                        Required="true"
-                        Label="Correo"
-                        InputType="InputType.Email"
-                        Variant="Variant.Text"
-                        Margin="Margin.Dense"
-                        For="@(() => UserDTO.Email)" />
-                </MudItem>
-                <MudItem xs="12" sm="3">
-                    <MudTextField @bind-Value="UserDTO.Phone"
-                        Label="Teléfono"
-                        Variant="Variant.Text"
-                        Required = "true"
-                        InputType="InputType.Telephone"
-                        onKeypress=" if (!(event.charCode >= 48 && event.charCode <= 57)) event.preventDefault()"
-                        Margin="Margin.Dense"
-                        For="@(() => UserDTO.Phone)" />
-                </MudItem>
-                <MudItem xs="12" sm="3">
-                    <MudSelect T="int"
-                                Label="Rol"
-                                Required="true"
-                                @bind-Value="UserDTO.RolID"
-                                For="@(() => UserDTO.RolID)">
-                            @foreach (var v in RolDTOs)
-                            {
-                                <MudSelectItem Value="v.RolID">
-                                    @v.Name
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12" sm="3">
+                            <MudSelect T="bool"
+                                       Label="Estatus"
+                                       Required="true"
+                                       @bind-Value="UserDTO.Status"
+                                       For="@(() => UserDTO.Status)">
+                                <MudSelectItem Value="false">
+                                    Desactivado
                                 </MudSelectItem>
-                                
-                            }
-                    </MudSelect>
-                </MudItem>
-                <MudItem xs="12" sm="3">
-                    <MudSelect T="bool"
-                            Label="Estatus"
-                            Required="true"
-                            @bind-Value="UserDTO.Status"
-                            For="@(() => UserDTO.Status)">
-                            <MudSelectItem Value="false">
-                                Desactivado
-                            </MudSelectItem>
-                            <MudSelectItem Value="true">
-                                Activo
-                            </MudSelectItem>
-                    </MudSelect>
-                </MudItem>
-                <MudItem xs="12" sm="12" Class="d-flex justify-content-end g-4">
-                    <MudButton Disabled="@_processing" Class="mr-3" Color="Color.Secondary"
-                                   Variant="Variant.Filled" OnClick="ClearFormUser">
-                            <MudText>Limpiar</MudText>
-                    </MudButton>
-                    <MudButton Disabled="@_processing" Color="Color.Primary"
-                                Variant="Variant.Filled" ButtonType="ButtonType.Submit" >
-                        @if (_processing)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                            <MudText Class="ms-2">Registrando</MudText>
-                        }
-                        else
-                        {
-                            <MudText>Registrar</MudText>
-                        }
-                    </MudButton>
-                </MudItem>
-            </MudGrid>
-        </EditForm>
-        </ChildContent>
-    </MudExpansionPanel>
-</MudExpansionPanels>
-<MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table" Class="mt-2" CanCancelEdit="true"
-          @bind-SelectedItem="selectedItem1" IsEditRowSwitchingBlocked="true">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">Usuarios registrados</MudText>
-        <MudSpacer />
-        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <HeaderContent>
-        <MudTh><MudTableSortLabel SortLabel="Nombre" T="UserRegistedDTO">Nombre</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Apellido" T="UserRegistedDTO">Apellido</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Teléfono" T="UserRegistedDTO">Teléfono</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Correo" T="UserRegistedDTO">Correo</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Rol" T="UserRegistedDTO">Rol</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortLabel="Estatus" T="UserRegistedDTO">Estatus</MudTableSortLabel></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Nombre">@context.UserName</MudTd>
-        <MudTd DataLabel="Apellido">@context.LastName</MudTd>
-        <MudTd DataLabel="Teléfono">@context.Phone</MudTd>
-        <MudTd DataLabel="Correo">@context.Email</MudTd>
-        <MudTd DataLabel="Rol">@context.RolID</MudTd>
-        <MudTd DataLabel="Estatus">@context.Status</MudTd>
-    </RowTemplate>
-    <RowEditingTemplate>
-        <MudTd DataLabel="Nombre">
-            <MudTextField @bind-Value="context.UserName" Required />
-        </MudTd>
-        <MudTd DataLabel="Apellido">
-            <MudTextField @bind-Value="context.LastName" Required />
-        </MudTd>
-        <MudTd DataLabel="Teléfono">
-            <MudTextField @bind-Value="context.Phone" Required Min="3" />
-        </MudTd>
-        <MudTd DataLabel="Correo">
-            <MudTextField @bind-Value="context.Email" Required />
-        </MudTd>
-    </RowEditingTemplate>
-    <EditButtonContent Context="button">
-        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
-    </EditButtonContent>
-    <NoRecordsContent>
-        <MudText>No se encontro el registro</MudText>
-    </NoRecordsContent>
-    <LoadingContent>
-        <MudText>cargando...</MudText>
-    </LoadingContent>
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
-</MudTable>
+                                <MudSelectItem Value="true">
+                                    Activo
+                                </MudSelectItem>
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12" sm="12" Class="d-flex justify-content-end g-4">
+                            <MudButton Disabled="@_processing" Class="mr-3" Color="Color.Secondary"
+                                       Variant="Variant.Filled" OnClick="ClearFormUser">
+                                <MudText>Limpiar</MudText>
+                            </MudButton>
+                            <MudButton Disabled="@_processing" Color="Color.Primary"
+                                       Variant="Variant.Filled" ButtonType="ButtonType.Submit">
+                                @if (_processing)
+                                {
+                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                    <MudText Class="ms-2">Registrando</MudText>
+                                }
+                                else
+                                {
+                                    <MudText>Registrar</MudText>
+                                }
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </EditForm>
+            </ChildContent>
+        </MudExpansionPanel>
+    </MudExpansionPanels>
+    <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table" Class="mt-2" CanCancelEdit="true"
+              @bind-SelectedItem="selectedItem1" IsEditRowSwitchingBlocked="true" RowEditCancel="ResetItemToOriginalValues"
+              RowEditPreview="BackupItem" OnCommitEditClick="SendEditUserAsync">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Usuarios registrados</MudText>
+            <MudSpacer />
+            <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortLabel="Nombre" T="UserRegistedDTO">Nombre</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="Apellido" T="UserRegistedDTO">Apellido</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="Teléfono" T="UserRegistedDTO">Teléfono</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="Correo" T="UserRegistedDTO">Correo</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="Rol" T="UserRegistedDTO">Rol</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortLabel="Estatus" T="UserRegistedDTO">Estatus</MudTableSortLabel></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nombre">@context.UserName</MudTd>
+            <MudTd DataLabel="Apellido">@context.LastName</MudTd>
+            <MudTd DataLabel="Teléfono">@context.Phone</MudTd>
+            <MudTd DataLabel="Correo">@context.Email</MudTd>
+            <MudTd DataLabel="Rol">@(RolDTOs.Single(f => f.RolID == context.RolID).Value)</MudTd>
+            <MudTd DataLabel="Estatus">@(context.Status ? "Activo" : "Desactivado")</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Nombre">
+                <MudTextField @bind-Value="context.UserName" Required />
+            </MudTd>
+            <MudTd DataLabel="Apellido">
+                <MudTextField @bind-Value="context.LastName" Required />
+            </MudTd>
+            <MudTd DataLabel="Teléfono">
+                <MudTextField @bind-Value="context.Phone" Required Min="3" />
+            </MudTd>
+            <MudTd DataLabel="Correo">
+                <MudTextField @bind-Value="context.Email" Required />
+            </MudTd>
+            <MudTd DataLabel="Rol">
+                <MudSelect T="int"
+                           Label="Rol"
+                           Required="true"
+                           @bind-Value="context.RolID"
+                           For="@(() => context.RolID)">
+                    @foreach (var v in RolDTOs)
+                    {
+                        <MudSelectItem Value="v.RolID">
+                            @v.Value
+                        </MudSelectItem>
+
+                    }
+                </MudSelect>
+            </MudTd>
+            <MudTd DataLabel="Estatus">
+                <MudSelect T="bool"
+                           Label="Estatus"
+                           Required="true"
+                           @bind-Value="context.Status"
+                           For="@(() => context.Status)">
+                    <MudSelectItem Value="false">
+                        Desactivado
+                    </MudSelectItem>
+                    <MudSelectItem Value="true">
+                        Activo
+                    </MudSelectItem>
+                </MudSelect>
+            </MudTd>
+        </RowEditingTemplate>
+        <EditButtonContent Context="button">
+            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+        </EditButtonContent>
+        <NoRecordsContent>
+            <MudText>No se encontro el registro</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>cargando...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+}
+

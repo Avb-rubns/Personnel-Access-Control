@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.ResponseCompression;
-using System.IO.Compression;
-
-namespace Personnel.Client.Server
+﻿namespace Personnel.Client.Server
 {
     internal static class ServiceConfigurations
     {
@@ -9,7 +6,8 @@ namespace Personnel.Client.Server
         {
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                    .AddNewtonsoftJson();
             builder.Services.AddOpenApi();
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();

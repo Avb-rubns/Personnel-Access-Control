@@ -1,7 +1,4 @@
-﻿using Rubns.Infrastructure.Middleware;
-using Scalar.AspNetCore;
-
-namespace Personnel.Client.Server
+﻿namespace Personnel.Client.Server
 {
     internal static class MiddlewaresConfigurations
     {

@@ -1,5 +1,6 @@
 ﻿global using Asp.Versioning;
 global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.JsonPatch;
 global using Microsoft.AspNetCore.Mvc;
 global using Personnel.Client.Shared.DTOs.ApiKey;
 global using Personnel.Client.Shared.DTOs.LogIn;

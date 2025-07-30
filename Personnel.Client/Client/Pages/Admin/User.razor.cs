@@ -7,16 +7,20 @@
 
         List<RolDTO> RolDTOs { get; set; } = new();
         RegisterUserDTO UserDTO { get; set; } = new();
-
         List<UserRegistedDTO> Users { get; set; }
+        private MudTable<UserRegistedDTO> table { get; set; } = new();
+        private IEnumerable<UserRegistedDTO> pagedData;
+        private UserRegistedDTO selectedItem1 = null;
+        private UserRegistedDTO elementBeforeEdit = new();
+
+        bool _loading = true;
         bool _processing = false;
         int page = 1;
         bool IsFinishPage = false;
         private int totalItems;
         private string searchString = null;
-        private MudTable<UserRegistedDTO> table { get; set; } = new();
-        private IEnumerable<UserRegistedDTO> pagedData;
-        private UserRegistedDTO selectedItem1 = null;
+
+
         protected override async Task OnInitializedAsync()
         {
             var response = await Proxy.GetAsync<ResponseData<List<RolDTO>>>("api/v1/rols");
@@ -28,6 +32,8 @@
                     break;
 
             }
+
+            _loading = false;
 
         }
 
@@ -77,6 +83,10 @@
             {
                 case System.Net.HttpStatusCode.OK:
                     Users = data.Data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
+                    Users.ForEach(s =>
+                    {
+                        s.LevelPermission = RolDTOs.Single(f => f.RolID == s.RolID).LevelPermission;
+                    });
                     totalItems = data.Data.Count();
                     break;
                 case HttpStatusCode.NoContent:
@@ -93,5 +103,35 @@
             table.ReloadServerData();
         }
 
+        private void BackupItem(object element)
+        {
+            elementBeforeEdit = new()
+            {
+                UserName = ((UserRegistedDTO)element).UserName,
+                LastName = ((UserRegistedDTO)element).LastName,
+                Phone = ((UserRegistedDTO)element).Phone,
+                Email = ((UserRegistedDTO)element).Email,
+                RolID = ((UserRegistedDTO)element).RolID,
+                Status = ((UserRegistedDTO)element).Status,
+                LevelPermission = ((UserRegistedDTO)element).LevelPermission,
+            };
+        }
+
+
+        private void ResetItemToOriginalValues(object element)
+        {
+            ((UserRegistedDTO)element).UserName = elementBeforeEdit.UserName;
+            ((UserRegistedDTO)element).LastName = elementBeforeEdit.LastName;
+            ((UserRegistedDTO)element).Phone = elementBeforeEdit.Phone;
+            ((UserRegistedDTO)element).Email = elementBeforeEdit.Email;
+            ((UserRegistedDTO)element).RolID = elementBeforeEdit.RolID;
+            ((UserRegistedDTO)element).Status = elementBeforeEdit.Status;
+        }
+        private async Task SendEditUserAsync()
+        {
+            var data = await Proxy.PatchAsync<Response, UserRegistedDTO>($"api/v1/user/{selectedItem1.UserID}", selectedItem1);
+
+            Console.WriteLine(selectedItem1.UserName);
+        }
     }
 }

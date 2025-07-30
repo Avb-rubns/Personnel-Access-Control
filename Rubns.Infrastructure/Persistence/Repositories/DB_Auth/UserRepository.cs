@@ -80,5 +80,51 @@
 
             return users;
         }
+
+        public async Task<UserDTO> FindUserforIDAsync(int ID)
+        {
+            UserDTO user = new();
+            var userFinded = await Context.Users.Where(s => s.UserID == ID)
+                                    .AsNoTracking()
+                                    .SingleOrDefaultAsync();
+
+            if (userFinded is { UserID: > 0 })
+            {
+                user.UserID = userFinded.UserID;
+                user.UserName = userFinded.Name;
+                user.Phone = userFinded.Phone;
+                user.Email = userFinded.Email;
+                user.Status = userFinded.Status;
+                user.LastName = userFinded.LastName;
+                user.RolID = userFinded.RolID;
+            }
+
+            return user;
+        }
+
+        public async Task<int> UpdateUserforIDAsync(UserDTO user)
+        {
+            User updateUser = new()
+            {
+                UserID = user.UserID,
+                Name = user.UserName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Phone = user.Phone,
+                Status = user.Status,
+                RolID = user.RolID
+            };
+
+            Context.Entry(updateUser).Property(u => u.Name).IsModified = !string.IsNullOrEmpty(user.UserName);
+            Context.Entry(updateUser).Property(u => u.LastName).IsModified = !string.IsNullOrEmpty(user.LastName);
+            Context.Entry(updateUser).Property(u => u.Email).IsModified = !string.IsNullOrEmpty(user.Email);
+            Context.Entry(updateUser).Property(u => u.Phone).IsModified = !string.IsNullOrEmpty(user.Phone);
+            Context.Entry(updateUser).Property(u => u.Status).IsModified = true;
+            Context.Entry(updateUser).Property(u => u.RolID).IsModified = true;
+
+            return await Context.SaveChangesAsync();
+
+
+        }
     }
 }
