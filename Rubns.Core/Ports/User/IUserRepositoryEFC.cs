@@ -7,6 +7,7 @@
         Task<TableUserDTO> FindUserAsync(string search, int? page, int? pageSize);
         Task<int> TotalUsersAsync();
         Task<UserDTO> FindUserforIDAsync(int ID);
+        Task<UserDTO> FindUserforEmailAsync(string email);
         Task<int> UpdateUserforIDAsync(UserDTO user);
         Task<List<UserRegistedDTO>> GetAllUsersforPageAsync(int? page, int? pageSize);
     }

@@ -264,3 +264,36 @@ BEGIN
 		) AS s4
 		CROSS APPLY( SELECT REPLACE(step4, '@day',DATENAME(WEEKDAY, GETDATE())) as FinalResult) as s5;
 END
+GO
+IF NOT EXISTS (
+	SELECT 1
+	FROM INFORMATION_SCHEMA.TABLES
+	WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'ResetPasswords')
+BEGIN
+CREATE TABLE ResetPasswords
+(
+	ResetPasswordID INT IDENTITY (1,1) NOT NULL CONSTRAINT PK_RESETPASSWORD_ID PRIMARY KEY CLUSTERED (ResetPasswordID)
+	,UserID INT 
+	,Token NVARCHAR(100)
+	,Registed DATETIME NOT NULL DEFAULT (SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)')
+	CONSTRAINT FK_USERS FOREIGN KEY (UserID)
+    REFERENCES Users(UserID)
+)
+END
+GO
+IF OBJECT_ID(N'p_CreateMailForgotPassword', N'P') IS NOT NULL
+    DROP PROCEDURE p_CreateMailForgotPassword;
+GO
+CREATE PROCEDURE p_CreateMailForgotPassword @Name NVARCHAR(20), @Link NVARCHAR(256)
+AS
+BEGIN
+	SET LANGUAGE 'SPANISH';
+    DECLARE @template NVARCHAR(MAX);
+	SELECT @template = Value FROM Templates WHERE Name = 'ForgotPasswordMail';
+
+	SELECT FinalResult
+	FROM (
+		SELECT REPLACE(@template, '@user', @Name) AS Step1) AS s1
+		CROSS APPLY (SELECT REPLACE(Step1, '@link', @Link) AS FinalResult) AS s2
+
+END

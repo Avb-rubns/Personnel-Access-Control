@@ -34,11 +34,9 @@
             <MudDrawer @bind-Open="@_drawerOpen" Elevation="1" Breakpoint="Breakpoint.Sm" Variant="DrawerVariant.Responsive">
                 <NavMenu/>
             </MudDrawer>
-            <MudMainContent>
-                <Space>
+                <MudMainContent>
                     @Body
-                </Space>
-            </MudMainContent>
+                </MudMainContent>
         </MudLayout>
     </Authorized>
     <NotAuthorized>

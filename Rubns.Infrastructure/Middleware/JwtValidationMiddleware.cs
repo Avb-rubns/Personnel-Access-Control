@@ -15,7 +15,12 @@
         {
             var path = context.Request.Path.Value?.ToLower();
 
-            if (path == "/api/v1/login" || path == "/api/v1/auth/refresh" || path == "/api/v1/ticket/check-in")
+            if (path == "/api/v1/login"
+                || path == "/api/v1/auth/refresh"
+                || path == "/api/v1/ticket/check-in"
+                || path == "/api/v1/auth/forgot-password"
+                || path == "/api/v1/auth/reset-password"
+                || path == "/api/v1/auth/reset-password/validate")
             {
                 await _next(context);
                 return;

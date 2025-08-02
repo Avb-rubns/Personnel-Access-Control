@@ -42,7 +42,7 @@ namespace Rubns.Application.User.Post
 
                     if (create > 0)
                     {
-                        if (Configuration["Enviroment"] == "prod")
+                        if (true)
                         {
                             var mail = await TemplateRepositoryDapper.GetMailRegistedAsync(registerUser);
                             RequestMailDTO requestMail = new()

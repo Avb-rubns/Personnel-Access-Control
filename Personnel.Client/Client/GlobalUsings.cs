@@ -11,6 +11,7 @@ global using Personnel.Client.Client;
 global using Personnel.Client.Client.Resources;
 global using Personnel.Client.Client.Services;
 global using Personnel.Client.Shared.Abstractions;
+global using Personnel.Client.Shared.DTOs.Auth;
 global using Personnel.Client.Shared.DTOs.LogIn;
 global using Personnel.Client.Shared.DTOs.Rol;
 global using Personnel.Client.Shared.DTOs.Ticket;

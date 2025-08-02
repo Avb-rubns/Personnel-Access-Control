@@ -31,7 +31,9 @@
         public async Task<UserDTO> FindUserAsync(RegisterUserDTO registerUser)
         {
             UserDTO user = new();
-            var userFinded = await Context.Users.Where(s => s.Email == registerUser.Email || s.Phone == registerUser.Phone)
+            var userFinded = await Context.Users.Where(s =>
+                                    s.Email == registerUser.Email
+                                    || s.Phone == registerUser.Phone)
                                     .AsNoTracking()
                                     .SingleOrDefaultAsync();
 
@@ -171,6 +173,27 @@
             return tableUsers;
 
 
+        }
+
+        public async Task<UserDTO> FindUserforEmailAsync(string email)
+        {
+            UserDTO user = new();
+            var userFinded = await Context.Users.Where(s =>
+                                    s.Email == email)
+                                    .AsNoTracking()
+                                    .SingleOrDefaultAsync();
+
+            if (userFinded is { UserID: > 0 })
+            {
+                user.UserID = userFinded.UserID;
+                user.UserName = userFinded.Name;
+                user.Phone = userFinded.Phone;
+                user.Email = userFinded.Email;
+                user.Status = userFinded.Status;
+                user.LastName = userFinded.LastName;
+            }
+
+            return user;
         }
     }
 }

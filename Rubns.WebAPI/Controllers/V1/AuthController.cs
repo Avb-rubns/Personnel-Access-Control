@@ -9,15 +9,24 @@
 
         private readonly IRefreshJWTPort<RefreshTokenResponseDTO> RefreshJWT;
         private readonly IUserInformationPort UserInformationPort;
-        ILogOutPort LogOutPort { get; }
+        private readonly IForgotPassword ForgotPasswordPort;
+        private readonly IResetPasswordPort ResetPasswordPort;
+        private readonly IResetPasswordValidatePort ResetPasswordValidatePort;
+        private ILogOutPort LogOutPort { get; }
 
         public AuthController(IRefreshJWTPort<RefreshTokenResponseDTO> refreshJWTPort
             , IUserInformationPort userInformationPort
-            , ILogOutPort logOut)
+            , ILogOutPort logOut
+            , IForgotPassword forgotPassword
+            , IResetPasswordPort resetPasswordPort
+            , IResetPasswordValidatePort resetPasswordValidatePort)
         {
             RefreshJWT = refreshJWTPort;
             UserInformationPort = userInformationPort;
             LogOutPort = logOut;
+            ForgotPasswordPort = forgotPassword;
+            ResetPasswordPort = resetPasswordPort;
+            ResetPasswordValidatePort = resetPasswordValidatePort;
         }
 
 
@@ -113,6 +122,31 @@
                     return Ok(new { message = "Sesión cerrada." });
                 }
             }
+
+            return BadRequest();
+        }
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO request)
+        {
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            await ForgotPasswordPort.GeneratePasswordResetTokenAsync(request, baseUrl);
+
+            return Ok(new { message = "Se ha enviado un correo con instrucciones." });
+        }
+        [HttpPut("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO request)
+        {
+            var result = await ResetPasswordPort.ResetPasswordAsync(request);
+
+            return Ok(new { message = "Contraseña restablecida correctamente" });
+        }
+        [HttpGet("reset-password/validate")]
+        public async Task<IActionResult> ValidateTokenResetPassword(string token)
+        {
+
+            var result = await ResetPasswordValidatePort.ValidateTokenPasswordAsync(token);
+            if (result)
+                return Ok();
 
             return BadRequest();
         }

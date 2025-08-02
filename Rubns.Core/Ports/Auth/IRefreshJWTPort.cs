@@ -1,4 +1,4 @@
-﻿namespace Rubns.Core.Ports.Login
+﻿namespace Rubns.Core.Ports.Auth
 {
     public interface IRefreshJWTPort<T>
     {

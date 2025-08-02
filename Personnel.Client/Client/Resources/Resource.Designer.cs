@@ -61,11 +61,110 @@ namespace Personnel.Client.Client.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Continuar.
+        /// </summary>
+        public static string BtnContinum {
+            get {
+                return ResourceManager.GetString("BtnContinum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Enviar.
+        /// </summary>
+        public static string BtnSend {
+            get {
+                return ResourceManager.GetString("BtnSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Enviando.
+        /// </summary>
+        public static string BtnSending {
+            get {
+                return ResourceManager.GetString("BtnSending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Validando.
+        /// </summary>
+        public static string BtnValiding {
+            get {
+                return ResourceManager.GetString("BtnValiding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¡Gracias! Si coincide con una dirección de correo electrónico que tenemos registrada, entonces te hemos enviado un correo con instrucciones adicionales para que puedas restablecer la contraseña..
+        /// </summary>
+        public static string ComplitSendForget {
+            get {
+                return ResourceManager.GetString("ComplitSendForget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Revisa tu correo electrónico.
+        /// </summary>
+        public static string ForgotCheckEmail {
+            get {
+                return ResourceManager.GetString("ForgotCheckEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¿Se te olvido tu contraseña?.
+        /// </summary>
+        public static string ForgotPasswordTitle {
+            get {
+                return ResourceManager.GetString("ForgotPasswordTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Iniciar sesion.
         /// </summary>
         public static string LogInTitle {
             get {
                 return ResourceManager.GetString("LogInTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Correo electrónico.
+        /// </summary>
+        public static string MailText {
+            get {
+                return ResourceManager.GetString("MailText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Contraseña.
+        /// </summary>
+        public static string PasswordTitle {
+            get {
+                return ResourceManager.GetString("PasswordTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Cambia tu contraseña actual de Ualá.
+        /// </summary>
+        public static string ResetPasswordtitle {
+            get {
+                return ResourceManager.GetString("ResetPasswordtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Regresar al inicio de sesión .
+        /// </summary>
+        public static string ReturnLgoInTitle {
+            get {
+                return ResourceManager.GetString("ReturnLgoInTitle", resourceCulture);
             }
         }
     }

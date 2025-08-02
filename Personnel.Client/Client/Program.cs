@@ -11,6 +11,7 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.TryAddScoped<AuthenticationStateProvider, AuthService>();
 builder.Services.TryAddScoped<AuthService>();
+builder.Services.TryAddScoped<PublicRoutesService>();
 builder.Services.TryAddScoped<IProxy, Proxy>();
 
 await builder.Build().RunAsync();

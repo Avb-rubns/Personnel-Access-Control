@@ -1,14 +1,25 @@
 ﻿namespace Personnel.Client.Client.Services
 {
     public class AuthService(ISnackbar snackbar
-        , HttpClient httpClient) : AuthenticationStateProvider
+        , HttpClient httpClient
+        , NavigationManager navigation
+        , PublicRoutesService publicRoutesService) : AuthenticationStateProvider
     {
         public ISnackbar Snackbar { get; set; } = snackbar;
         private readonly HttpClient HttpClient = httpClient;
+        private readonly NavigationManager _navigation = navigation;
+        private readonly PublicRoutesService _publicRoutes = publicRoutesService;
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             try
             {
+                var currentUri = new Uri(_navigation.Uri).PathAndQuery;
+
+                if (_publicRoutes.IsPublicRoute(currentUri))
+                {
+                    var anonymous = new ClaimsPrincipal(new ClaimsIdentity());
+                    return new AuthenticationState(anonymous);
+                }
 
                 var httpResponse = await HttpClient.GetAsync("api/v1/auth/me");
 

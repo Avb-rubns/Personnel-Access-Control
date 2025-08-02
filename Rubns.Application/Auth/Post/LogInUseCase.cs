@@ -1,4 +1,4 @@
-﻿namespace Rubns.Application.Login.Post
+﻿namespace Rubns.Application.Auth.Post
 {
     internal class LogInUseCase : ILogInPort<AuthResponseDTO>
     {
