@@ -27,6 +27,7 @@ namespace Rubns.Application.Auth.Post
                 var user = await _userRepositoryEFC.FindUserforEmailAsync(request.Email);
                 if (user is { UserID: <= 0 })
                 {
+                    _logger.Information("El correo no existe:{email}", request.Email);
                     return false;
                 }
 

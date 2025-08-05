@@ -142,6 +142,15 @@ namespace Personnel.Client.Client.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Nueva contraseña.
+        /// </summary>
+        public static string NewPasswordTitle {
+            get {
+                return ResourceManager.GetString("NewPasswordTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Contraseña.
         /// </summary>
         public static string PasswordTitle {
@@ -151,11 +160,146 @@ namespace Personnel.Client.Client.Resources {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Cambia tu contraseña actual de Ualá.
+        ///   Busca una cadena traducida similar a Confirmar contraseña.
+        /// </summary>
+        public static string PasswordTitleConfirme {
+            get {
+                return ResourceManager.GetString("PasswordTitleConfirme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Por favor, solicita un nuevo enlace para restablecer tu contraseña..
+        /// </summary>
+        public static string ResetPassowrMessage {
+            get {
+                return ResourceManager.GetString("ResetPassowrMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Una letra minúscula (a-z).
+        /// </summary>
+        public static string ResetPasswordLowercaseReq {
+            get {
+                return ResourceManager.GetString("ResetPasswordLowercaseReq", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Una letra mayúscula (A-Z).
+        /// </summary>
+        public static string ResetPasswordMay {
+            get {
+                return ResourceManager.GetString("ResetPasswordMay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Mínimo 8 caracteres.
+        /// </summary>
+        public static string ResetPasswordMinLength {
+            get {
+                return ResourceManager.GetString("ResetPasswordMinLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El enlace que utilizaste para restablecer tu contraseña ya no es válido. Por motivos de seguridad, los enlaces tienen un tiempo limitado de uso..
+        /// </summary>
+        public static string ResetPasswordNotValidtoken {
+            get {
+                return ResourceManager.GetString("ResetPasswordNotValidtoken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Un número (0-9).
+        /// </summary>
+        public static string ResetPasswordNumberReq {
+            get {
+                return ResourceManager.GetString("ResetPasswordNumberReq", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Solicitar nuevo enlace .
+        /// </summary>
+        public static string ResetPasswordRepeatToken {
+            get {
+                return ResourceManager.GetString("ResetPasswordRepeatToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La contraseña debe cumplir con los siguientes requisitos:.
+        /// </summary>
+        public static string ResetPasswordRequirements {
+            get {
+                return ResourceManager.GetString("ResetPasswordRequirements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Guardar nueva contraseña.
+        /// </summary>
+        public static string ResetPasswordSend {
+            get {
+                return ResourceManager.GetString("ResetPasswordSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Un carácter especial (!@#$%).
+        /// </summary>
+        public static string ResetPasswordSpecialCharReq {
+            get {
+                return ResourceManager.GetString("ResetPasswordSpecialCharReq", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Por favor, ingresa tu nueva contraseña a continuación..
+        /// </summary>
+        public static string ResetPasswordSubtitle {
+            get {
+                return ResourceManager.GetString("ResetPasswordSubtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¡Contraseña actualizada!.
+        /// </summary>
+        public static string ResetPasswordSuccess {
+            get {
+                return ResourceManager.GetString("ResetPasswordSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Tu contraseña se ha cambiado con éxito. A partir de ahora, usa tu nueva contraseña para iniciar sesión..
+        /// </summary>
+        public static string ResetPasswordSuccessMessage {
+            get {
+                return ResourceManager.GetString("ResetPasswordSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Restablecer tu contraseña.
         /// </summary>
         public static string ResetPasswordtitle {
             get {
                 return ResourceManager.GetString("ResetPasswordtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a El enlace ha caducado.
+        /// </summary>
+        public static string ResetTokenNotValid {
+            get {
+                return ResourceManager.GetString("ResetTokenNotValid", resourceCulture);
             }
         }
         

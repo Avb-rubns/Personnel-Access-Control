@@ -89,5 +89,27 @@
 
             return result;
         }
+
+        public async Task<int> UpdateUserPasswordforUserIDAsync(int useID, string newPassword)
+        {
+            int result = 0;
+            try
+            {
+                await using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
+                await connection.OpenAsync();
+
+                var proc = "p_UpdateUserPasswordforUserID";
+
+                result = await connection.ExecuteAsync(proc, new { UserID = useID, NewPassword = newPassword }, commandType: CommandType.StoredProcedure);
+                await connection.CloseAsync();
+
+            }
+            catch
+            {
+                throw;
+            }
+
+            return result;
+        }
     }
 }

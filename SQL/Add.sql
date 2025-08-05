@@ -297,3 +297,55 @@ BEGIN
 		CROSS APPLY (SELECT REPLACE(Step1, '@link', @Link) AS FinalResult) AS s2
 
 END
+GO
+IF OBJECT_ID(N'p_DeleteSessionUserforUserID', N'P') IS NOT NULL
+    DROP PROCEDURE p_DeleteSessionUserforUserID;
+GO
+CREATE PROCEDURE p_DeleteSessionUserforUserID @UserID INT
+AS
+BEGIN
+    BEGIN TRY
+	    
+		SET XACT_ABORT ON;
+		BEGIN TRANSACTION;
+		DECLARE @Result INT = 0;
+
+		DELETE FROM SessionUsers WHERE UserID = @UserID;
+		COMMIT TRANSACTION;
+
+		 SET @Result = 1;
+
+	END TRY
+	 BEGIN CATCH
+        ROLLBACK TRANSACTION;
+		SET @Result = -3;
+    END CATCH
+
+	SELECT @Result AS Result;
+END
+GO
+IF OBJECT_ID(N'p_UpdateUserPasswordforUserID', N'P') IS NOT NULL
+    DROP PROCEDURE p_UpdateUserPasswordforUserID;
+GO
+CREATE PROCEDURE p_UpdateUserPasswordforUserID @UserID INT, @NewPassword NVARCHAR(MAX)
+AS
+BEGIN
+    BEGIN TRY
+	    
+		SET XACT_ABORT ON;
+		BEGIN TRANSACTION;
+		DECLARE @Result INT = 0;
+
+		UPDATE Users SET Password = @NewPassword WHERE UserID = @UserID;
+		COMMIT TRANSACTION;
+
+		 SET @Result = 1;
+
+	END TRY
+	 BEGIN CATCH
+        ROLLBACK TRANSACTION;
+		SET @Result = -3;
+    END CATCH
+
+	SELECT @Result AS Result;
+END

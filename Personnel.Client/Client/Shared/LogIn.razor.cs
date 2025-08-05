@@ -19,7 +19,7 @@
 
 
 
-        void ButtonTestclick()
+        void Visibility()
         {
             if (isShow)
             {

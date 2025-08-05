@@ -131,14 +131,16 @@
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
             await ForgotPasswordPort.GeneratePasswordResetTokenAsync(request, baseUrl);
 
-            return Ok(new { message = "Se ha enviado un correo con instrucciones." });
+            return Ok();
         }
         [HttpPut("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO request)
         {
             var result = await ResetPasswordPort.ResetPasswordAsync(request);
+            if (result)
+                return Ok();
 
-            return Ok(new { message = "Contraseña restablecida correctamente" });
+            return BadRequest();
         }
         [HttpGet("reset-password/validate")]
         public async Task<IActionResult> ValidateTokenResetPassword(string token)

@@ -10,7 +10,7 @@ namespace Personnel.Client.Shared.Abstractions
         public Task<R> PostAsync<R>(string url, string userName = null) where R : IApiResponse;
         public Task<R> PatchAsync<R, S>(string url, S PathData) where R : IApiResponse;
         public Task<R> GetAsync<R>(string url, string userName = null) where R : IApiResponse;
-        public Task<R> PutAsync<R, S>(string url, S postData, string userName = null);
+        public Task<R> PutAsync<R, S>(string url, S postData, string userName = null) where R : IApiResponse;
         public Task<R> PostFileAsync<R, S>(string url, S PostFile, string userName = null);
 
 

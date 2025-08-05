@@ -144,11 +144,59 @@
   <data name="MailText" xml:space="preserve">
     <value>Correo electrónico</value>
   </data>
+  <data name="NewPasswordTitle" xml:space="preserve">
+    <value>Nueva contraseña</value>
+  </data>
   <data name="PasswordTitle" xml:space="preserve">
     <value>Contraseña</value>
   </data>
+  <data name="PasswordTitleConfirme" xml:space="preserve">
+    <value>Confirmar contraseña</value>
+  </data>
+  <data name="ResetPassowrMessage" xml:space="preserve">
+    <value>Por favor, solicita un nuevo enlace para restablecer tu contraseña.</value>
+  </data>
+  <data name="ResetPasswordLowercaseReq" xml:space="preserve">
+    <value>Una letra minúscula (a-z)</value>
+  </data>
+  <data name="ResetPasswordMay" xml:space="preserve">
+    <value>Una letra mayúscula (A-Z)</value>
+  </data>
+  <data name="ResetPasswordMinLength" xml:space="preserve">
+    <value>Mínimo 8 caracteres</value>
+  </data>
+  <data name="ResetPasswordNotValidtoken" xml:space="preserve">
+    <value>El enlace que utilizaste para restablecer tu contraseña ya no es válido. Por motivos de seguridad, los enlaces tienen un tiempo limitado de uso.</value>
+  </data>
+  <data name="ResetPasswordNumberReq" xml:space="preserve">
+    <value>Un número (0-9)</value>
+  </data>
+  <data name="ResetPasswordRepeatToken" xml:space="preserve">
+    <value>Solicitar nuevo enlace </value>
+  </data>
+  <data name="ResetPasswordRequirements" xml:space="preserve">
+    <value>La contraseña debe cumplir con los siguientes requisitos:</value>
+  </data>
+  <data name="ResetPasswordSend" xml:space="preserve">
+    <value>Guardar nueva contraseña</value>
+  </data>
+  <data name="ResetPasswordSpecialCharReq" xml:space="preserve">
+    <value>Un carácter especial (!@#$%)</value>
+  </data>
+  <data name="ResetPasswordSubtitle" xml:space="preserve">
+    <value>Por favor, ingresa tu nueva contraseña a continuación.</value>
+  </data>
+  <data name="ResetPasswordSuccess" xml:space="preserve">
+    <value>¡Contraseña actualizada!</value>
+  </data>
+  <data name="ResetPasswordSuccessMessage" xml:space="preserve">
+    <value>Tu contraseña se ha cambiado con éxito. A partir de ahora, usa tu nueva contraseña para iniciar sesión.</value>
+  </data>
   <data name="ResetPasswordtitle" xml:space="preserve">
-    <value>Cambia tu contraseña actual de Ualá</value>
+    <value>Restablecer tu contraseña</value>
+  </data>
+  <data name="ResetTokenNotValid" xml:space="preserve">
+    <value>El enlace ha caducado</value>
   </data>
   <data name="ReturnLgoInTitle" xml:space="preserve">
     <value>Regresar al inicio de sesión </value>

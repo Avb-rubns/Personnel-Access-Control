@@ -1,4 +1,5 @@
 ﻿@page "/login"
+@layout CleanLayout
 <Space>
     @if (_loader)
     {
@@ -27,7 +28,7 @@
                         Variant="Variant.Text"/>
                     <MudTextField Class="mt-4" Label="@Resource.PasswordTitle" @bind-Value="model.Password" Disabled="@_processing" For="@(() => model.Password)"
                         Variant="Variant.Text" InputType="@PasswordInput" Adornment="Adornment.End"
-                        AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="ver" />
+                                  AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="Visibility" AdornmentAriaLabel="ver" />
                     <MudButton Variant="Variant.Filled" DropShadow="false" FullWidth="true" Color="Color.Primary" Class="mt-4" ButtonType="ButtonType.Submit">
                         @if (_processing)
                         {
@@ -41,7 +42,7 @@
                     </MudButton>
                 </EditForm>
             </div>
-            <MudLink Href="/forgot-password" Underline="Underline.Always">@Resource.ForgotPasswordTitle</MudLink>
+            <MudLink Class="mt-2" Href="/forgot-password" Underline="Underline.Always">@Resource.ForgotPasswordTitle</MudLink>
         </section>
     }
 </Space>

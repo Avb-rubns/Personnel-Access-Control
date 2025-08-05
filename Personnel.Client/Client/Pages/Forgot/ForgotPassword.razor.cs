@@ -26,7 +26,7 @@ namespace Personnel.Client.Client.Pages.Forgot
             _processing = true;
             try
             {
-
+                model.Email = model.Email.Trim();
                 var send = await Proxy.PostAsync<Response, ForgotPasswordDTO>("api/v1/auth/forgot-password", model);
 
                 _send = true;

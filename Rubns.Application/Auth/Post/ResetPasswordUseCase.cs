@@ -3,7 +3,9 @@
     internal sealed class ResetPasswordUseCase(IResetPasswordEFC resetPasswordEFC
         , ILogger logger
         , IUserRepositoryEFC userRepositoryEFC
-        , IEncryptionService encryptionService)
+        , IEncryptionService encryptionService
+        , ISessionUserRepositoryDapper sessionUserRepositoryDapper
+        , IUserRepositoryDapper userRepositoryDapper)
 
         : IResetPasswordPort
     {
@@ -11,34 +13,49 @@
         private readonly IUserRepositoryEFC _userRepositoryEFC = userRepositoryEFC;
         private readonly IEncryptionService _encryptionService = encryptionService;
         private readonly ILogger _logger = logger;
+        private readonly ISessionUserRepositoryDapper _sessionUserRepositoryDapper = sessionUserRepositoryDapper;
+        private readonly IUserRepositoryDapper _userRepositoryDapper = userRepositoryDapper;
 
         public async Task<bool> ResetPasswordAsync(ResetPasswordRequestDTO request)
         {
             try
             {
-                var user = await _userRepositoryEFC.FindUserforEmailAsync(request.Email);
-                if (user is { UserID: < 0 })
-                {
-                    return false;
-                }
+
                 var resetPassword = await _resetPasswordEFC.FindResetPasswordAsync(request.ResetCode);
                 if (resetPassword is { ResetPasswordID: < 0 })
                 {
                     return false;
                 }
-                if (resetPassword.Registed.AddMinutes(15) < DateTimeOffset.UtcNow.AddHours(-6))
-                {
 
+                var referenceOffset = resetPassword.Registed.Offset;
+                var nowWithSameOffset = DateTimeOffset.UtcNow.ToOffset(referenceOffset);
+
+                if (resetPassword.Registed.AddMinutes(16) < nowWithSameOffset)
+                {
+                    await _resetPasswordEFC.DeleteResetPasswordAsync(resetPassword);
                     return false;
                 }
 
+                var user = await _userRepositoryEFC.FindUserforIDAsync(resetPassword.UserId);
+                if (user is { UserID: < 0 })
+                {
+                    return false;
+                }
+
+                if (!request.Password.Equals(request.NewPassword))
+                {
+                    return false;
+                }
                 var newPassword = _encryptionService.GenerateNewPass(request.NewPassword);
 
                 user.Password = newPassword;
 
-                var updatePass = await _userRepositoryEFC.UpdateUserforIDAsync(user);
+                var updatePass = await _userRepositoryDapper.UpdateUserPasswordforUserIDAsync(user.UserID, newPassword);
                 await _resetPasswordEFC.DeleteResetPasswordAsync(resetPassword);
-
+                if (updatePass > 0)
+                {
+                    await _sessionUserRepositoryDapper.DeleteSessionforUserIdAsync(user.UserID);
+                }
                 return updatePass > 0;
 
 

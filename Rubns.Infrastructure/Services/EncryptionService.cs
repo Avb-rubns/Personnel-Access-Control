@@ -2,7 +2,8 @@
 {
     internal class EncryptionService : IEncryptionService
     {
-        IConfiguration Configuration { get; }
+        private readonly IConfiguration Configuration;
+
         public EncryptionService(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -10,113 +11,47 @@
 
         public string GenerateApiKey(RegisterDTO register)
         {
-            string apiKey = string.Empty;
-
             string wordSecret = Configuration["WordSecret"];
-
             byte[] salt1 = Encoding.UTF8.GetBytes(wordSecret);
             byte[] salt2 = Encoding.UTF8.GetBytes(register.WordSecretUser);
-
             byte[] combinedSalt = salt1.Concat(salt2).ToArray();
 
-            byte[] clientData = Encoding.UTF8.GetBytes(register.NameApp);
-
-            using (var hmacsha256 = new HMACSHA256(combinedSalt))
-            {
-                byte[] hash = hmacsha256.ComputeHash(clientData);
-                apiKey = BitConverter.ToString(hash).Replace("-", "").ToLower();
-            }
-
-            return apiKey;
-
+            return ComputeHash(register.NameApp, combinedSalt);
         }
 
         public bool ValidatePass(string pass, string passUser)
         {
-            bool result = false;
-            string Salt = Configuration["WordSecretPass"];
-
-            byte[] salt = Encoding.UTF8.GetBytes(Salt);
-
-            byte[] userPass = Encoding.UTF8.GetBytes(pass);
-
-            using (var hmacsha256 = new HMACSHA256(salt))
-            {
-                byte[] hash = hmacsha256.ComputeHash(userPass);
-                var passHash = BitConverter.ToString(hash).Replace("-", "").ToLower();
-
-                result = passUser.Equals(passHash);
-            }
-
-            return result;
+            string salt = Configuration["WordSecretPass"];
+            string hashed = ComputeHash(pass, Encoding.UTF8.GetBytes(salt));
+            return passUser.Equals(hashed);
         }
 
         public string GeneratePassTemp(RegisterUserDTO register)
         {
-            string result = string.Empty;
-            string Salt = Configuration["WordSecretPass"];
-
-            byte[] salt = Encoding.UTF8.GetBytes(Salt);
-
-            string[] temp = register.Email.Split('@');
-
-            byte[] userPass = Encoding.UTF8.GetBytes(temp[0]);
-
-            using (var hmacsha256 = new HMACSHA256(salt))
-            {
-                byte[] hash = hmacsha256.ComputeHash(userPass);
-                var passHash = BitConverter.ToString(hash).Replace("-", "").ToLower();
-
-                result = passHash;
-
-            }
-
-
-            return result;
+            string salt = Configuration["WordSecretPass"];
+            string baseString = register.Email.Split('@')[0];
+            return ComputeHash(baseString, Encoding.UTF8.GetBytes(salt));
         }
 
         public string GenerateTokenForgotPass(string email)
         {
-            string token = string.Empty;
-
-            string Salt = Configuration["WordSecretForgotPass"];
-
-            byte[] salt = Encoding.UTF8.GetBytes(Salt);
-
-            byte[] userPass = Encoding.UTF8.GetBytes(email);
-
-            using (var hmacsha256 = new HMACSHA256(salt))
-            {
-                byte[] hash = hmacsha256.ComputeHash(userPass);
-                var passHash = BitConverter.ToString(hash).Replace("-", "").ToLower();
-
-                token = passHash;
-
-            }
-
-            return token;
+            string salt = Configuration["WordSecretForgotPass"];
+            return ComputeHash(email, Encoding.UTF8.GetBytes(salt));
         }
 
         public string GenerateNewPass(string newPass)
         {
-            string result = string.Empty;
-            string Salt = Configuration["WordSecretPass"];
+            string salt = Configuration["WordSecretPass"];
+            return ComputeHash(newPass, Encoding.UTF8.GetBytes(salt));
+        }
 
-            byte[] salt = Encoding.UTF8.GetBytes(Salt);
+        private string ComputeHash(string input, byte[] salt)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(input);
 
-            byte[] userPass = Encoding.UTF8.GetBytes(newPass);
-
-            using (var hmacsha256 = new HMACSHA256(salt))
-            {
-                byte[] hash = hmacsha256.ComputeHash(userPass);
-                var passHash = BitConverter.ToString(hash).Replace("-", "").ToLower();
-
-                result = passHash;
-
-            }
-
-
-            return result;
+            using var hmac = new HMACSHA256(salt);
+            byte[] hash = hmac.ComputeHash(data);
+            return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
         }
     }
 }

@@ -14,9 +14,18 @@ namespace Rubns.Application.Auth.Get
             {
 
                 var resetPassword = await _resetPasswordEFC.FindResetPasswordAsync(token);
-                return resetPassword is
-                { ResetPasswordID: > 0 }
-                && resetPassword.Registed.AddMinutes(15) < DateTimeOffset.UtcNow.AddHours(-6);
+                var referenceOffset = resetPassword.Registed.Offset;
+                var nowWithSameOffset = DateTimeOffset.UtcNow.ToOffset(referenceOffset);
+
+                if (resetPassword is
+                    { ResetPasswordID: > 0 }
+                && (resetPassword.Registed.AddMinutes(15) > nowWithSameOffset))
+                {
+                    return true;
+                }
+
+                await _resetPasswordEFC.DeleteResetPasswordAsync(resetPassword);
+                return false;
 
             }
             catch (Exception e)

@@ -2,12 +2,12 @@
 {
     internal class RefreshJWTUseCase : IRefreshJWTPort<RefreshTokenResponseDTO>
     {
-        private readonly ISessionUserRepository SessionUserRepository;
+        private readonly ISessionUserRepositoryEFC SessionUserRepository;
         private readonly IUserRepositoryDapper LogInRepository;
         private readonly ILogInService LogInService;
         private readonly ILogger Logger;
 
-        public RefreshJWTUseCase(ISessionUserRepository sessionUserRepository,
+        public RefreshJWTUseCase(ISessionUserRepositoryEFC sessionUserRepository,
             IUserRepositoryDapper logInRepository,
             ILogInService logInService,
             ILogger logger)

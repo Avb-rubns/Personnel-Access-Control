@@ -1,6 +1,6 @@
 ﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
-    internal class SessionUserRepository : ISessionUserRepository
+    internal class SessionUserRepository : ISessionUserRepositoryEFC
     {
         private readonly AuthDbContextEFC AuthDbContextEFC;
         private readonly IConfiguration Configuration;
@@ -20,22 +20,6 @@
 
             await AuthDbContextEFC.AddAsync(sessionUser);
             return await AuthDbContextEFC.SaveChangesAsync();
-        }
-
-        public async Task<int> DeleteSessionAsync(string token)
-        {
-            try
-            {
-                var result = await AuthDbContextEFC.Database.ExecuteSqlAsync($"p_DeleteSessionUser @Token = {token}");
-
-                return result;
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
         }
 
         public async Task<SessionUserDTO> FindAsyn(string token)

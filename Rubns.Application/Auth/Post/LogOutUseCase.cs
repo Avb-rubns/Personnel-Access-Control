@@ -2,10 +2,10 @@
 {
     internal class LogOutUseCase : ILogOutPort
     {
-        private readonly ISessionUserRepository SessionUserRepository;
+        private readonly ISessionUserRepositoryDapper SessionUserRepository;
         private readonly ILogger Logger;
 
-        public LogOutUseCase(ISessionUserRepository sessionUserRepository
+        public LogOutUseCase(ISessionUserRepositoryDapper sessionUserRepository
             , ILogger logger)
         {
             SessionUserRepository = sessionUserRepository;
@@ -17,7 +17,7 @@
             bool result = false;
             try
             {
-                return await SessionUserRepository.DeleteSessionAsync(token) > 0;
+                return await SessionUserRepository.DeleteSessionforTokenAsync(token) > 0;
             }
             catch (Exception e)
             {
