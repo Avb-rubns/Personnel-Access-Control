@@ -14,7 +14,7 @@
         }
 
 
-        public async Task<Response> CheckIn(CheckInDTO checkTicket)
+        public async Task<Response> CheckIn(CheckDTO checkTicket)
         {
             Response response = new();
 
@@ -39,7 +39,7 @@
                 if (checkInResult > 0)
                 {
                     response.StatusCode = System.Net.HttpStatusCode.Created;
-                    response.Message = $"Check-in realizado para {name}";
+                    response.Message = $"{name}";
                 }
                 else
                 {

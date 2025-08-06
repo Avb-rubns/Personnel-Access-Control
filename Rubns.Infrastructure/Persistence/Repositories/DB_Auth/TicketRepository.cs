@@ -7,13 +7,19 @@
         {
             Configuration = configuration;
         }
-        public async Task<int> InsertCheckAsync(CheckInDTO check, int userID)
+        public async Task<int> InsertCheckAsync(CheckDTO check, int userID)
         {
             try
             {
                 using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
                 await connection.OpenAsync();
-                var parameters = new { UserID = userID, Latitude = check.Latitude, Longitude = check.Longitude, Ip = check.IP?.ToString() };
+                var parameters = new
+                {
+                    UserID = userID,
+                    Latitude = check.Latitude,
+                    Longitude = check.Longitude,
+                    Ip = check.IP?.ToString()
+                };
 
                 int result = await connection.ExecuteScalarAsync<int>(
                     "p_InsertCheckPersonal",

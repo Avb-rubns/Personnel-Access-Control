@@ -2,6 +2,10 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height:100%;
+}
+#app{
+    min-height:100dvh;
 }
 
 h1:focus {
@@ -99,3 +103,46 @@ a, .btn-link {
     .loading-progress-text:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
+
+@media (prefers-color-scheme: dark) {
+    html, body {
+        background-color: rgba(50,51,61,1);
+        color: #e0e0e0;
+    }
+
+    a, .btn-link {
+        color: #4ba3ff;
+    }
+
+    .btn-primary {
+        background-color: #0078d4;
+        border-color: #005a9e;
+        color: white;
+    }
+
+    .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+        box-shadow: 0 0 0 0.1rem black, 0 0 0 0.25rem #66aaff;
+    }
+
+    .validation-message {
+        color: #ff6f6f;
+    }
+
+    #blazor-error-ui {
+        background: #332200;
+        color: #fff;
+    }
+
+    .blazor-error-boundary {
+        background-color: #5c0000;
+        color: #fff;
+    }
+
+    .loading-progress circle {
+        stroke: #444;
+    }
+
+        .loading-progress circle:last-child {
+            stroke: #4ba3ff;
+        }
+}

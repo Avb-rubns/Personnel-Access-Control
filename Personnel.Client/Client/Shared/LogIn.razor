@@ -1,48 +1,46 @@
 ﻿@page "/login"
 @layout CleanLayout
-<Space>
-    @if (_loader)
-    {
-        <section class="d-none d-md-flex align-center justify-center w-100">
-            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="320px" Height="220px" />
-        </section>
-        <section class="d-md-none d-flex flex-column gap-2 align-center justify-center vh-100 p-1 w-100">
-            <MudSkeleton SkeletonType="SkeletonType.Text" Width="100%" Height="32px" />
-            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="42px" />
-            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="42px" />
-            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="28px" />
-        </section>
-    }
-    else
-    {
-        <section class="d-flex align-center flex-column h-100 w-100 justify-content-center g-1 log-in-section">
-            <div class="w-100 log-in-form ">
-                <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
-                    <DataAnnotationsValidator />
-                    <MudText Typo="Typo.h5" Align="Align.Center">@Resource.LogInTitle</MudText>
-                    <MudTextField Label="@Resource.MailText"
-                        Class="mt-4"
-                        Disabled="@_processing"
-                        @bind-Value="model.Email"
-                        For="@(() => model.Email)"
-                        Variant="Variant.Text"/>
-                    <MudTextField Class="mt-4" Label="@Resource.PasswordTitle" @bind-Value="model.Password" Disabled="@_processing" For="@(() => model.Password)"
-                        Variant="Variant.Text" InputType="@PasswordInput" Adornment="Adornment.End"
-                                  AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="Visibility" AdornmentAriaLabel="ver" />
-                    <MudButton Variant="Variant.Filled" DropShadow="false" FullWidth="true" Color="Color.Primary" Class="mt-4" ButtonType="ButtonType.Submit">
-                        @if (_processing)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                            <MudText Class="ms-2">@Resource.BtnValiding</MudText>
-                        }
-                        else
-                        {
-                            <MudText>@Resource.BtnContinum</MudText>
-                        }
-                    </MudButton>
-                </EditForm>
-            </div>
-            <MudLink Class="mt-2" Href="/forgot-password" Underline="Underline.Always">@Resource.ForgotPasswordTitle</MudLink>
-        </section>
-    }
-</Space>
+@if (_loader)
+{
+    <section class="d-none d-md-flex align-center justify-center w-100">
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="320px" Height="220px" />
+    </section>
+    <section class="d-md-none d-flex flex-column gap-2 align-center justify-center vh-100 p-1 w-100">
+        <MudSkeleton SkeletonType="SkeletonType.Text" Width="100%" Height="32px" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="42px" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="42px" />
+        <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="100%" Height="28px" />
+    </section>
+}
+else
+{
+    <section class="d-flex align-center flex-column h-100 w-100 justify-center g-1 log-in-section">
+        <div class="w-100 log-in-form ">
+            <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator />
+                <MudText Typo="Typo.h5" Align="Align.Center">@Resource.LogInTitle</MudText>
+                <MudTextField Label="@Resource.MailText"
+                              Class="mt-4"
+                              Disabled="@_processing"
+                              @bind-Value="model.Email"
+                              For="@(() => model.Email)"
+                              Variant="Variant.Text" />
+                <MudTextField Class="mt-4" Label="@Resource.PasswordTitle" @bind-Value="model.Password" Disabled="@_processing" For="@(() => model.Password)"
+                              Variant="Variant.Text" InputType="@PasswordInput" Adornment="Adornment.End"
+                              AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="Visibility" AdornmentAriaLabel="ver" />
+                <MudButton Variant="Variant.Filled" DropShadow="false" FullWidth="true" Color="Color.Primary" Class="mt-4" ButtonType="ButtonType.Submit">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudText Class="ms-2">@Resource.BtnValiding</MudText>
+                    }
+                    else
+                    {
+                        <MudText>@Resource.BtnContinum</MudText>
+                    }
+                </MudButton>
+            </EditForm>
+        </div>
+        <MudLink Class="mt-2" Href="/forgot-password" Underline="Underline.Always">@Resource.ForgotPasswordTitle</MudLink>
+    </section>
+}

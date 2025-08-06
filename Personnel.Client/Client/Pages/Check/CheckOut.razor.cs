@@ -1,14 +1,13 @@
 ﻿namespace Personnel.Client.Client.Pages.Check
 {
-    public partial class CheckIn : IDisposable
+    public partial class CheckOut
     {
-
         [Inject] public IJSRuntime JS { get; set; } = default!;
         [Inject] public IProxy Proxy { get; set; } = default!;
         [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
         CheckDTO model = new();
-        private DotNetObjectReference<CheckIn>? _dotnetRef;
+        private DotNetObjectReference<CheckOut>? _dotnetRef;
         private bool _processing = false;
         private bool _loader = true;
         private bool _checinSuccess = false;
@@ -44,7 +43,7 @@
             _processing = true;
             try
             {
-                var response = await Proxy.PostAsync<Response, CheckDTO>("api/v1/ticket/check-in", model);
+                var response = await Proxy.PostAsync<Response, CheckDTO>("api/v1/ticket/check-out", model);
 
                 switch (response.StatusCode)
                 {
@@ -76,5 +75,6 @@
         {
             _dotnetRef?.Dispose();
         }
+
     }
 }

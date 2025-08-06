@@ -10,7 +10,10 @@
                 await using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
                 await connection.OpenAsync();
 
-                var result = await connection.QueryFirstAsync($"p_DeleteSessionUser @Token = {token}");
+                var result = await connection.ExecuteAsync("p_DeleteSessionUser",
+                    new { token },
+                    commandType: CommandType.StoredProcedure);
+
 
                 return result;
 

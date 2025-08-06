@@ -97,6 +97,60 @@ namespace Personnel.Client.Client.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Ambos campos son obligatorios para completar tu registro..
+        /// </summary>
+        public static string CheckInSubtitle {
+            get {
+                return ResourceManager.GetString("CheckInSubtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¡Bienvenido,.
+        /// </summary>
+        public static string CheckInSuccess {
+            get {
+                return ResourceManager.GetString("CheckInSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Tu registro de entrada ha sido completado con éxito..
+        /// </summary>
+        public static string checkInSuccessSubtitle {
+            get {
+                return ResourceManager.GetString("checkInSuccessSubtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Para registrar tu entrada, por favor ingresa tu información..
+        /// </summary>
+        public static string CheckInTitle {
+            get {
+                return ResourceManager.GetString("CheckInTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¡Hola!.
+        /// </summary>
+        public static string CheckInTitleHi {
+            get {
+                return ResourceManager.GetString("CheckInTitleHi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¡Hola!.
+        /// </summary>
+        public static string checkOutTitleHi {
+            get {
+                return ResourceManager.GetString("checkOutTitleHi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a ¡Gracias! Si coincide con una dirección de correo electrónico que tenemos registrada, entonces te hemos enviado un correo con instrucciones adicionales para que puedas restablecer la contraseña..
         /// </summary>
         public static string ComplitSendForget {

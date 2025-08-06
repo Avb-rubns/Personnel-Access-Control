@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JS
+
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" />
 <MudSnackbarProvider />
 
@@ -16,10 +18,29 @@
 </MudLayout>
 
 @code{
+
+
+
     private bool _isDarkMode;
     void DarkMode()
     {
         _isDarkMode = !_isDarkMode;
     }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var theme = await JS.InvokeAsync<string>("getFromLocalStorage", "theme");
 
+            if (string.IsNullOrEmpty(theme))
+            {
+                await JS.InvokeVoidAsync("detectColorScheme");
+                theme = await JS.InvokeAsync<string>("getFromLocalStorage", "theme");
+            }
+
+            _isDarkMode = theme == "dark";
+
+            StateHasChanged();
+        }
+    }
 }

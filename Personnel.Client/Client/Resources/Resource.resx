@@ -129,6 +129,12 @@
   <data name="BtnValiding" xml:space="preserve">
     <value>Validando</value>
   </data>
+  <data name="CheckInSuccess" xml:space="preserve">
+    <value>¡Bienvenido,</value>
+  </data>
+  <data name="CheckInTitle" xml:space="preserve">
+    <value>Para registrar tu entrada, por favor ingresa tu información.</value>
+  </data>
   <data name="ComplitSendForget" xml:space="preserve">
     <value>¡Gracias! Si coincide con una dirección de correo electrónico que tenemos registrada, entonces te hemos enviado un correo con instrucciones adicionales para que puedas restablecer la contraseña.</value>
   </data>
@@ -200,5 +206,17 @@
   </data>
   <data name="ReturnLgoInTitle" xml:space="preserve">
     <value>Regresar al inicio de sesión </value>
+  </data>
+  <data name="checkInSuccessSubtitle" xml:space="preserve">
+    <value>Tu registro de entrada ha sido completado con éxito.</value>
+  </data>
+  <data name="CheckInSubtitle" xml:space="preserve">
+    <value>Ambos campos son obligatorios para completar tu registro.</value>
+  </data>
+  <data name="CheckInTitleHi" xml:space="preserve">
+    <value>¡Hola!</value>
+  </data>
+  <data name="checkOutTitleHi" xml:space="preserve">
+    <value>¡Hola!</value>
   </data>
 </root>

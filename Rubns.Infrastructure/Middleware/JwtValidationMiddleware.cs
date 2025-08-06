@@ -18,6 +18,7 @@
             if (path == "/api/v1/login"
                 || path == "/api/v1/auth/refresh"
                 || path == "/api/v1/ticket/check-in"
+                || path == "/api/v1/ticket/check-out"
                 || path == "/api/v1/auth/forgot-password"
                 || path == "/api/v1/auth/reset-password"
                 || path == "/api/v1/auth/reset-password/validate")

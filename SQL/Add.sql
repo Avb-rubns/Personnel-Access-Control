@@ -27,8 +27,10 @@ CREATE TABLE CheckPersonal
 (
 	CheckPersonalID INT IDENTITY (1,1) NOT NULL CONSTRAINT PK_CheckPersonal_ID PRIMARY KEY CLUSTERED (CheckPersonalID)
 	,UserID INT NOT NULL
-	,Latitude DECIMAL(11,8) NULL
-	,Longitude DECIMAL(11,8) NULL
+	,LatitudeCheckIn DECIMAL(11,8) NULL
+	,LongitudeCheckIn DECIMAL(11,8) NULL
+	,LatitudeCheckOut DECIMAL(11,8) NULL
+	,LongitudeCheckOut DECIMAL(11,8) NULL
 	,IP NVARCHAR(100) NULL
 	,Registed DATETIME NOT NULL DEFAULT (SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)')
 )
@@ -171,8 +173,8 @@ IF OBJECT_ID(N'p_InsertCheckPersonal', N'P') IS NOT NULL
 GO
 CREATE PROCEDURE [dbo].[p_InsertCheckPersonal]
     @UserID INT,
-    @Latitude DECIMAL(11,8),
-    @Longitude DECIMAL(11,8),
+    @Latitude FLOAT,
+    @Longitude FLOAT,
     @IP NVARCHAR(200)
 AS
 BEGIN
@@ -180,7 +182,7 @@ BEGIN
         SET XACT_ABORT ON;
         BEGIN TRANSACTION;
 		DECLARE @Result INT = 0;
-        INSERT INTO CheckPersonal(UserID, Latitude, Longitude, IP)
+        INSERT INTO CheckPersonal(UserID, LatitudeCheckIN, LongitudeCheckIn, IP)
         VALUES (@UserID, @Latitude, @Longitude, @Ip);
 
         COMMIT TRANSACTION;
@@ -202,8 +204,13 @@ AS
 BEGIN
 	SELECT 
 		checkUser.Registed as 'Entrada'
-		,usr.Name
-		,rol.Name
+		,usr.Name as 'Nombre' 
+		,rol.Name as 'Rol'
+		,CONCAT(ROUND(dbo.DistanceMts(checkUser.LatitudeCheckIn,checkUser.LongitudeCheckIn),2), ' mts') as 'Distancia',
+		CASE 
+			WHEN (dbo.DistanceMts(checkUser.LatitudeCheckIn,checkUser.LongitudeCheckIn)) <= 100 THEN 'Está dentro del área permitida.'
+			ELSE 'Fuera del área permitida.' 
+		END as 'Valida'
 	FROM  [dbo].[CheckPersonal]  as checkUser
 	INNER JOIN Users as usr on checkUser.UserID = usr.UserID
 	INNER JOIN Rols as rol on rol.RolID = usr.RolID
@@ -348,4 +355,40 @@ BEGIN
     END CATCH
 
 	SELECT @Result AS Result;
+END
+GO
+CREATE or ALTER FUNCTION dbo.DistanceMts (@latCheck FLOAT, @lonCheck FLOAT)
+RETURNS FLOAT
+AS
+BEGIN
+	DECLARE @RadioTierra FLOAT = 6371000; -- en metros
+DECLARE @latHomeRad FLOAT, @lonHomeRad FLOAT;
+DECLARE @latCheckRad FLOAT, @lonCheckRad FLOAT;
+DECLARE @deltaLat FLOAT, @deltaLon FLOAT;
+DECLARE @a FLOAT, @c FLOAT, @distanciaMetros FLOAT;
+
+-- Coordenadas del punto base
+SELECT 
+	@latHomeRad = RADIANS(ch.LatitudeCheckIn),
+	@lonHomeRad = RADIANS(ch.LongitudeCheckIn)
+FROM dbo.CheckPersonal AS ch
+WHERE ch.CheckPersonalID = 0;
+
+-- Coordenadas del punto a comprobar
+
+SET	@latCheckRad = RADIANS(@latCheck);
+SET	@lonCheckRad = RADIANS(@lonCheck)
+
+
+-- Diferencias
+SET @deltaLat = @latCheckRad - @latHomeRad;
+SET @deltaLon = @lonCheckRad - @lonHomeRad;
+
+-- Fórmula de Haversine
+SET @a = POWER(SIN(@deltaLat / 2), 2) + COS(@latHomeRad) * COS(@latCheckRad) * POWER(SIN(@deltaLon / 2), 2);
+SET @c = 2 * ASIN(SQRT(@a));
+SET @distanciaMetros = @RadioTierra * @c;
+
+-- Resultado
+RETURN @distanciaMetros
 END
