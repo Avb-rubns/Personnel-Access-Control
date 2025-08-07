@@ -32,7 +32,8 @@ CREATE TABLE CheckPersonal
 	,LatitudeCheckOut DECIMAL(11,8) NULL
 	,LongitudeCheckOut DECIMAL(11,8) NULL
 	,IP NVARCHAR(100) NULL
-	,Registed DATETIME NOT NULL DEFAULT (SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)')
+	,RegistedCheckIn DATETIME NOT NULL DEFAULT (SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)')
+	,RegistedCheckOut DATETIME 
 )
 END
 GO
@@ -203,18 +204,30 @@ CREATE PROCEDURE [dbo].[p_CheckUserToday]
 AS
 BEGIN
 	SELECT 
-		checkUser.Registed as 'Entrada'
+		checkUser.RegistedCheckIn as 'Hora Entrada'
 		,usr.Name as 'Nombre' 
 		,rol.Name as 'Rol'
-		,CONCAT(ROUND(dbo.DistanceMts(checkUser.LatitudeCheckIn,checkUser.LongitudeCheckIn),2), ' mts') as 'Distancia',
+		,CONCAT(ROUND(dbo.DistanceMts(checkUser.LatitudeCheckIn,checkUser.LongitudeCheckIn),2), ' mts') as 'Distancia en check-in',
 		CASE 
 			WHEN (dbo.DistanceMts(checkUser.LatitudeCheckIn,checkUser.LongitudeCheckIn)) <= 100 THEN 'Está dentro del área permitida.'
+			ELSE 'Fuera del área permitida.' 
+		END as 'Entrada'
+		,ISNULL(checkUser.RegistedCheckOut, '1900-01-01') as 'Salida'
+		,CASE
+			WHEN
+				checkUser.LatitudeCheckOut is not null 
+			THEN 
+				CONCAT(ROUND(dbo.DistanceMts(checkUser.LatitudeCheckOut,checkUser.LongitudeCheckOut),2), ' mts') 
+			ELSE 'Sin realizar registro'
+		END as 'Distancia en check-out'
+		,CASE 
+			WHEN (dbo.DistanceMts(checkUser.LatitudeCheckOut,checkUser.LongitudeCheckOut)) <= 100 THEN 'Está dentro del área permitida.'
 			ELSE 'Fuera del área permitida.' 
 		END as 'Valida'
 	FROM  [dbo].[CheckPersonal]  as checkUser
 	INNER JOIN Users as usr on checkUser.UserID = usr.UserID
 	INNER JOIN Rols as rol on rol.RolID = usr.RolID
-	WHERE CAST(checkUser.Registed as DATE) = CAST(GETDATE() as DATE);
+	WHERE CAST(checkUser.RegistedCheckIn as DATE) = CAST(GETDATE() as DATE);
 END
 
 

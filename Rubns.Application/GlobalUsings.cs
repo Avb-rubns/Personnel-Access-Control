@@ -15,6 +15,7 @@ global using QRCoder;
 global using Rubns.Core.Ports.ApiKey;
 global using Rubns.Core.Ports.ApiKey.Register;
 global using Rubns.Core.Ports.Auth;
+global using Rubns.Core.Ports.CheckUser;
 global using Rubns.Core.Ports.QR;
 global using Rubns.Core.Ports.Rol;
 global using Rubns.Core.Ports.SessionUser;

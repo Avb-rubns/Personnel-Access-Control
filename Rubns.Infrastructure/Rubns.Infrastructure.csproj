@@ -24,4 +24,8 @@
     <ProjectReference Include="..\ServicesRegister\ServicesRegister.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistence\Entities\DB_Auth\CheckUsers\" />
+  </ItemGroup>
+
 </Project>

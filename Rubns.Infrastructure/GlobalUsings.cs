@@ -18,6 +18,7 @@ global using Personnel.Client.Shared.DTOs.Users;
 global using Personnel.Client.Shared.POCO.Users;
 global using Rubns.Core.Ports.ApiKey.Register;
 global using Rubns.Core.Ports.Auth;
+global using Rubns.Core.Ports.CheckUser;
 global using Rubns.Core.Ports.Rol;
 global using Rubns.Core.Ports.SessionUser;
 global using Rubns.Core.Ports.Template;

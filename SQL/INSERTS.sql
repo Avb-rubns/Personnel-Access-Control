@@ -160,3 +160,7 @@ INSERT INTO Templates(Name,Value) VALUES('ForgotPasswordMail','<!DOCTYPE html>
 
 </html>')
 
+GO
+SET IDENTITY_INSERT dbo.CheckPersonal ON
+INSERT INTO dbo.CheckPersonal(CheckPersonalID,UserID,LatitudeCheckIn,LongitudeCheckIn,LatitudeCheckOut,LongitudeCheckOut,IP)VALUES(0,0,19.0568929,-98.2146622,19.0568929,-98.2146622,'::1')
+SET IDENTITY_INSERT dbo.CheckPersonal  OFF
