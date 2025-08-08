@@ -204,26 +204,31 @@ CREATE PROCEDURE [dbo].[p_CheckUserToday]
 AS
 BEGIN
 	SELECT 
-		checkUser.RegistedCheckIn as 'Hora Entrada'
-		,usr.Name as 'Nombre' 
+		checkUser.RegistedCheckIn as 'HourCheckIn'
+		,usr.Name as 'Name' 
 		,rol.Name as 'Rol'
-		,CONCAT(ROUND(dbo.DistanceMts(checkUser.LatitudeCheckIn,checkUser.LongitudeCheckIn),2), ' mts') as 'Distancia en check-in',
+		,CONCAT(ROUND(dbo.DistanceMts(checkUser.LatitudeCheckIn,checkUser.LongitudeCheckIn),2), ' mts') as 'DistanceCheckIn',
 		CASE 
 			WHEN (dbo.DistanceMts(checkUser.LatitudeCheckIn,checkUser.LongitudeCheckIn)) <= 100 THEN 'Está dentro del área permitida.'
 			ELSE 'Fuera del área permitida.' 
-		END as 'Entrada'
-		,ISNULL(checkUser.RegistedCheckOut, '1900-01-01') as 'Salida'
+		END as 'AccessIn'
+		,ISNULL(checkUser.RegistedCheckOut, '1900-01-01') as 'HourCheckOut'
 		,CASE
 			WHEN
 				checkUser.LatitudeCheckOut is not null 
 			THEN 
 				CONCAT(ROUND(dbo.DistanceMts(checkUser.LatitudeCheckOut,checkUser.LongitudeCheckOut),2), ' mts') 
 			ELSE 'Sin realizar registro'
-		END as 'Distancia en check-out'
+		END as 'DistanceCheckOut'
 		,CASE 
-			WHEN (dbo.DistanceMts(checkUser.LatitudeCheckOut,checkUser.LongitudeCheckOut)) <= 100 THEN 'Está dentro del área permitida.'
-			ELSE 'Fuera del área permitida.' 
-		END as 'Valida'
+			WHEN checkUser.LatitudeCheckOut IS NOT NULL 
+			THEN 
+				CASE WHEN (dbo.DistanceMts(checkUser.LatitudeCheckOut,checkUser.LongitudeCheckOut)) <= 100 
+				THEN 'Está dentro del área permitida.'
+				ELSE 'Fuera del área permitida.' 
+				END
+			ELSE 'Sin realizar registro' 
+		END as 'AccessOut'
 	FROM  [dbo].[CheckPersonal]  as checkUser
 	INNER JOIN Users as usr on checkUser.UserID = usr.UserID
 	INNER JOIN Rols as rol on rol.RolID = usr.RolID
