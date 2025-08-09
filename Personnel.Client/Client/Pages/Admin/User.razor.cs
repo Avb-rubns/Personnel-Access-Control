@@ -9,7 +9,6 @@
         RegisterUserDTO UserDTO { get; set; } = new();
         List<UserRegistedDTO> Users { get; set; }
         private MudTable<UserRegistedDTO> table { get; set; } = new();
-        private IEnumerable<UserRegistedDTO> pagedData;
         private UserRegistedDTO selectedItem1 = null;
         private UserRegistedDTO elementBeforeEdit = new();
 

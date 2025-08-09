@@ -1,6 +1,6 @@
 ﻿namespace Rubns.Application.Ticket.Post
 {
-    internal sealed class CheckInUseCase : ICheckInPort<Response>
+    internal sealed class CheckInUseCase : ICheckPort<Response>
     {
         IUserRepositoryDapper LogInRepository { get; }
         ILogger Logger { get; }
@@ -14,12 +14,13 @@
         }
 
 
-        public async Task<Response> CheckIn(CheckDTO checkTicket)
+        public async Task<Response> CheckAsync(CheckDTO checkTicket, string op)
         {
             Response response = new();
 
             try
             {
+
 
                 var userEmail = await LogInRepository.GetUserByEmailAsync(checkTicket.Email);
 
@@ -34,18 +35,39 @@
                 }
                 int userID = userEmail.UserID > 0 ? userEmail.UserID : userPhone.UserID;
                 string name = userEmail.UserID > 0 ? userEmail.UserName : userPhone.UserName;
-                var checkInResult = await TicketRepository.InsertCheckAsync(checkTicket, userID);
 
-                if (checkInResult > 0)
+                switch (op)
                 {
-                    response.StatusCode = System.Net.HttpStatusCode.Created;
-                    response.Message = $"{name}";
+                    case "in":
+                        var checkInResult = await TicketRepository.InsertCheckInAsync(checkTicket, userID);
+
+                        if (checkInResult > 0)
+                        {
+                            response.StatusCode = System.Net.HttpStatusCode.Created;
+                            response.Message = $"{name}";
+                        }
+                        else
+                        {
+                            response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                            response.Message = "Check-in failed.";
+                        }
+                        break;
+                    case "out":
+                        var checkOutResult = await TicketRepository.InsertCheckOutAsync(checkTicket, userID);
+
+                        if (checkOutResult > 0)
+                        {
+                            response.StatusCode = System.Net.HttpStatusCode.Created;
+                            response.Message = $"{name}";
+                        }
+                        else
+                        {
+                            response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                            response.Message = "Check-Out failed.";
+                        }
+                        break;
                 }
-                else
-                {
-                    response.StatusCode = System.Net.HttpStatusCode.BadRequest;
-                    response.Message = "Check-in failed.";
-                }
+
 
             }
             catch (Exception e)

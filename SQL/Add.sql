@@ -169,10 +169,10 @@ BEGIN
 	usr.UserID = @ID;
 END
 GO
-IF OBJECT_ID(N'p_InsertCheckPersonal', N'P') IS NOT NULL
-    DROP PROCEDURE p_InsertCheckPersonal;
+IF OBJECT_ID(N'p_InsertCheckInPersonal', N'P') IS NOT NULL
+    DROP PROCEDURE p_InsertCheckInPersonal;
 GO
-CREATE PROCEDURE [dbo].[p_InsertCheckPersonal]
+CREATE PROCEDURE [dbo].[p_InsertCheckInPersonal]
     @UserID INT,
     @Latitude FLOAT,
     @Longitude FLOAT,
@@ -207,7 +207,7 @@ BEGIN
 		checkUser.RegistedCheckIn as 'HourCheckIn'
 		,usr.Name as 'Name' 
 		,rol.Name as 'Rol'
-		,CONCAT(ROUND(dbo.DistanceMts(checkUser.LatitudeCheckIn,checkUser.LongitudeCheckIn),2), ' mts') as 'DistanceCheckIn',
+		,CAST(ROUND(dbo.DistanceMts(checkUser.LatitudeCheckIn,checkUser.LongitudeCheckIn),2) as nvarchar(50)) as 'DistanceCheckIn',
 		CASE 
 			WHEN (dbo.DistanceMts(checkUser.LatitudeCheckIn,checkUser.LongitudeCheckIn)) <= 100 THEN 'Está dentro del área permitida.'
 			ELSE 'Fuera del área permitida.' 
@@ -217,7 +217,7 @@ BEGIN
 			WHEN
 				checkUser.LatitudeCheckOut is not null 
 			THEN 
-				CONCAT(ROUND(dbo.DistanceMts(checkUser.LatitudeCheckOut,checkUser.LongitudeCheckOut),2), ' mts') 
+				CAST(ROUND(dbo.DistanceMts(checkUser.LatitudeCheckOut,checkUser.LongitudeCheckOut),2) as nvarchar(50)) 
 			ELSE 'Sin realizar registro'
 		END as 'DistanceCheckOut'
 		,CASE 
@@ -232,7 +232,7 @@ BEGIN
 	FROM  [dbo].[CheckPersonal]  as checkUser
 	INNER JOIN Users as usr on checkUser.UserID = usr.UserID
 	INNER JOIN Rols as rol on rol.RolID = usr.RolID
-	WHERE CAST(checkUser.RegistedCheckIn as DATE) = CAST(GETDATE() as DATE);
+	WHERE CAST(checkUser.RegistedCheckIn as DATE) = CAST(GETDATE() as DATE) AND checkUser.CheckPersonalID > 0;
 END
 
 
@@ -409,4 +409,44 @@ SET @distanciaMetros = @RadioTierra * @c;
 
 -- Resultado
 RETURN @distanciaMetros
+END
+GO
+IF OBJECT_ID(N'p_InsertCheckOutPersonal', N'P') IS NOT NULL
+    DROP PROCEDURE p_InsertCheckOutPersonal;
+GO
+CREATE PROCEDURE [dbo].[p_InsertCheckOutPersonal]
+    @UserID INT,
+    @Latitude FLOAT,
+    @Longitude FLOAT
+AS
+BEGIN
+    BEGIN TRY
+        SET XACT_ABORT ON;
+		DECLARE @LastCheckID  INT;
+		WITH LastCheckIn AS (
+		SELECT 
+		*,
+		ROW_NUMBER() OVER (ORDER BY RegistedCheckIn DESC) as RowNum
+		FROM CheckPersonal WHERE UserID = @UserID)
+		SELECT 
+		@LastCheckID = LastCheckIn.CheckPersonalID
+		FROM LastCheckIn WHERE  RowNum = 1 
+
+        BEGIN TRANSACTION;
+		DECLARE @Result INT = 0;
+        UPDATE dbo.CheckPersonal 
+			SET LatitudeCheckOut = @Latitude,
+				LongitudeCheckOut = @Longitude,
+				RegistedCheckOut =  (SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)')
+		WHERE CheckPersonalID = @LastCheckID
+
+        COMMIT TRANSACTION;
+        SET @Result = 1;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @Result = -3;
+    END CATCH
+
+    SELECT @Result AS Result;
 END

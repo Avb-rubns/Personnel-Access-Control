@@ -10,7 +10,6 @@
         public DbSet<User> Users { get; set; }
         public DbSet<SessionUser> SessionUser { get; set; }
         public DbSet<Rol> Rols { get; set; }
-
         public DbSet<ResetPassword> ResetPasswords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

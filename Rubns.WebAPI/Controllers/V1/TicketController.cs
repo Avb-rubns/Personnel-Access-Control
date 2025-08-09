@@ -6,9 +6,9 @@
     public class TicketController : ControllerBase
     {
 
-        ICheckInPort<Response> CheckInUseCase { get; }
+        ICheckPort<Response> CheckInUseCase { get; }
 
-        public TicketController(ICheckInPort<Response> checkInUseCase)
+        public TicketController(ICheckPort<Response> checkInUseCase)
         {
             CheckInUseCase = checkInUseCase;
         }
@@ -19,7 +19,7 @@
         {
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
             checkTicket.IP = ip;
-            var checkInResult = await CheckInUseCase.CheckIn(checkTicket);
+            var checkInResult = await CheckInUseCase.CheckAsync(checkTicket, "in");
 
             return checkInResult.StatusCode switch
             {
@@ -34,7 +34,7 @@
         {
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
             checkTicket.IP = ip;
-            var checkInResult = await CheckInUseCase.CheckIn(checkTicket);
+            var checkInResult = await CheckInUseCase.CheckAsync(checkTicket, "out");
 
             return checkInResult.StatusCode switch
             {

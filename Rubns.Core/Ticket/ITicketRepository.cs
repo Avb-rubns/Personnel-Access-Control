@@ -2,6 +2,7 @@
 {
     public interface ITicketRepository
     {
-        Task<int> InsertCheckAsync(CheckDTO check, int userID);
+        Task<int> InsertCheckInAsync(CheckDTO check, int userID);
+        Task<int> InsertCheckOutAsync(CheckDTO check, int userID);
     }
 }
