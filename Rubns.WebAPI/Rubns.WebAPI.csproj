@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Personnel.Client\Shared\Personnel.Client.Shared.csproj" />
     <ProjectReference Include="..\Rubns.Core\Rubns.Core.csproj" />
+    <ProjectReference Include="..\Rubns.Infrastructure\Rubns.Infrastructure.csproj" />
     <ProjectReference Include="..\ServicesRegister\ServicesRegister.csproj" />
   </ItemGroup>
 

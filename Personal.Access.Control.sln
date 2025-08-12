@@ -33,6 +33,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Personnel.Client.Shared", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Personnel.Server.Tests", "Personnel.Server.Tests\Personnel.Server.Tests.csproj", "{17C8B51F-565A-40D4-A894-21DB61A0099C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{675133F6-1477-4063-BD02-BF0A0805F5D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "user-stories", "user-stories", "{EDA893EA-B5F8-47FD-8C35-273CADBF7D94}"
+	ProjectSection(SolutionItems) = preProject
+		qr.md = qr.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +96,7 @@ Global
 		{F59DBD8D-0E2C-4C6C-9B17-A773C4874EDC} = {2F87E516-CFEE-44ED-BADB-1A4B48A80953}
 		{DA8A730E-C293-4A37-80D6-59105720FF09} = {F04A7994-4BAF-4F5D-91D6-8393132FD4EC}
 		{BF58A334-854A-4208-B826-23EC3188B6B0} = {3B39BEAF-36BA-404A-9A16-BBE1E97032C9}
+		{EDA893EA-B5F8-47FD-8C35-273CADBF7D94} = {675133F6-1477-4063-BD02-BF0A0805F5D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {49780B10-1616-45DA-ACBE-335B9624C7CE}

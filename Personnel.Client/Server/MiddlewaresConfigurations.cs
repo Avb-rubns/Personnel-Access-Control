@@ -26,8 +26,9 @@
                },
                apiApp =>
                {
-                   apiApp.UseMiddleware<JwtValidationMiddleware>();
                    apiApp.UseRouting();
+                   apiApp.UseMiddleware<JwtValidationMiddleware>();
+                   apiApp.UseAuthorization();
                    apiApp.UseEndpoints(endpoints =>
                    {
                        endpoints.MapControllers();

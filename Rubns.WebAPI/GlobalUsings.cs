@@ -17,3 +17,4 @@ global using Rubns.Core.Ports.QR;
 global using Rubns.Core.Ports.Rol;
 global using Rubns.Core.Ports.User;
 global using Rubns.Core.Ticket;
+global using Rubns.Infrastructure.Middleware;

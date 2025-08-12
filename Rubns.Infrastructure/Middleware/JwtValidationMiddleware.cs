@@ -1,49 +1,72 @@
-﻿namespace Rubns.Infrastructure.Middleware
+﻿using Microsoft.Extensions.Logging;
+
+namespace Rubns.Infrastructure.Middleware
 {
     public class JwtValidationMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration _config;
+        private readonly ILogger<JwtValidationMiddleware> _logger;
+        private readonly List<string> _publicRoutes;
+        private readonly string _jwtSecret;
+        private readonly string _cookieName;
 
-        public JwtValidationMiddleware(RequestDelegate next, IConfiguration config)
+        public JwtValidationMiddleware(RequestDelegate next
+            , IConfiguration config
+            , ILogger<JwtValidationMiddleware> logger)
         {
             _next = next;
             _config = config;
+            _logger = logger;
+
+            _publicRoutes = _config.GetSection("PublicRoutes").Get<List<string>>() ?? new();
+
+            _jwtSecret = config["Jwt:Secret"] ?? config["WordSecretJWT"] ?? throw new InvalidOperationException("Jwt secret no configurado.");
+
+            _cookieName = config["Jwt:CookieName"] ?? "accessToken";
+
+
+
+
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IUserContextService userContext)
         {
+
+
+
             var path = context.Request.Path.Value?.ToLower();
 
-            if (path == "/api/v1/login"
-                || path == "/api/v1/auth/refresh"
-                || path == "/api/v1/ticket/check-in"
-                || path == "/api/v1/ticket/check-out"
-                || path == "/api/v1/auth/forgot-password"
-                || path == "/api/v1/auth/reset-password"
-                || path == "/api/v1/auth/reset-password/validate")
+            if (_publicRoutes.Any(r => path.StartsWith(r, StringComparison.OrdinalIgnoreCase)))
             {
                 await _next(context);
                 return;
             }
 
-            // Verifica el token en el header
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            if (string.IsNullOrEmpty(token) && context.Request.Cookies.TryGetValue("accessToken", out var cookieToken))
+
+            string? token = null;
+            var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+            if (!string.IsNullOrWhiteSpace(authHeader)
+                && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            {
+                token = authHeader.Substring("Bearer ".Length).Trim();
+            }
+            else if (context.Request.Cookies.TryGetValue(_cookieName, out var cookieToken)
+                && !string.IsNullOrEmpty(cookieToken))
             {
                 token = cookieToken;
             }
 
-
-            if (string.IsNullOrEmpty(token))
+            if (string.IsNullOrWhiteSpace(token))
             {
-                context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("Falta el token.");
+                _logger.LogWarning("No token provided for path {Path}", path);
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Unauthorized - token missing.");
                 return;
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_config["WordSecretJWT"]);
+            var key = Encoding.UTF8.GetBytes(_jwtSecret);
 
             try
             {
@@ -56,19 +79,66 @@
                     RoleClaimType = ClaimTypes.Role,
                     NameClaimType = ClaimTypes.Name,
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.Zero,
                 };
 
                 tokenHandler.ValidateToken(token, validations, out _);
+
+                var principal = tokenHandler.ValidateToken(token, validations, out var validatedToken);
+
+
+
+
+                if (validatedToken is JwtSecurityToken jwt
+                    && !jwt.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.OrdinalIgnoreCase))
+                {
+                    _logger.LogWarning("Token algorithm no permitido: {Alg}", jwt.Header.Alg);
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    await context.Response.WriteAsync("Unauthorized - invalid token algorithm.");
+                    return;
+                }
+
+                context.User = principal;
+
+                if (principal.Identity?.IsAuthenticated == true)
+                {
+                    var roles = principal.Claims
+                                .Where(c => c.Type == ClaimTypes.Role || c.Type.Equals("role", StringComparison.OrdinalIgnoreCase))
+                                .Select(c => c.Value)
+                                .ToList();
+                    var statusClaim = principal.Claims.FirstOrDefault(c => c.Type.Equals("Status", StringComparison.OrdinalIgnoreCase)
+                                                           || c.Type.Equals("status", StringComparison.OrdinalIgnoreCase)
+                                                           || c.Type.Equals("isActive", StringComparison.OrdinalIgnoreCase));
+
+                    var iD = principal.Claims
+                                        .FirstOrDefault(c => c.Type.Equals("userId", StringComparison.OrdinalIgnoreCase));
+
+                    var name = principal.Claims
+                                        .FirstOrDefault(c => c.Type.Equals("firstName", StringComparison.OrdinalIgnoreCase));
+
+                    userContext.UserId = iD.Value;
+                    userContext.Roles = roles;
+                    userContext.Status = statusClaim.Value;
+                    userContext.Name = name.Value;
+                }
+
+                await _next(context);
             }
-            catch
+            catch (SecurityTokenExpiredException)
             {
-                context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("Token inválido.");
+                _logger.LogInformation("Token expirado para path {Path}", path);
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Unauthorized - token expired.");
+                return;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Token inválido en request para {Path}", path);
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Unauthorized - token invalid.");
                 return;
             }
 
-            await _next(context);
         }
     }
 

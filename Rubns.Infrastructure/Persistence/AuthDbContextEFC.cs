@@ -11,7 +11,7 @@
         public DbSet<SessionUser> SessionUser { get; set; }
         public DbSet<Rol> Rols { get; set; }
         public DbSet<ResetPassword> ResetPasswords { get; set; }
-
+        public DbSet<QR> QRs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(e =>
@@ -37,6 +37,18 @@
                 e.ToTable("ResetPasswords", schema: "dbo");
                 e.HasKey(k => k.ResetPasswordID);
                 e.Property(p => p.Registed)
+                .HasDefaultValueSql("SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)'")
+                .ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<QR>(e =>
+            {
+                e.ToTable("QRCodes", schema: "dbo");
+                e.HasKey(k => k.QRID);
+                e.Property(p => p.Registered)
+                .HasDefaultValueSql("SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)'")
+                .ValueGeneratedOnAdd();
+                e.Property(p => p.LastModificated)
                 .HasDefaultValueSql("SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)'")
                 .ValueGeneratedOnAdd();
             });

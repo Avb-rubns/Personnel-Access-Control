@@ -50,6 +50,19 @@
                 c.BaseAddress = new Uri("https://smtp.maileroo.com");
                 c.DefaultRequestHeaders.Add("X-API-Key", builder.Configuration.GetSection("Maileroo")["ApiKey"]);
             });
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminActive", policy =>
+                {
+                    policy.RequireRole("Administrator");
+                    policy.RequireClaim("Status", "Active");
+                });
+                options.AddPolicy("RootActive", policy =>
+                {
+                    policy.RequireRole("root");
+                    policy.RequireClaim("Status", "Active");
+                });
+            });
 
 
             return builder.Build();

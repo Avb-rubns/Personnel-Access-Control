@@ -1,5 +1,4 @@
-﻿
-namespace Rubns.Infrastructure.Services
+﻿namespace Rubns.Infrastructure.Services
 {
     internal class Utils : IUtils
     {
@@ -17,6 +16,36 @@ namespace Rubns.Infrastructure.Services
             }
 
             return formData;
+        }
+
+        public string CreateSlug(string s)
+        {
+            string slug = string.Empty;
+
+            slug = s.Trim().ToLower();
+            slug = RemoveAccents(slug);
+
+            slug = Regex.Replace(s, @"\s", "-");
+
+            return slug;
+        }
+        public string RemoveAccents(string text)
+        {
+
+            string normalizedString = text.Normalize(NormalizationForm.FormD);
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            foreach (char c in normalizedString)
+            {
+
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }
