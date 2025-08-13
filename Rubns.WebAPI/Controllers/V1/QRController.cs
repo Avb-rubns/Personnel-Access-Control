@@ -1,8 +1,8 @@
 ﻿namespace Rubns.WebAPI.Controllers.V1
 {
     [ApiController]
-    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [RoleAndStatusAuth("Administrator,root")]
     public class QRController : ControllerBase
     {

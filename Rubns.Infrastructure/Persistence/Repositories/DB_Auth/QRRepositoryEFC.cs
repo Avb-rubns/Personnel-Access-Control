@@ -37,5 +37,21 @@
 
             return QRResult;
         }
+
+        public async Task<string> FindSlugAsync(string slug)
+        {
+            string result = string.Empty;
+
+            var isExists = await _context.QRs
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.Slug == slug);
+
+            if (isExists is { QRID: > 0 })
+            {
+                result = isExists.Content;
+            }
+
+            return result;
+        }
     }
 }

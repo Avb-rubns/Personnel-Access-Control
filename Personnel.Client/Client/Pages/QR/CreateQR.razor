@@ -1,0 +1,48 @@
+﻿@page "/create-qr"
+
+<Space>
+<MudText Typo="Typo.h4" Align="Align.Left">Crear QR</MudText>
+<EditForm Model="model">
+    <DataAnnotationsValidator/>
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+            <MudPaper Class="pa-4">
+                <MudTextField T="string" Label="Nombre" Variant="Variant.Text" @bind-Value="model.Name"
+                              For="@(() => model.Name)" Disabled="_processing"/>
+                <MudTextField T="string" Label="Nombre descriptivo" Variant="Variant.Text" @bind-Value="model.Slug"
+                                For="@(() => model.Slug)" Disabled="_processing" />
+                    <MudTextField T="string" Label="URL" Variant="Variant.Text" @bind-Value="model.Content"
+                                  For="@(() => model.Content)" Disabled="_processing" />
+                    <MudSelect T="bool"
+                               Label="Estatus"
+                               Required="true"
+                               @bind-Value="model.Status"
+                               For="@(() => model.Status)">
+                        <MudSelectItem Value="false">
+                            Desactivado
+                        </MudSelectItem>
+                        <MudSelectItem Value="true">
+                            Activo
+                        </MudSelectItem>
+                    </MudSelect>
+                    <MudButton Disabled="@_processing" Class="mt-3" Color="Color.Primary" FullWidth="true"
+                               Variant="Variant.Filled" ButtonType="ButtonType.Submit">
+                        @if (_processing)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">@Resource.BtnSending</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Crear</MudText>
+                        }
+                    </MudButton>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="5">
+            <MudPaper Class="pa-4 mud-height-full">
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+</Space>

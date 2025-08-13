@@ -9,7 +9,7 @@
 - El endpoint `/api/qr` debe permitir enviar una URL inicial.
 - El sistema debe generar un QR único y un *slug* asociado.
 - La respuesta debe incluir:
-  - URL pública para escanear (`url/api/v1/qr/{slug}`)
+  - URL pública para escanear (`url/qr/{slug}`)
   - Imagen del QR (en base64 o enlace de descarga)
   - Slug único
 - Si se envía una URL inválida, debe devolver un error `400 Bad Request`.
@@ -39,7 +39,7 @@
 **Para** acceder al contenido sin pasos adicionales.
 
 **Criterios de aceptación:**
-- Al acceder a `/{slug}`, el sistema debe:
+- Al acceder a `qr/{slug}`, el sistema debe:
   - Buscar el slug en la base de datos.
   - Redirigir (HTTP 302) a la URL actual asociada.
   - Registrar el evento en las métricas.

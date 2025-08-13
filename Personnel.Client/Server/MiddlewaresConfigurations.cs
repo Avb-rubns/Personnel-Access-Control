@@ -46,6 +46,11 @@
             });
 
 
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers(); // Esto permite que rutas como /r/{slug} lleguen a su controlador
+                endpoints.MapRazorPages();
+            });
 
             app.MapOpenApi();
             app.MapScalarApiReference();

@@ -1,5 +1,4 @@
-﻿
-namespace Rubns.Core.Ticket
+﻿namespace Rubns.Core.Ticket
 {
     public interface ICheckPort<T>
     {

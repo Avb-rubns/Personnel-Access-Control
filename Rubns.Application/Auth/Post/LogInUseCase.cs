@@ -31,6 +31,12 @@
             try
             {
                 var user = await LogInRepository.GetUserByEmailAsync(login.Email);
+
+                if (user is { Status: false })
+                {
+                    return null;
+                }
+
                 if (user.Email is null)
                 {
                     return null;

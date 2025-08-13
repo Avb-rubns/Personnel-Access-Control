@@ -5,4 +5,9 @@
             <MudNavLink Href="/users" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Person2">Usuarios</MudNavLink>
         </MudNavGroup>
     </AuthorizeView>
+    <AuthorizeView Roles="Administrador, root">
+        <MudNavGroup Icon="@Icons.Material.Filled.QrCode2" Title="QRs">
+            <MudNavLink Href="/create-qr" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.QrCode">Crear</MudNavLink>
+        </MudNavGroup>
+    </AuthorizeView>
 </MudNavMenu>

@@ -33,8 +33,6 @@ namespace Rubns.Infrastructure.Middleware
         public async Task Invoke(HttpContext context, IUserContextService userContext)
         {
 
-
-
             var path = context.Request.Path.Value?.ToLower();
 
             if (_publicRoutes.Any(r => path.StartsWith(r, StringComparison.OrdinalIgnoreCase)))

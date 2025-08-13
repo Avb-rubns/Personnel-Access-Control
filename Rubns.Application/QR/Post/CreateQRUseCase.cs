@@ -25,7 +25,15 @@
                 {
                     createDTO.Slug = _utils.CreateSlug(createDTO.Name);
                 }
-                createDTO.Url = $"{createDTO.Url}/{createDTO.Slug}";
+
+                var isExistSlug = await _repositoryEFC.FindSlugAsync(createDTO.Slug);
+                if (!string.IsNullOrEmpty(isExistSlug))
+                {
+                    return qr;
+                }
+
+                createDTO.Url = $"{createDTO.Url}/qr/{createDTO.Slug}";
+
                 qr = await _repositoryEFC.AddAsync(createDTO);
                 qr.UserRegistered = _userContextService.Name;
                 qr.UserLastModificated = _userContextService.Name;

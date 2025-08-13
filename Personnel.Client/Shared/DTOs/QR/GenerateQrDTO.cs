@@ -7,10 +7,10 @@
         public string Content { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
-        [StringLength(500, ErrorMessage = "Content cannot exceed 500 characters.", MinimumLength = 10)]
+        [StringLength(500, ErrorMessage = "Content cannot exceed 500 characters.", MinimumLength = 3)]
         public string Name { get; set; }
 
-        [StringLength(500, ErrorMessage = "Content cannot exceed 500 characters.", MinimumLength = 10)]
+        [StringLength(500, ErrorMessage = "Content cannot exceed 500 characters.", MinimumLength = 3)]
         public string Slug { get; set; }
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
         [Range(100, 1000, ErrorMessage = "Width must be between 100 and 1000 pixels.")]
