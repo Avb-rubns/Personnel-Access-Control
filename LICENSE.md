@@ -24,8 +24,6 @@ Notices:
 
 ---
 
-**Licencia Completa (para el archivo LICENSE.md)**
-
 [Rubén Sánchez Rugerio] ([2025])
 
 This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.
