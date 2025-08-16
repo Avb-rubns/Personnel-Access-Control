@@ -1,52 +1,167 @@
 ﻿@page "/create-qr"
 
 <Space>
-<MudText Typo="Typo.h4" Align="Align.Left">Crear QR</MudText>
+    <MudText class="text-sm-center text-md-start" Typo="Typo.h4">Crear QR</MudText>
 <EditForm Model="model">
     <DataAnnotationsValidator/>
     <MudGrid>
         <MudItem xs="12" sm="7">
-            <MudPaper Class="pa-4">
-                <MudTextField T="string" Label="Nombre" Variant="Variant.Text" @bind-Value="model.Name"
-                              For="@(() => model.Name)" Disabled="_processing"/>
-                <MudTextField T="string" Label="Nombre descriptivo" Variant="Variant.Text" @bind-Value="model.Slug"
-                                For="@(() => model.Slug)" Disabled="_processing" />
-                    <MudTextField T="string" Label="URL" Variant="Variant.Text" @bind-Value="model.Content"
-                                  For="@(() => model.Content)" Disabled="_processing" />
-                    <MudSelect T="bool"
-                               Label="Estatus"
-                               Required="true"
-                               @bind-Value="model.Status"
-                               For="@(() => model.Status)">
-                        <MudSelectItem Value="false">
-                            Desactivado
-                        </MudSelectItem>
-                        <MudSelectItem Value="true">
-                            Activo
-                        </MudSelectItem>
-                    </MudSelect>
-                    <MudButton Disabled="@_processing" Class="mt-3" Color="Color.Primary" FullWidth="true"
-                               Variant="Variant.Filled" ButtonType="ButtonType.Submit">
-                        @if (_processing)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                            <MudText Class="ms-2">@Resource.BtnSending</MudText>
-                        }
-                        else
-                        {
-                            <MudText>Crear</MudText>
-                        }
-                    </MudButton>
-            </MudPaper>
+                <MudExpansionPanels>
+                    <MudExpansionPanel @bind-Expanded="openPanel1">
+                        <TitleContent>
+                            <div class="d-flex align-center g-4">
+                                <MudIcon Color="@(openPanel1? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.TravelExplore" />
+                                <MudText Class="ml-2" Typo="Typo.h6" Color="@(openPanel1? Color.Primary: Color.Default)">Contenido</MudText>
+                            </div>
+                        </TitleContent>
+                        <ChildContent>
+                            <MudTextField T="string" Label="Nombre" Variant="Variant.Text"
+                                          @bind-Value="model.Name" Immediate="true"
+                                          For="@(() => model.Name)" Disabled="_processing" />
+                            <MudTextField T="string" Label="Nombre descriptivo" Variant="Variant.Text" @bind-Value="model.Slug"
+                                          For="@(() => model.Slug)" Disabled="_processing" />
+                            <MudTextField T="string" Label="URL" Variant="Variant.Text" @bind-Value="model.Content"
+                                          For="@(() => model.Content)" Disabled="_processing" />
+                            <MudSelect T="bool"
+                                       Label="Estatus"
+                                       Class="mt-1"
+                                       Dense="false"
+                                       Required="true"
+                                       @bind-Value="model.Status"
+                                       For="@(() => model.Status)">
+                                <MudSelectItem Value="false">
+                                    Desactivado
+                                </MudSelectItem>
+                                <MudSelectItem Value="true">
+                                    Activo
+                                </MudSelectItem>
+                            </MudSelect>
+                        </ChildContent>
+
+                    </MudExpansionPanel>
+                    <MudExpansionPanel @bind-Expanded="openPanel2">
+                        <TitleContent>
+                            <div class="d-flex align-center g-2">
+                                <MudIcon Color="@(openPanel2? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.ColorLens" />
+                                <MudText Class="ml-2" Color="@(openPanel2? Color.Primary: Color.Default)" Typo="Typo.h6">Colores</MudText>
+                            </div>
+                        </TitleContent>
+                        <ChildContent>
+                            <MudText>Color de los Puntos</MudText>
+                            <div class="d-flex">
+                                <MudPaper Width="50px" Square="true" Style="@($"background-color: {qrCode.ColorDark};")" />
+                                <MudColorPicker Class="ml-2" 
+                                                @bind-Text="qrCode.ColorDark"
+                                                Label="Puntos"
+                                                ValueChanged="UpdateSelectedColorDot" />
+
+                            </div>
+                            <MudText>Color de fondo</MudText>
+                            <div class="d-flex">
+                                <MudPaper Width="50px" Square="true" Style="@($"background-color: {qrCode.ColorLight};")" />
+                                <MudColorPicker Class="ml-2"
+                                                Label="Fondo"
+                                                @bind-Text="qrCode.ColorLight"
+                                                ValueChanged="UpdateSelectedColor" />
+
+                            </div>
+                        </ChildContent>
+                    </MudExpansionPanel>
+                    <MudExpansionPanel @bind-Expanded="openPanel3">
+                        <TitleContent>
+                            <div class="d-flex align-center">
+                                <MudIcon Color="@(openPanel3? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.Adjust" />
+                                <MudText Class="ml-2" Color="@(openPanel3? Color.Primary: Color.Default)" Typo="Typo.h6">Tamaño de los puntos</MudText>
+                            </div>
+                        </TitleContent>
+                        <ChildContent>
+                            <MudText>Tamaño de los puntos</MudText>
+                            <MudSlider T="double"
+                                        Min="0.6"
+                                        Max="1"
+                                        Step="0.1"
+                                        Value="qrCode.DotScale"
+                                        Color="Color.Info"
+                                        TickMarks="true"
+                                        ValueChanged="UpdateSliderDot">
+                                @qrCode.DotScale.ToString()
+                            </MudSlider>
+                            <MudText>Borde</MudText>
+                            <MudSlider T="int"
+                                        Min="0"
+                                        Max="50"
+                                        Value="qrCode.QuietZone"
+                                        Step="1"
+                                        TickMarks="true"
+                                       ValueChanged="@(UpdateSliderPaper)"
+                                       Color="Color.Info">
+                                @qrCode.QuietZone.ToString()
+                            </MudSlider>
+                        </ChildContent>
+                        
+                    </MudExpansionPanel>
+                    <MudExpansionPanel @bind-Expanded="openPanel4">
+                        <TitleContent>
+                            <div class="d-flex align-center">
+                                <MudIcon Color="@(openPanel4? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.Panorama" />
+                                <MudText Class="ml-2" Color="@(openPanel4? Color.Primary: Color.Default)" Typo="Typo.h6">Logo</MudText>
+                            </div>
+                        </TitleContent>
+                        <ChildContent>
+                            <MudTooltip Text="Subir logo">
+                                <MudFileUpload T="IBrowserFile"
+                                                FilesChanged="UploadFiles"
+                                               Accept=".png, .jpg"
+                                                MaximumFileCount="1">
+                                    <ActivatorContent>
+                                        <MudButton Variant="Variant.Filled"
+                                                   Color="Color.Primary"
+                                                   StartIcon="@Icons.Material.Filled.Image">
+                                            Subir logo
+                                        </MudButton>
+                                    </ActivatorContent>
+                                </MudFileUpload>
+                            </MudTooltip>
+                            <MudTooltip Text="Eliminar Logo">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                               aria-label="delete"
+                                               OnClick="DeleteLogo"
+                                               />
+                            </MudTooltip>
+                        </ChildContent>
+                        
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+
+                <MudButton Disabled="@_processing" Class="mt-3" Color="Color.Primary" FullWidth="true"
+                           Variant="Variant.Filled" ButtonType="ButtonType.Submit">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudText Class="ms-2">@Resource.BtnSending</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Crear</MudText>
+                    }
+                </MudButton>
         </MudItem>
         <MudItem xs="12" sm="5">
-            <MudPaper Class="pa-4 mud-height-full">
-
-
-                    <input id="text" type="text" value="https://hogangnono.com" style="width:80%" /><br />
-                    <div id="qrcode" style="width:160px; height:160px; margin-top:15px;"/>
-
-            </MudPaper>
+                <MudPaper Class="pa-4">
+                    <div id="qrcode"></div>
+                    <MudTooltip Text="Descargar">
+                        <MudIconButton Icon="@Icons.Material.Filled.Download" aria-label="download" />
+                    </MudTooltip>
+                    <MudTooltip Text="Descargar">
+                        <MudIconButton Icon="@Icons.Material.Filled.Share" aria-label="share" />
+                    </MudTooltip>
+                    <MudTooltip Text="Descargar">
+                        <MudIconButton Icon="@Icons.Material.Filled.FlipCameraAndroid" aria-label="share" />
+                    </MudTooltip>
+                </MudPaper>
+              
+                    
+                   
         </MudItem>
     </MudGrid>
 </EditForm>

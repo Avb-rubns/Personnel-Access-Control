@@ -15,18 +15,11 @@
 
     localStorage.setItem("theme", "dark");
 }
+function createQR(id, options) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.innerHTML = "";
+        new QRCode(document.getElementById(id), options);
 
-import { QRCode } from '.qrcode.min.js'
-function makeCode() {
-    var qrcode = new QRCode("qrcode");
-    var elText = document.getElementById("text");
-
-    if (!elText.value) {
-        alert("Input a text");
-        elText.focus();
-        return;
     }
-
-    qrcode.makeCode(elText.value);
 }
-makeCode()
