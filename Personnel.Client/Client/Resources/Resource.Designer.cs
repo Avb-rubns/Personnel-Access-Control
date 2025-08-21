@@ -160,6 +160,42 @@ namespace Personnel.Client.Client.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Reiniciar.
+        /// </summary>
+        public static string CreateQRBtnReset {
+            get {
+                return ResourceManager.GetString("CreateQRBtnReset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Compartir.
+        /// </summary>
+        public static string CreateQrBtnShare {
+            get {
+                return ResourceManager.GetString("CreateQrBtnShare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Contenido.
+        /// </summary>
+        public static string CreateQrLabelContent {
+            get {
+                return ResourceManager.GetString("CreateQrLabelContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Crear QR.
+        /// </summary>
+        public static string CreateQRTitle {
+            get {
+                return ResourceManager.GetString("CreateQRTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Revisa tu correo electrónico.
         /// </summary>
         public static string ForgotCheckEmail {

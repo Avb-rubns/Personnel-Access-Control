@@ -1,0 +1,76 @@
+@page "/links"
+
+<Space>
+    <div class="p-1 mb-2 d-flex justify-content-between ">
+        <MudText Typo="Typo.h5">Links</MudText>
+        <MudButton OnClick="CreateLink" Variant="Variant.Outlined" Color="Color.Primary">Crear</MudButton>
+    </div>
+    <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table">
+        <ToolBarContent>
+            <MudSpacer/>
+            <MudTextField T="string" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel SortLabel="Nombre" T="QRDTO">
+                    Nombre
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="URL" T="QRDTO">
+                    URL
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="Contenido" T="QRDTO">
+                    Contenido
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="Clicks" T="QRDTO">
+                    Clicks
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="QR" T="QRDTO">
+                    QR
+                </MudTableSortLabel>
+            </MudTh>
+            <MudTh>
+            </MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nombre">@context.Name</MudTd>
+            <MudTd DataLabel="URL">
+                <span>
+                    <MudText HtmlTag="a" style="cursor:pointer;" Typo="Typo.body2">
+                        @context.Url 
+                    </MudText>
+                    <MudIconButton Size="Size.Small" Icon="@Icons.Material.Rounded.CopyAll" />
+                </span>
+            </MudTd>
+            <MudTd DataLabel="Contenido">
+                <MudText HtmlTag="a" style="cursor:pointer;" Typo="Typo.caption">@context.Content</MudText>
+            </MudTd>
+            <MudTd DataLabel="Clicks">
+                1
+            </MudTd>
+            <MudTd DataLabel="QR">
+                ver
+            </MudTd>
+            <MudTd >
+                <MudMenu Icon="@Icons.Material.Filled.MoreVert"
+                         AriaLabel="Open user menu">
+                    <MudMenuItem Label="Editar" />
+                    <MudMenuItem Label="Eliminar" />
+                </MudMenu>
+            </MudTd>
+        </RowTemplate>
+        <LoadingContent>
+            <MudText>cargando...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</Space>

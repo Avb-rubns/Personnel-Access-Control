@@ -1,45 +1,57 @@
 ﻿@page "/create-qr"
 
 <Space>
-    <MudText class="text-sm-center text-md-start" Typo="Typo.h4">Crear QR</MudText>
-<EditForm Model="model">
-    <DataAnnotationsValidator/>
+    <MudText class="text-sm-center text-md-start" Typo="Typo.h4">@Resource.CreateQRTitle</MudText>
     <MudGrid>
         <MudItem xs="12" sm="7">
+            <EditForm Model="model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator/>
                 <MudExpansionPanels>
-                    <MudExpansionPanel @bind-Expanded="openPanel1">
+                    <MudExpansionPanel @bind-Expanded="openPanel1" Disabled="_processing">
+
                         <TitleContent>
                             <div class="d-flex align-center g-4">
                                 <MudIcon Color="@(openPanel1? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.TravelExplore" />
-                                <MudText Class="ml-2" Typo="Typo.h6" Color="@(openPanel1? Color.Primary: Color.Default)">Contenido</MudText>
+                                <MudText Class="ml-2" Typo="Typo.h6" Color="@(openPanel1? Color.Primary: Color.Default)">@Resource.CreateQrLabelContent</MudText>
                             </div>
+                           
                         </TitleContent>
                         <ChildContent>
-                            <MudTextField T="string" Label="Nombre" Variant="Variant.Text"
-                                          @bind-Value="model.Name" Immediate="true"
-                                          For="@(() => model.Name)" Disabled="_processing" />
+                            @if(_scanURL){
+                            <MudProgressLinear Color="Color.Primary"  Size="Size.Large" Indeterminate="true">
+                                <MudText Typo="Typo.body2" Style="font-size:.8rem;" >Analisando URL</MudText>
+                            </MudProgressLinear>
+                            }
+                            <MudTextField T="string" Label="URL" Variant="Variant.Text" ValueChanged="GetTagUrl"
+                                          For="@(() => model.Content)" Disabled="_processing || _scanURL" />
+                            <MudTextField T="string"
+                                          Label="Nombre"
+                                          Variant="Variant.Text"
+                                          For="@(() => model.Name)"
+                                          @bind-Value="model.Name"
+                                          Disabled="_processing" />
                             <MudTextField T="string" Label="Nombre descriptivo" Variant="Variant.Text" @bind-Value="model.Slug"
-                                          For="@(() => model.Slug)" Disabled="_processing" />
-                            <MudTextField T="string" Label="URL" Variant="Variant.Text" @bind-Value="model.Content"
-                                          For="@(() => model.Content)" Disabled="_processing" />
+                                          For="@(() => model.Slug)" Disabled="_processing || _scanURL" />
                             <MudSelect T="bool"
                                        Label="Estatus"
                                        Class="mt-1"
                                        Dense="false"
+                                       Disabled="_processing || _scanURL"
                                        Required="true"
                                        @bind-Value="model.Status"
                                        For="@(() => model.Status)">
-                                <MudSelectItem Value="false">
-                                    Desactivado
-                                </MudSelectItem>
                                 <MudSelectItem Value="true">
                                     Activo
                                 </MudSelectItem>
+                                <MudSelectItem Value="false">
+                                    Desactivado
+                                </MudSelectItem>
+                                
                             </MudSelect>
                         </ChildContent>
 
                     </MudExpansionPanel>
-                    <MudExpansionPanel @bind-Expanded="openPanel2">
+                    <MudExpansionPanel @bind-Expanded="openPanel2" Disabled="_processing">
                         <TitleContent>
                             <div class="d-flex align-center g-2">
                                 <MudIcon Color="@(openPanel2? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.ColorLens" />
@@ -67,7 +79,7 @@
                             </div>
                         </ChildContent>
                     </MudExpansionPanel>
-                    <MudExpansionPanel @bind-Expanded="openPanel3">
+                    <MudExpansionPanel @bind-Expanded="openPanel3" Disabled="_processing">
                         <TitleContent>
                             <div class="d-flex align-center">
                                 <MudIcon Color="@(openPanel3? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.Adjust" />
@@ -100,41 +112,45 @@
                         </ChildContent>
                         
                     </MudExpansionPanel>
-                    <MudExpansionPanel @bind-Expanded="openPanel4">
+                    <MudExpansionPanel @bind-Expanded="openPanel4" Disabled="_processing">
                         <TitleContent>
                             <div class="d-flex align-center">
                                 <MudIcon Color="@(openPanel4? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.Panorama" />
                                 <MudText Class="ml-2" Color="@(openPanel4? Color.Primary: Color.Default)" Typo="Typo.h6">Logo</MudText>
                             </div>
                         </TitleContent>
-                        <ChildContent>
-                            <MudTooltip Text="Subir logo">
-                                <MudFileUpload T="IBrowserFile"
-                                                FilesChanged="UploadFiles"
-                                               Accept=".png, .jpg"
-                                                MaximumFileCount="1">
-                                    <ActivatorContent>
-                                        <MudButton Variant="Variant.Filled"
-                                                   Color="Color.Primary"
-                                                   StartIcon="@Icons.Material.Filled.Image">
-                                            Subir logo
-                                        </MudButton>
-                                    </ActivatorContent>
-                                </MudFileUpload>
-                            </MudTooltip>
-                            <MudTooltip Text="Eliminar Logo">
-                                <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                               aria-label="delete"
-                                               OnClick="DeleteLogo"
-                                               />
-                            </MudTooltip>
+                        <ChildContent >
+                            <MudPaper Elevation="0" Class="d-flex space align-baseline">
+                                <MudTooltip Text="Subir logo">
+                                    <MudFileUpload T="IBrowserFile"
+                                                    FilesChanged="UploadFiles"
+                                                   Accept=".png, .jpg"
+                                                    MaximumFileCount="1">
+                                        <ActivatorContent>
+                                            <MudButton Variant="Variant.Filled"
+                                                       Color="Color.Primary"
+                                                       StartIcon="@Icons.Material.Filled.Image">
+                                                Subir logo
+                                            </MudButton>
+                                        </ActivatorContent>
+                                    </MudFileUpload>
+                                </MudTooltip>
+                                <MudTooltip Text="Eliminar Logo">
+                                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                   aria-label="delete"
+                                                   Color="Color.Error"
+                                                   OnClick="DeleteLogo"
+                                                   />
+                                </MudTooltip>
+                            </MudPaper>
                         </ChildContent>
                         
                     </MudExpansionPanel>
                 </MudExpansionPanels>
-
-                <MudButton Disabled="@_processing" Class="mt-3" Color="Color.Primary" FullWidth="true"
-                           Variant="Variant.Filled" ButtonType="ButtonType.Submit">
+                <MudButton  Class="mt-3" Color="Color.Primary" FullWidth="true"
+                           Disabled="_processing || _scanURL"
+                           Variant="Variant.Filled"
+                           ButtonType="ButtonType.Submit">
                     @if (_processing)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -145,24 +161,33 @@
                         <MudText>Crear</MudText>
                     }
                 </MudButton>
+             </EditForm>
         </MudItem>
         <MudItem xs="12" sm="5">
                 <MudPaper Class="pa-4">
-                    <div id="qrcode"></div>
-                    <MudTooltip Text="Descargar">
-                        <MudIconButton Icon="@Icons.Material.Filled.Download" aria-label="download" />
-                    </MudTooltip>
-                    <MudTooltip Text="Descargar">
-                        <MudIconButton Icon="@Icons.Material.Filled.Share" aria-label="share" />
-                    </MudTooltip>
-                    <MudTooltip Text="Descargar">
-                        <MudIconButton Icon="@Icons.Material.Filled.FlipCameraAndroid" aria-label="share" />
-                    </MudTooltip>
-                </MudPaper>
-              
-                    
-                   
+                    <section id="qrcode" class="create-qr-seccion-code"/>
+                    <MudText Typo="Typo.caption" >@model.Url</MudText>
+                    <MudPaper Elevation="0" Class="d-flex justify-center">
+                        <MudTooltip Text="Descargar">
+                            <MudIconButton Icon="@Icons.Material.Filled.Download"
+                                            aria-label="download"
+                                           OnClick="DownloadQrCode"
+                                            Color="Color.Primary"/>
+                        </MudTooltip>
+                        <MudTooltip Text="@Resource.CreateQrBtnShare">
+                            <MudIconButton Icon="@Icons.Material.Filled.Share"
+                                            aria-label="share"
+                                           OnClick="ShareQrCode"
+                                            Color="Color.Info" />
+                        </MudTooltip>
+                        <MudTooltip Text="@Resource.CreateQRBtnReset">
+                            <MudIconButton Icon="@Icons.Material.Filled.Cached"
+                                            aria-label="reset"
+                                           OnClick="ResetQrCode"
+                                            Color="Color.Warning"/>
+                        </MudTooltip>
+                    </MudPaper>
+                </MudPaper>    
         </MudItem>
-    </MudGrid>
-</EditForm>
+</MudGrid>
 </Space>

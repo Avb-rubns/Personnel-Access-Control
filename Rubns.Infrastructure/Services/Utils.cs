@@ -47,5 +47,33 @@
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
+
+        public string GenerateSlug(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return "";
+
+            // Convertir a minúsculas
+            text = text.ToLowerInvariant();
+
+            // Eliminar acentos
+            var normalized = text.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+            foreach (var c in normalized)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    sb.Append(c);
+            }
+            text = sb.ToString().Normalize(NormalizationForm.FormC);
+
+            // Reemplazar espacios y caracteres no válidos
+            text = Regex.Replace(text, @"\s+", "-");
+            text = Regex.Replace(text, @"[^a-z0-9\-]", "");
+            text = Regex.Replace(text, @"-+", "-");
+            text = text.Trim('-');
+
+            return text;
+        }
+
     }
 }

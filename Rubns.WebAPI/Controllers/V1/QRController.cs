@@ -6,14 +6,33 @@
     [RoleAndStatusAuth("Administrator,root")]
     public class QRController : ControllerBase
     {
-        IQRGeneratePort<MemoryStream> QRGeneratePort { get; }
-        IQRCreatePort<QRDTO> QRCreatePort { get; }
+        private IQRGeneratePort<MemoryStream> QRGeneratePort { get; }
+        private IQRCreatePort<QRDTO> QRCreatePort { get; }
+        private IQRsGetPort QRsGetPort { get; }
+
         public QRController(IQRGeneratePort<MemoryStream> qrGeneratePort
-            , IQRCreatePort<QRDTO> qRCreatePort)
+            , IQRCreatePort<QRDTO> qRCreatePort
+            , IQRsGetPort qRsGetPort)
         {
             QRGeneratePort = qrGeneratePort;
             QRCreatePort = qRCreatePort;
+            QRsGetPort = qRsGetPort;
         }
+
+        [HttpGet("qrs")]
+        public async Task<IActionResult> GetQrsAsync(int? page = 0, int? pageSize = 10, string? filter = "")
+        {
+            var data = await QRsGetPort.GetPortsAsync(page, pageSize, filter);
+            switch (data.Count)
+            {
+                case > 0:
+                    return Ok(data);
+                case 0:
+                    return NoContent();
+            }
+            return BadRequest();
+        }
+
 
         [HttpPost("generate")]
         public async Task<IActionResult> GenerateCode(GenerateQrDTO generateQr)

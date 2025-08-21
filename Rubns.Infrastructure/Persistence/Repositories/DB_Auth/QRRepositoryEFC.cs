@@ -53,5 +53,58 @@
 
             return result;
         }
+
+        public async Task<List<QRDTO>> GetAllQrsForPageAsync(int? page, int? pagesize, string? filter)
+        {
+            List<QRDTO> qrs = new List<QRDTO>();
+            IEnumerable<QR> data;
+            int pageSize = ((pagesize.HasValue && pagesize.Value > 0) ? pagesize.Value : 25);
+            int pageNumber = ((page.HasValue && page.Value > 0) ? page.Value : 1);
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                bool status = filter.Equals("true") ? true : false;
+                data = await _context.QRs.Where(s => s.Status == status)
+                                .OrderBy(id => id.QRID)
+                                .Skip((pageNumber - 1) * pageSize)
+                                .Take(pageSize)
+                                .AsNoTracking()
+                                .ToListAsync();
+            }
+            else
+            {
+
+                data = await _context.QRs.OrderBy(id => id.QRID)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+
+
+
+            if (data.Count() > 0)
+            {
+                qrs = data.Select(s => new QRDTO
+                {
+                    ID = s.QRID,
+                    Name = s.Name,
+                    Slug = s.Slug,
+                    Content = s.Content,
+                    Url = s.Url,
+                    DotScale = s.DotScale,
+                    ColorDark = s.ColorDark,
+                    ColorLight = s.ColorLight,
+                    QuietZone = s.QuietZone,
+                    Status = s.Status,
+                    Registered = s.Registered,
+                    LastModificated = s.LastModificated,
+
+                }).ToList();
+            }
+
+
+            return qrs;
+        }
     }
 }

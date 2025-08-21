@@ -17,6 +17,7 @@ global using Rubns.Core.Ports.Auth;
 global using Rubns.Core.Ports.CheckUser;
 global using Rubns.Core.Ports.QR;
 global using Rubns.Core.Ports.Rol;
+global using Rubns.Core.Ports.Scrapper;
 global using Rubns.Core.Ports.SessionUser;
 global using Rubns.Core.Ports.Template;
 global using Rubns.Core.Ports.User;

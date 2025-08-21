@@ -219,4 +219,16 @@
   <data name="checkOutTitleHi" xml:space="preserve">
     <value>¡Hola!</value>
   </data>
+  <data name="CreateQRTitle" xml:space="preserve">
+    <value>Crear QR</value>
+  </data>
+  <data name="CreateQRBtnReset" xml:space="preserve">
+    <value>Reiniciar</value>
+  </data>
+  <data name="CreateQrBtnShare" xml:space="preserve">
+    <value>Compartir</value>
+  </data>
+  <data name="CreateQrLabelContent" xml:space="preserve">
+    <value>Contenido</value>
+  </data>
 </root>

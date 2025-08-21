@@ -117,6 +117,7 @@
         {
             var claims = new List<Claim> {
                         new Claim(ClaimTypes.NameIdentifier, userInfo.ID.ToString()),
+                        new Claim("userId", userInfo.ID.ToString()),
                         new Claim(ClaimTypes.Name, userInfo.FirstName),
                         new Claim(ClaimTypes.Email, userInfo.Email),
                         new Claim(ClaimTypes.Expiration, userInfo.Expiration.ToString()),

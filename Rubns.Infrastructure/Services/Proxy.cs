@@ -19,9 +19,19 @@
             throw new NotImplementedException();
         }
 
+        public async Task<R> GetStringAsync<R>(string clientName, string url)
+        {
+            using var client = _factory.CreateClient(clientName);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; Bot/1.0)");
+
+            var html = await client.GetStringAsync(url);
+
+            return (R)(object)html;
+        }
+
         public async Task<R> PostAsFormDataAsync<R, S>(string clientName, string url, S postData)
         {
-            var client = _factory.CreateClient(clientName);
+            using var client = _factory.CreateClient(clientName);
             MultipartFormDataContent form = new MultipartFormDataContent();
 
             form = _utils.ToMultipartFormDataContent(postData);

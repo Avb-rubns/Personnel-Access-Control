@@ -3,6 +3,7 @@
     public interface IProxyServer
     {
         public Task<R> GetAsync<R>(string clientName, string url);
+        public Task<R> GetStringAsync<R>(string clientName, string url);
         public Task<R> PostAsJsonAsync<R, S>(string clientName, string url, S postData);
         public Task<R> PostAsFormDataAsync<R, S>(string clientName, string url, S postData);
         public Task<R> PostAsync<R>(string clientName, string url);

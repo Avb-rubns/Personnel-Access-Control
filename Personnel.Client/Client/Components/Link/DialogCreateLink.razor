@@ -1,0 +1,66 @@
+﻿<MudDialog ContentClass="w-75vh">
+    <TitleContent>
+        <MudText Typo="Typo.body2">Link > Create</MudText>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="model" OnValidSubmit="CreateAsync">
+        <DataAnnotationsValidator/>
+        @if (_scanURL)
+        {
+            <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true">
+                <MudText Typo="Typo.body2" Style="font-size:.8rem;">Analisando URL</MudText>
+            </MudProgressLinear>
+        }
+        <MudTextField T="string" Label="URL de destino" Variant="Variant.Text" ValueChanged="GetTagUrl"
+                        For="@(() => model.Content)" Disabled="_processing || _scanURL" />
+        <MudTextField T="string"
+                      Label="Nombre"
+                      Variant="Variant.Text"
+                      For="@(() => model.Name)"
+                      @bind-Value="model.Name"
+                      Disabled="_processing" />
+
+        <MudTextField T="string" Label="Nombre descriptivo" Variant="Variant.Text" @bind-Value="model.Slug"
+                      For="@(() => model.Slug)" Disabled="_processing || _scanURL" />
+
+        <MudSelect T="bool"
+                   Label="Estatus"
+                   Class="mt-1"
+                   Dense="false"
+                   Disabled="_processing || _scanURL"
+                   Required="true"
+                   @bind-Value="model.Status"
+                   For="@(() => model.Status)">
+            <MudSelectItem Value="true">
+                Activo
+            </MudSelectItem>
+            <MudSelectItem Value="false">
+                Desactivado
+            </MudSelectItem>
+
+        </MudSelect>
+        <MudPaper Class="mt-4 d-flex g-5">
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Secondary"
+                       OnClick="Cancel">
+                Cancelar
+            </MudButton>
+            <MudButton Color="Color.Primary" 
+                       Disabled="_processing || _scanURL"
+                       Variant="Variant.Filled"
+                       Class="ms-2"
+                       ButtonType="ButtonType.Submit">
+                @if (_processing)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">@Resource.BtnSending</MudText>
+                }
+                else
+                {
+                    <MudText>Crear</MudText>
+                }
+            </MudButton>
+        </MudPaper>
+        </EditForm>
+    </DialogContent>
+</MudDialog>

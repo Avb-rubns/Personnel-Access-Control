@@ -51,6 +51,20 @@
                 e.Property(p => p.LastModificated)
                 .HasDefaultValueSql("SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)'")
                 .ValueGeneratedOnAdd();
+                e.Property(p => p.ColorDark)
+                .HasDefaultValueSql("#000000")
+                .ValueGeneratedOnAdd();
+                e.Property(p => p.ColorLight)
+                .HasDefaultValueSql("#FFFFFF")
+                .ValueGeneratedOnAdd();
+                e.Property(p => p.DotScale)
+                .HasDefaultValueSql("1.0")
+                .ValueGeneratedOnAdd();
+                e.Property(p => p.QuietZone)
+                .HasDefaultValueSql("20")
+                .ValueGeneratedOnAdd();
+                e.Property(p => p.DotScale)
+                .HasColumnType("float");
             });
 
 
