@@ -2,37 +2,37 @@
 
 <Space>
     <div class="p-1 mb-2 d-flex justify-content-between ">
-        <MudText Typo="Typo.h5">Links</MudText>
+        <MudText Typo="Typo.h5">Enlaces</MudText>
         <MudButton OnClick="CreateLink" Variant="Variant.Outlined" Color="Color.Primary">Crear</MudButton>
     </div>
-    <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table">
+    <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="_table">
         <ToolBarContent>
             <MudSpacer/>
             <MudTextField T="string" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>
-                <MudTableSortLabel SortLabel="Nombre" T="QRDTO">
+                <MudTableSortLabel SortLabel="Nombre" T="LinkDTO">
                     Nombre
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="URL" T="QRDTO">
+                <MudTableSortLabel SortLabel="URL" T="LinkDTO">
                     URL
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="Contenido" T="QRDTO">
-                    Contenido
+                <MudTableSortLabel SortLabel="URL Destino" T="LinkDTO">
+                    URL Destino
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="Clicks" T="QRDTO">
-                    Clicks
+                <MudTableSortLabel SortLabel="Clicks" T="LinkDTO">
+                    Clics
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="QR" T="QRDTO">
+                <MudTableSortLabel SortLabel="QR" T="LinkDTO">
                     QR
                 </MudTableSortLabel>
             </MudTh>
@@ -43,34 +43,45 @@
             <MudTd DataLabel="Nombre">@context.Name</MudTd>
             <MudTd DataLabel="URL">
                 <span>
-                    <MudText HtmlTag="a" style="cursor:pointer;" Typo="Typo.body2">
-                        @context.Url 
+                    <MudText HtmlTag="a"  style="cursor:pointer;" Typo="Typo.body2">
+                         @(context.Slug)
                     </MudText>
-                    <MudIconButton Size="Size.Small" Icon="@Icons.Material.Rounded.CopyAll" />
+                    <MudIconButton OnClick="@(async() => { await ClipboardCopy(context.Url);})" Size="Size.Small" Icon="@Icons.Material.Rounded.CopyAll" Color="Color.Info" />
                 </span>
             </MudTd>
-            <MudTd DataLabel="Contenido">
-                <MudText HtmlTag="a" style="cursor:pointer;" Typo="Typo.caption">@context.Content</MudText>
+            <MudTd DataLabel="URL Destino">
+                <MudText HtmlTag="a" style="cursor:pointer;"  Typo="Typo.caption">@context.Content</MudText>
             </MudTd>
-            <MudTd DataLabel="Clicks">
+            <MudTd DataLabel="Clics">
                 1
             </MudTd>
             <MudTd DataLabel="QR">
-                ver
+                <MudButton Variant="Variant.Outlined" OnClick="@(async() => { await QREditor(context.ID);})" StartIcon="@Icons.Material.Rounded.QrCode2" IconColor="Color.Error">
+                    Ver
+                </MudButton>
             </MudTd>
             <MudTd >
                 <MudMenu Icon="@Icons.Material.Filled.MoreVert"
                          AriaLabel="Open user menu">
-                    <MudMenuItem Label="Editar" />
-                    <MudMenuItem Label="Eliminar" />
+                    <MudMenuItem Label="Editar" Icon="@Icons.Material.Rounded.Edit" />
+                    <MudDivider/>
+                    <MudMenuItem IconColor="Color.Warning"
+                                 Label="Eliminar"
+                                 OnClick="@(async() => { await DeleteLinkAsync(context.ID);})"
+                                 Icon="@Icons.Material.Rounded.DeleteForever" />
                 </MudMenu>
             </MudTd>
         </RowTemplate>
+        <NoRecordsContent>
+            <MudText>Sin informacion por el momento</MudText>
+        </NoRecordsContent>
         <LoadingContent>
             <MudText>cargando...</MudText>
         </LoadingContent>
         <PagerContent>
-            <MudTablePager />
+            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }"
+                           RowsPerPageString="Filas por pagina:"
+                           InfoFormat="{first_item}-{last_item} de {all_items}"/>
         </PagerContent>
     </MudTable>
 </Space>

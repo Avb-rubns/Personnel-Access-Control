@@ -1,6 +1,6 @@
-﻿<MudDialog ContentClass="w-75vh">
+﻿<MudDialog>
     <TitleContent>
-        <MudText Typo="Typo.body2">Link > Create</MudText>
+        <MudText Typo="Typo.body2">Enlaces > Crear</MudText>
     </TitleContent>
     <DialogContent>
         <EditForm Model="model" OnValidSubmit="CreateAsync">
@@ -14,23 +14,29 @@
         <MudTextField T="string" Label="URL de destino" Variant="Variant.Text" ValueChanged="GetTagUrl"
                         For="@(() => model.Content)" Disabled="_processing || _scanURL" />
         <MudTextField T="string"
-                      Label="Nombre"
-                      Variant="Variant.Text"
-                      For="@(() => model.Name)"
-                      @bind-Value="model.Name"
-                      Disabled="_processing" />
-
-        <MudTextField T="string" Label="Nombre descriptivo" Variant="Variant.Text" @bind-Value="model.Slug"
-                      For="@(() => model.Slug)" Disabled="_processing || _scanURL" />
+                        Label="Nombre"
+                        Variant="Variant.Text"
+                        For="@(() => model.Name)"
+                        @bind-Value="model.Name"
+                        Disabled="_processing" />
+        <MudTooltip Text="Puede dejar en blanco para que se genere uno en automatico">
+            <MudTextField T="string"
+                          Label="Nombre descriptivo"
+                          Variant="Variant.Text"
+                          For="@(() => model.Slug)"
+                          Value="model.Slug"
+                          ValueChanged="UpdateSlug"
+                          Disabled="_processing || _scanURL" />
+        </MudTooltip>
 
         <MudSelect T="bool"
-                   Label="Estatus"
-                   Class="mt-1"
-                   Dense="false"
-                   Disabled="_processing || _scanURL"
-                   Required="true"
-                   @bind-Value="model.Status"
-                   For="@(() => model.Status)">
+                    Label="Estatus"
+                    Class="mt-1"
+                    Dense="false"
+                    Disabled="_processing || _scanURL"
+                    Required="true"
+                    @bind-Value="model.Status"
+                    For="@(() => model.Status)">
             <MudSelectItem Value="true">
                 Activo
             </MudSelectItem>
@@ -39,17 +45,19 @@
             </MudSelectItem>
 
         </MudSelect>
-        <MudPaper Class="mt-4 d-flex g-5">
+        <MudPaper Class="mt-4 d-flex justify-content-end g-5">
             <MudButton Variant="Variant.Filled"
-                       Color="Color.Secondary"
-                       OnClick="Cancel">
-                Cancelar
+                        Color="Color.Secondary"
+                        Class="ms-2"
+                        ButtonType="ButtonType.Reset"
+                        OnClick="Cancel">
+                    <MudText Class="ms-2">Cancelar</MudText>
             </MudButton>
             <MudButton Color="Color.Primary" 
-                       Disabled="_processing || _scanURL"
-                       Variant="Variant.Filled"
-                       Class="ms-2"
-                       ButtonType="ButtonType.Submit">
+                        Disabled="_processing || _scanURL"
+                        Variant="Variant.Filled"
+                        Class="ms-2 w-20"
+                        ButtonType="ButtonType.Submit">
                 @if (_processing)
                 {
                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -60,7 +68,7 @@
                     <MudText>Crear</MudText>
                 }
             </MudButton>
-        </MudPaper>
-        </EditForm>
+    </MudPaper>
+    </EditForm>
     </DialogContent>
 </MudDialog>

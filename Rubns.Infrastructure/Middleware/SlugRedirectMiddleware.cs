@@ -1,13 +1,14 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using Rubns.Core.Ports.Link;
 
 namespace Rubns.Infrastructure.Middleware
 {
     public class SlugRedirectMiddleware(RequestDelegate requestDelegate
-        , IQRRepositoryEFC repositoryEFC
+        , ILinkRepositoryEFC repositoryEFC
         , IMemoryCache memoryCache)
     {
         private readonly RequestDelegate _next = requestDelegate;
-        private readonly IQRRepositoryEFC qRRepositoryEFC = repositoryEFC;
+        private readonly ILinkRepositoryEFC qRRepositoryEFC = repositoryEFC;
         private readonly IMemoryCache _cache = memoryCache;
 
         public async Task InvokeAsync(HttpContext context)

@@ -1,9 +1,12 @@
 ﻿
-namespace Rubns.Application.QR.Post
+using Personnel.Client.Shared.DTOs.Link;
+using Rubns.Core.Ports.Link;
+
+namespace Rubns.Application.Link.Post
 {
     internal class GenerateQRUseCases(IQRServices qRServices
         , ILogger logger)
-        : IQRGeneratePort<MemoryStream>
+        : IGenerateQRPort<MemoryStream>
     {
         private readonly IQRServices _qRServices = qRServices;
         private readonly ILogger _logger = logger;

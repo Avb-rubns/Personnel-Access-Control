@@ -1,0 +1,28 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1"/>
+            ¿Desea eliminar?
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText>
+            @Message
+        </MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancelar</MudButton>
+        <MudButton Color="Color.Error" OnClick="Delete">Eliminar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code{
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Message { get; set; }
+
+    private void Cancel() => MudDialog.Cancel();
+    private void Delete()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}

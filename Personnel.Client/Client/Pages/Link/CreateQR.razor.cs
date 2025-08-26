@@ -10,9 +10,9 @@
         [Inject] public HttpClient HttpClient { get; set; } = default!;
 
 
-        QRCreateDTO model = new();
+        LinkCreateDTO model = new();
         QRCode qrCode = new();
-        QRDTO qrCreated = new();
+        LinkDTO qrCreated = new();
         bool openPanel1;
         bool openPanel2;
         bool openPanel3;
@@ -47,7 +47,7 @@
             _processing = true;
             try
             {
-                var response = await Proxy.PostAsync<ResponseData<QRDTO>, QRCreateDTO>("/api/v1/qr/create", model);
+                var response = await Proxy.PostAsync<ResponseData<LinkDTO>, LinkCreateDTO>("/api/v1/qr/create", model);
 
                 switch (response.StatusCode)
                 {

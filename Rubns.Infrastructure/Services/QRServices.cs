@@ -1,5 +1,4 @@
-﻿
-namespace Rubns.Infrastructure.Services
+﻿namespace Rubns.Infrastructure.Services
 {
     internal class QRServices : IQRServices
     {

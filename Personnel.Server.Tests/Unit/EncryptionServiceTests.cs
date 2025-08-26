@@ -1,4 +1,4 @@
-namespace Personnel.Server.Tests;
+namespace Personnel.Server.Tests.Unit;
 
 [TestClass]
 public class EncryptionServiceTests

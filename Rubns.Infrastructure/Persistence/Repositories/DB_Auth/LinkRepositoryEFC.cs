@@ -1,0 +1,167 @@
+﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+{
+    internal class LinkRepositoryEFC(AuthDbContextEFC contextEFC)
+        : ILinkRepositoryEFC
+    {
+
+        private readonly AuthDbContextEFC _context = contextEFC;
+        public async Task<LinkDTO> AddAsync(LinkCreateDTO link)
+        {
+            LinkDTO Link = new LinkDTO();
+            Link linkCreate = new Link()
+            {
+                Name = link.Name,
+                Slug = link.Slug,
+                Content = link.Content,
+                Url = link.Url,
+                UserID = link.UserIDRegistered,
+                LastUserID = link.UserIDRegistered,
+                Status = link.Status,
+            };
+
+            await _context.Links.AddAsync(linkCreate);
+            var result = await _context.SaveChangesAsync();
+            if (result > 0)
+            {
+                Link.ID = linkCreate.ID;
+                Link.Name = linkCreate.Name;
+                Link.Slug = linkCreate.Slug;
+                Link.Content = linkCreate.Content;
+                Link.Url = linkCreate.Url;
+                Link.Status = linkCreate.Status;
+                Link.Registered = linkCreate.Registered;
+                Link.LastModificated = linkCreate.Registered;
+
+            }
+
+
+            return Link;
+        }
+
+        public async Task<int> DeleteLinkAsync(int id)
+        {
+            Link remove = new Link()
+            {
+                ID = id,
+            };
+            _context.Links.Remove(remove);
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<string> FindSlugAsync(string slug)
+        {
+            string result = string.Empty;
+
+            var isExists = await _context.Links
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.Slug == slug);
+
+            if (isExists is { ID: > 0 })
+            {
+                result = isExists.Content;
+            }
+
+            return result;
+        }
+
+        public async Task<List<LinkDTO>> GetAllLinksForPageAsync(int? page, int? pagesize, string? filter)
+        {
+            List<LinkDTO> links = new List<LinkDTO>();
+            IEnumerable<Link> data;
+            int pageSize = ((pagesize.HasValue && pagesize.Value > 0) ? pagesize.Value : 25);
+            int pageNumber = ((page.HasValue && page.Value > 0) ? page.Value : 1);
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                bool status = filter.Equals("true") ? true : false;
+                data = await _context.Links.Where(s => s.Status == status)
+                                .OrderBy(id => id.ID)
+                                .Skip((pageNumber - 1) * pageSize)
+                                .Take(pageSize)
+                                .AsNoTracking()
+                                .ToListAsync();
+            }
+            else
+            {
+
+                data = await _context.Links.OrderBy(id => id.ID)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+
+
+
+            if (data.Count() > 0)
+            {
+                links = data.Select(s => new LinkDTO
+                {
+                    ID = s.ID,
+                    Name = s.Name,
+                    Slug = s.Slug,
+                    Content = s.Content,
+                    Url = s.Url,
+                    DotScale = s.DotScale,
+                    ColorDark = s.ColorDark,
+                    ColorLight = s.ColorLight,
+                    QuietZone = s.QuietZone,
+                    Status = s.Status,
+                    Registered = s.Registered,
+                    LastModificated = s.LastModificated,
+
+                }).ToList();
+            }
+
+
+            return links;
+        }
+
+        public async Task<LinkDTO> GetLinkForIdAsync(int id)
+        {
+            LinkDTO link = new();
+
+            var data = await _context.Links.Where(s => s.ID == id)
+                .AsNoTracking()
+                .SingleOrDefaultAsync();
+
+            if (data is { ID: > 0 })
+            {
+                link.ID = id;
+                link.Name = data.Name;
+                link.Slug = data.Slug;
+                link.Url = data.Url;
+                link.DotScale = data.DotScale;
+                link.ColorDark = data.ColorDark;
+                link.ColorLight = data.ColorLight;
+                link.QuietZone = data.QuietZone;
+                link.Status = data.Status;
+                link.Registered = data.Registered;
+            }
+
+
+            return link;
+        }
+
+        public async Task<int> UpdateQRAsync(int id, int userID, QRDTO qr)
+        {
+            Link link = new()
+            {
+                ID = id,
+                DotScale = qr.DotScale,
+                ColorDark = qr.ColorDark,
+                ColorLight = qr.ColorLight,
+                QuietZone = qr.QuietZone,
+                LastUserID = userID,
+            };
+
+            _context.Entry(link).Property(u => u.DotScale).IsModified = true;
+            _context.Entry(link).Property(u => u.ColorDark).IsModified = true;
+            _context.Entry(link).Property(u => u.ColorLight).IsModified = true;
+            _context.Entry(link).Property(u => u.QuietZone).IsModified = true;
+            _context.Entry(link).Property(u => u.LastUserID).IsModified = true;
+
+            return await _context.SaveChangesAsync();
+        }
+    }
+}

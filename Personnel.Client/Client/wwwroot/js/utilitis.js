@@ -19,7 +19,7 @@ function createQR(id, options) {
     const element = document.getElementById(id);
     if (element) {
         element.innerHTML = "";
-        new QRCode(document.getElementById(id), options);
+        new QRCode(element, options);
 
     }
 }
@@ -65,3 +65,18 @@ function shareQRCode(id) {
         console.log('Web Share no es compatible en este navegador.');
     }
 }
+
+function width(){
+    return window.innerWidth
+}
+
+window.clipboardCopy = {
+    copyText: function (text) {
+        navigator.clipboard.writeText(text).then(function () {
+            // Optional: Provide user feedback, e.g., an alert or a visual change
+            console.log("Text copied to clipboard!");
+        }).catch(function (error) {
+            console.error("Failed to copy text:", error);
+        });
+    }
+};

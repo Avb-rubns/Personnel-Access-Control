@@ -1,10 +1,12 @@
-﻿namespace Rubns.Application.Scrapper.Get
+﻿using Rubns.Core.Ports.Link;
+
+namespace Rubns.Application.Scrapper.Get
 {
     internal class GetHeadUseCase(IProxyServer proxyServer,
         ILogger logger,
         IWebPageFetcher PlaywrighFetcher,
         IHtmlParser RegexParserHtml,
-        IQRRepositoryEFC qRRepositoryEFC,
+        ILinkRepositoryEFC qRRepositoryEFC,
         IUtils utilitis)
         : IHeadPort<List<Dictionary<string, string>>>
     {
@@ -13,7 +15,7 @@
         private readonly IHtmlParser _regexParserHtml = RegexParserHtml;
         private readonly IWebPageFetcher _playwrightService = PlaywrighFetcher;
         readonly IUtils _utils = utilitis;
-        readonly IQRRepositoryEFC _qRRepositoryEFC = qRRepositoryEFC;
+        readonly ILinkRepositoryEFC _qRRepositoryEFC = qRRepositoryEFC;
 
 
 

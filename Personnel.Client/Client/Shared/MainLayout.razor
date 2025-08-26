@@ -13,13 +13,8 @@
                 <MudSpacer />
                 <MudMenu  Dense="true" Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit" >
                     <ActivatorContent>
-                        <div class="d-flex align-center flex-column">
-                            <MudAvatar Color="Color.Secondary" Variant="Variant.Outlined" Size="Size.Small">@context.User.Identity?.Name[0]</MudAvatar><MudText Typo="Typo.caption">
-                                @string.Join(", ", context.User.Claims
-                                                            .Where(c => c.Type == ClaimTypes.Role || c.Type == "role")
-                                                            .Select(c => c.Value)).ToUpper()
-                            </MudText>
-                        </div>
+                        <MudAvatar Color="Color.Secondary" Variant="Variant.Outlined" Size="Size.Small">@context.User.Identity?.Name[0]</MudAvatar>
+                        
                     </ActivatorContent>
                     <ChildContent>
                         <MudMenuItem 
@@ -31,7 +26,20 @@
                     </ChildContent>
                 </MudMenu>
             </MudAppBar>
-            <MudDrawer @bind-Open="@_drawerOpen" Elevation="1" Breakpoint="Breakpoint.Sm" Variant="DrawerVariant.Responsive">
+            <MudDrawer @bind-Open="@_drawerOpen"
+                        Elevation="1"
+                        Breakpoint="Breakpoint.Sm"
+                        Variant="DrawerVariant.Temporary">
+                <MudDrawerHeader>
+                    <div class="d-flex align-center flex-column">
+                        <MudText Typo="Typo.h6">@context.User.Identity?.Name</MudText>
+                        <MudText Typo="Typo.caption">
+                            Rol: @string.Join(", ", context.User.Claims
+                                                        .Where(c => c.Type == ClaimTypes.Role || c.Type == "role")
+                                                        .Select(c => c.Value)).ToUpper()
+                        </MudText>
+                    </div>
+                </MudDrawerHeader>
                 <NavMenu/>
             </MudDrawer>
                 <MudMainContent>

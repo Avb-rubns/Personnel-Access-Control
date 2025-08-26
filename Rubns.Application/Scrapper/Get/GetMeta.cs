@@ -1,10 +1,12 @@
-﻿namespace Rubns.Application.Scrapper.Get
+﻿using Rubns.Core.Ports.Link;
+
+namespace Rubns.Application.Scrapper.Get
 {
     internal class GetMeta(IProxyServer proxyServer,
         ILogger logger,
         IHtmlParser webScrappynService,
         IWebPageFetcher PlaywrighFetcher,
-        IQRRepositoryEFC qRRepositoryEFC,
+        ILinkRepositoryEFC qRRepositoryEFC,
         IUtils utilitis)
         : IMetaProxyPort
     {
@@ -14,7 +16,7 @@
         private readonly IHtmlParser _webScrappynService = webScrappynService;
         private readonly IWebPageFetcher _playwrighFetcher = PlaywrighFetcher;
         readonly IUtils _utils = utilitis;
-        readonly IQRRepositoryEFC _qRRepositoryEFC = qRRepositoryEFC;
+        readonly ILinkRepositoryEFC _qRRepositoryEFC = qRRepositoryEFC;
 
         public async Task<Dictionary<string, string>> GetMetaAsync(string url)
         {

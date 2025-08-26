@@ -1,4 +1,6 @@
-﻿namespace Rubns.Infrastructure.Persistence
+﻿using Rubns.Infrastructure.Persistence.Entities.DB_Auth.Links;
+
+namespace Rubns.Infrastructure.Persistence
 {
     public class AuthDbContextEFC : DbContext
     {
@@ -11,7 +13,7 @@
         public DbSet<SessionUser> SessionUser { get; set; }
         public DbSet<Rol> Rols { get; set; }
         public DbSet<ResetPassword> ResetPasswords { get; set; }
-        public DbSet<QR> QRs { get; set; }
+        public DbSet<Link> Links { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(e =>
@@ -41,10 +43,10 @@
                 .ValueGeneratedOnAdd();
             });
 
-            modelBuilder.Entity<QR>(e =>
+            modelBuilder.Entity<Link>(e =>
             {
-                e.ToTable("QRCodes", schema: "dbo");
-                e.HasKey(k => k.QRID);
+                e.ToTable("Links", schema: "dbo");
+                e.HasKey(k => k.ID);
                 e.Property(p => p.Registered)
                 .HasDefaultValueSql("SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)'")
                 .ValueGeneratedOnAdd();

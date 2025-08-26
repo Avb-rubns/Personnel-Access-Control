@@ -1,18 +1,20 @@
-﻿namespace Rubns.Application.Scrapper.Get
+﻿using Rubns.Core.Ports.Link;
+
+namespace Rubns.Application.Scrapper.Get
 {
     internal class GetTitle(IProxyServer proxyServer,
         IWebPageFetcher playwrighFetcher,
         ILogger logger,
         IHtmlParser regexParserHtml,
         IUtils utils,
-        IQRRepositoryEFC qRRepositoryEFC)
+        ILinkRepositoryEFC qRRepositoryEFC)
         : ITitlePort<Dictionary<string, string>>
     {
         readonly IProxyServer _proxyServer = proxyServer;
         readonly IWebPageFetcher _playwrighFetcher = playwrighFetcher;
         readonly ILogger _logger = logger;
         readonly IUtils _utils = utils;
-        readonly IQRRepositoryEFC _qRRepositoryEF = qRRepositoryEFC;
+        readonly ILinkRepositoryEFC _qRRepositoryEF = qRRepositoryEFC;
         readonly IHtmlParser _regexParserHtml = regexParserHtml;
 
         public async Task<Dictionary<string, string>> GetPortPort(string url)

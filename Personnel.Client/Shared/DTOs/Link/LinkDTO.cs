@@ -1,6 +1,6 @@
-﻿namespace Personnel.Client.Shared.DTOs.QR
+﻿namespace Personnel.Client.Shared.DTOs.Link
 {
-    public class QRDTO
+    public class LinkDTO
     {
         public int ID { get; set; }
         public string Name { get; set; }

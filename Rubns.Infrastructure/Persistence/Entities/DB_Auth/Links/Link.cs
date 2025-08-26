@@ -1,8 +1,8 @@
-﻿namespace Rubns.Infrastructure.Persistence.Entities.DB_Auth.QRs
+﻿namespace Rubns.Infrastructure.Persistence.Entities.DB_Auth.Links
 {
-    public class QR
+    public class Link
     {
-        public int QRID { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
         public string Slug { get; set; }
 

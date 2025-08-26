@@ -2,14 +2,14 @@
 {
     public partial class DialogCreateLink
     {
-        [CascadingParameter] private IMudDialogInstance MudDialog { get; set; }
+        [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
         [Parameter] public int UserId { get; set; }
 
         [Inject] public IJSRuntime JS { get; set; } = default!;
         [Inject] public IProxy Proxy { get; set; } = default!;
         [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
-        QRCreateDTO model = new();
+        LinkCreateDTO model = new();
         bool _scanURL = false;
         bool _processing = false;
 
@@ -31,7 +31,7 @@
             _scanURL = true;
             try
             {
-                content.Trim();
+                content = content.Trim();
                 content = content.StartsWith("https://") ? content : "https://" + content;
 
                 var metas = await Proxy.GetAsync<ResponseData<Dictionary<string, string>>>
@@ -58,7 +58,8 @@
             _processing = true;
             try
             {
-                var response = await Proxy.PostAsync<ResponseData<QRDTO>, QRCreateDTO>("/api/v1/qr/create", model);
+                var response = await Proxy.PostAsync<ResponseData<LinkDTO>, LinkCreateDTO>(
+                    "/api/v1/link/create", model);
 
                 switch (response.StatusCode)
                 {
@@ -78,6 +79,28 @@
 
             }
             _processing = false;
+        }
+        private async Task UpdateSlug(string slug)
+        {
+            try
+            {
+                var ExistsSlug = await Proxy.GetAsync<Response>($"/api/v1/link/check?slug={slug}");
+                switch (ExistsSlug.StatusCode)
+                {
+                    case System.Net.HttpStatusCode.OK:
+                        Snackbar.Add("El nombre descritivo ya existe, intente con otro.", Severity.Error);
+                        model.Slug = string.Empty;
+                        break;
+                    case System.Net.HttpStatusCode.NotFound:
+                        model.Slug = slug;
+                        break;
+                    default:
+                        Snackbar.Add("Ocurrió un error inesperado, informe a su jefe", Severity.Error);
+                        model.Slug = string.Empty;
+                        break;
+                }
+            }
+            catch (Exception ex) { }
         }
         private void Cancel() => MudDialog.Cancel();
     }

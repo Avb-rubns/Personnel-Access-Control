@@ -1,6 +1,6 @@
-﻿namespace Personnel.Client.Shared.DTOs.QR
+﻿namespace Personnel.Client.Shared.DTOs.Link
 {
-    public class QRCreateDTO
+    public class LinkCreateDTO
     {
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]

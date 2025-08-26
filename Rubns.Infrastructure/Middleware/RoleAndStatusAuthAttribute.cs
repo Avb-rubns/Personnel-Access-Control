@@ -19,13 +19,11 @@
                 return Task.CompletedTask;
             }
 
-            // Obtener roles (soportamos ClaimTypes.Role y "role")
             var roles = user.Claims
                 .Where(c => c.Type == ClaimTypes.Role || c.Type.Equals("role", StringComparison.OrdinalIgnoreCase))
                 .Select(c => c.Value)
                 .ToList();
 
-            // Obtener status (puede venir como "Status", "status", "isActive", etc. adaptalo)
             var statusClaim = user.Claims.FirstOrDefault(c => c.Type.Equals("Status", StringComparison.OrdinalIgnoreCase)
                                                            || c.Type.Equals("status", StringComparison.OrdinalIgnoreCase)
                                                            || c.Type.Equals("isActive", StringComparison.OrdinalIgnoreCase));

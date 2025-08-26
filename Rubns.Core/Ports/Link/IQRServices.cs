@@ -1,4 +1,6 @@
-﻿namespace Rubns.Core.Ports.QR
+﻿using Personnel.Client.Shared.DTOs.Link;
+
+namespace Rubns.Core.Ports.Link
 {
     public interface IQRServices
     {

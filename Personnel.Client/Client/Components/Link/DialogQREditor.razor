@@ -1,0 +1,131 @@
+﻿<MudDialog ContentClass="dialog-editor-container">
+    <TitleContent>
+        <MudText Typo="Typo.body2">Enlaces > QR editor</MudText>
+    </TitleContent>
+    <DialogContent>
+        <EditForm Model="qrCode" >
+            <DataAnnotationsValidator/>
+            <MudGrid>
+                <MudItem xs="12" sm="6">
+                <MudExpansionPanels MultiExpansion="true">
+                        <MudExpansionPanel @bind-Expanded="_openPanel1" Disabled="_processing">
+                            <TitleContent>
+                                <div class="d-flex align-center g-2">
+                                    <MudIcon Color="@(_openPanel1? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.ColorLens" />
+                                    <MudText Class="ml-2" Color="@(_openPanel1? Color.Primary: Color.Default)" Typo="Typo.h6">Colores</MudText>
+                                </div>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText>Color de los Puntos</MudText>
+                                <div class="d-flex">
+                                    <MudPaper Width="50px" Square="true" Style="@($"background-color: {qrCode.ColorDark};")" />
+                                    <MudColorPicker Class="ml-2"
+                                                    @bind-Text="qrCode.ColorDark"
+                                                    Label="Puntos"
+                                                    PickerVariant="PickerVariant.Dialog"
+                                                    ShowAlpha="false"
+                                                    ValueChanged="UpdateSelectedColorDot" />
+
+                                </div>
+                                <MudText>Color de fondo</MudText>
+                                <div class="d-flex">
+                                    <MudPaper Width="50px" Square="true" Style="@($"background-color: {qrCode.ColorLight};")" />
+                                    <MudColorPicker Class="ml-2"
+                                                    Label="Fondo"
+                                                    PickerVariant="PickerVariant.Dialog"
+                                                    ShowAlpha="false"
+                                                    @bind-Text="qrCode.ColorLight"
+                                                    ValueChanged="UpdateSelectedColor" />
+
+                                </div>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                        <MudExpansionPanel @bind-Expanded="_openPanel2" Disabled="_processing">
+                            <TitleContent>
+                                <div class="d-flex align-center">
+                                    <MudIcon Color="@(_openPanel2? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.Adjust" />
+                                    <MudText Class="ml-2" Color="@(_openPanel2? Color.Primary: Color.Default)" Typo="Typo.h6">Tamaño de los puntos</MudText>
+                                </div>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText>Tamaño de los puntos</MudText>
+                                <MudSlider T="double"
+                                           Min="0.6"
+                                           Max="1"
+                                           Step="0.1"
+                                           Value="qrCode.DotScale"
+                                           Color="Color.Info"
+                                           TickMarks="true"
+                                           ValueChanged="UpdateSliderDot">
+                                    @qrCode.DotScale.ToString()
+                                </MudSlider>
+                                <MudText>Borde</MudText>
+                                <MudSlider T="int"
+                                           Min="0"
+                                           Max="50"
+                                           Value="qrCode.QuietZone"
+                                           Step="1"
+                                           TickMarks="true"
+                                           ValueChanged="@(UpdateSliderPaper)"
+                                           Color="Color.Info">
+                                    @qrCode.QuietZone.ToString()
+                                </MudSlider>
+                            </ChildContent>
+
+                        </MudExpansionPanel>
+                </MudExpansionPanels>    
+                    <MudPaper Class="mt-4 d-flex justify-content-end g-5" Elevation="0">
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Secondary"
+                                   Class="ms-2"
+                                   ButtonType="ButtonType.Reset"
+                                   OnClick="Cancel">
+                            <MudText>Cancelar</MudText>
+                        </MudButton>
+                        <MudButton Color="Color.Primary"
+                                   Disabled="_processing"
+                                   Variant="Variant.Filled"
+                                   Class="ms-2 w-20"
+                                   OnClick="UpdataQRAsync"
+                                   ButtonType="ButtonType.Submit">
+                            @if (_processing)
+                            {
+                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                <MudText Class="ms-2">@Resource.BtnSending</MudText>
+                            }
+                            else
+                            {
+                                <MudText>Actualizar</MudText>
+                            }
+                        </MudButton>
+                    </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudPaper Class="pa-4" Elevation="0">
+                    <section id="qrcode" class="editor-qr-seccion-code" />
+                    <MudPaper Elevation="0" Class="d-flex justify-center">
+                        <MudTooltip Text="Descargar">
+                            <MudIconButton Icon="@Icons.Material.Filled.Download"
+                                           aria-label="download"
+                                           OnClick="DownloadQrCode"
+                                           Color="Color.Primary" />
+                        </MudTooltip>
+                        <MudTooltip Text="@Resource.CreateQrBtnShare">
+                            <MudIconButton Icon="@Icons.Material.Filled.Share"
+                                           aria-label="share"
+                                           OnClick="ShareQrCode"
+                                           Color="Color.Info" />
+                        </MudTooltip>
+                        <MudTooltip Text="@Resource.CreateQRBtnReset">
+                            <MudIconButton Icon="@Icons.Material.Filled.Cached"
+                                           aria-label="reset"
+                                           OnClick="ResetQrCode"
+                                           Color="Color.Warning" />
+                        </MudTooltip>
+                    </MudPaper>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+        </EditForm>
+    </DialogContent>
+</MudDialog>

@@ -35,8 +35,13 @@ else
             <LoadingContent>
                 <MudText>cargando...</MudText>
             </LoadingContent>
+            <NoRecordsContent>
+                <MudText>Sin informacion por el momento</MudText>
+            </NoRecordsContent>
             <PagerContent>
-                <MudTablePager />
+                <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }"
+                               RowsPerPageString="Filas por pagina:"
+                               InfoFormat="{first_item}-{last_item} de {all_items}" />
             </PagerContent>
         </MudTable>
     </section>

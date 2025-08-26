@@ -25,7 +25,7 @@
             slug = s.Trim().ToLower();
             slug = RemoveAccents(slug);
 
-            slug = Regex.Replace(s, @"\s", "-");
+            slug = Regex.Replace(slug, @"\s", "-");
 
             return slug;
         }

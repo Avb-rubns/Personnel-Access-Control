@@ -1,6 +1,8 @@
 ﻿namespace Rubns.Application.User.Patch
 {
-    internal sealed class PatchUserUseCase(IUserRepositoryEFC repositoryEFC, ILogger logger) : IPatchUserPort
+    internal sealed class PatchUserUseCase(IUserRepositoryEFC repositoryEFC,
+        ILogger logger)
+        : IPatchUserPort
     {
         private readonly IUserRepositoryEFC _repositoryEFC = repositoryEFC;
         private readonly ILogger _logger = logger;
