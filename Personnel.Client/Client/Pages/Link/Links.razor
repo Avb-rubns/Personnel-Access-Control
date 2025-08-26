@@ -5,7 +5,7 @@
         <MudText Typo="Typo.h5">Enlaces</MudText>
         <MudButton OnClick="CreateLink" Variant="Variant.Outlined" Color="Color.Primary">Crear</MudButton>
     </div>
-    <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="_table">
+    <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="_table" FixedHeader="true" >
         <ToolBarContent>
             <MudSpacer/>
             <MudTextField T="string" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>

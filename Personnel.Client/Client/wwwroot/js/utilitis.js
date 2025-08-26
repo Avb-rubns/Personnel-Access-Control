@@ -39,44 +39,42 @@ function downloadQRcode(id, name) {
     link.click();
 }
 
-function shareQRCode(id) {
-    // Verifica si la API de Web Share está disponible en el navegador.
-    if (navigator.share) {
+//function shareQRCode(id) {
+//    // Verifica si la API de Web Share está disponible en el navegador.
+//    if (navigator.share) {
 
-        console.log('Web Share es compatible en este navegador.');
-    //    // Configura los datos que se van a compartir.
-    //    const shareData = {
-    //        title: 'Mi increíble sitio web',
-    //        text: 'Echa un vistazo a este sitio web que encontré!',
-    //        url: 'https://www.ejemplo.com',
-    //    };
+//        console.log('Web Share es compatible en este navegador.');
+//        // Configura los datos que se van a compartir.
+//        const shareData = {
+//            title: 'Mi increíble sitio web',
+//            text: 'Echa un vistazo a este sitio web que encontré!',
+//            url: 'https://www.ejemplo.com',
+//        };
 
-    //    try {
-    //        // Intenta compartir.
-    //        await navigator.share(shareData);
-    //        console.log('Contenido compartido con éxito.');
-    //    } catch (err) {
-    //        // Maneja errores, como cuando el usuario cancela.
-    //        console.error('Error al compartir:', err);
-    //    }
-    } else {
-        // Si la API no está disponible, proporciona una alternativa.
-       // Por ejemplo, mostrar un modal con enlaces a redes sociales.
-        console.log('Web Share no es compatible en este navegador.');
-    }
-}
+//        try {
+//            // Intenta compartir.
+//            await navigator.share(shareData);
+//            console.log('Contenido compartido con éxito.');
+//        } catch (err) {
+//            // Maneja errores, como cuando el usuario cancela.
+//            console.error('Error al compartir:', err);
+//       }
+//    } else {
+//        // Si la API no está disponible, proporciona una alternativa.
+//       // Por ejemplo, mostrar un modal con enlaces a redes sociales.
+//        console.log('Web Share no es compatible en este navegador.');
+//    }
+//}
 
 function width(){
     return window.innerWidth
 }
 
-window.clipboardCopy = {
-    copyText: function (text) {
-        navigator.clipboard.writeText(text).then(function () {
-            // Optional: Provide user feedback, e.g., an alert or a visual change
-            console.log("Text copied to clipboard!");
-        }).catch(function (error) {
-            console.error("Failed to copy text:", error);
-        });
+async function copyText(text) {
+    try {
+        await navigator.clipboard.writeText(text);
+        return true; // Éxito
+    } catch (error) {
+        return false; // Fallo
     }
-};
+}

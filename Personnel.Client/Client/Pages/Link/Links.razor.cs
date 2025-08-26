@@ -129,7 +129,13 @@
 
         private async Task ClipboardCopy(string url)
         {
-            await JS.InvokeVoidAsync("clipboardCopy.copyText", url);
+            var result = await JS.InvokeAsync<bool>("copyText", url);
+            if (result)
+            {
+                Snackbar.Add("URL copiado al portapapeles", severity: Severity.Success);
+
+            }
+            else { Snackbar.Add("Su equipo no permite copiar al portapapeles", severity: Severity.Error); }
         }
     }
 }
