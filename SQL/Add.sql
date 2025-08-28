@@ -533,10 +533,6 @@ BEGIN
 		link.DotScale,
 		link.QuietZone,
 		link.Status,
-		link.Registered,
-		link.LastModificated,
-		usrmodified.Name,
-		usrRegisted.Name,
 		usrRegisted.Name as 'userRegisted',
 		usrmodified.Name as 'userModified',
 		count(clic.id) as 'Clicks'
