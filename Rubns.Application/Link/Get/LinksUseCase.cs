@@ -1,27 +1,39 @@
 ﻿namespace Rubns.Application.Link.Get
 {
-    internal class LinksUseCase(ILinkRepositoryEFC qRRepositoryEFC
+    internal class LinksUseCase(ILinkRepositoryDapper linkRepositoryDapper
+        , ILinkRepositoryEFC linkRepositoryEFC
         , ILogger logger)
         : IGetLinksPort
     {
 
-        private readonly ILinkRepositoryEFC _qRRepositoryEFC = qRRepositoryEFC;
+        private readonly ILinkRepositoryDapper _linkRepositoryDapper = linkRepositoryDapper;
         private readonly ILogger _logger = logger;
+        private readonly ILinkRepositoryEFC _linkRepositoryEFC = linkRepositoryEFC;
 
-        public async Task<List<LinkDTO>> GetPortsAsync(int? page, int? pagesize, string? filter)
+        public async Task<TableLinkDTO> GetPortsAsync(int page, int pagesize, string filter)
         {
-            List<LinkDTO> qrs = new List<LinkDTO>();
+            TableLinkDTO table = new TableLinkDTO();
+            List<LinkTableDTO> links = new List<LinkTableDTO>();
+            int total = 0;
 
             try
             {
-                qrs = await _qRRepositoryEFC.GetAllLinksForPageAsync(page, pagesize, filter);
+
+                links = await _linkRepositoryDapper.GetLinksAsync(page, pagesize, filter);
+                if (links.Count() >= pagesize)
+                {
+                    total = await _linkRepositoryEFC.CountLinksAsync();
+                }
+
+                table.Links = links;
+                table.Total = links.Count() >= pagesize ? total : links.Count();
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Error GetPortsAsync:{error}", ex.Message);
 
             }
-            return qrs;
+            return table;
         }
     }
 }

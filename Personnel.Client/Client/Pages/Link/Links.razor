@@ -8,32 +8,41 @@
     <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="_table" FixedHeader="true" >
         <ToolBarContent>
             <MudSpacer/>
-            <MudTextField T="string" Placeholder="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>
+            <MudTextField T="string" Placeholder="Buscar" Label="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>
+            
+            <MudSelect Class="m-1" T="string" Label="Filtrar por Estatus" TextChanged="UpdateFilter" Value="_filter" FitContent="true" Dense="true">
+                <MudSelectItem Value="@("all")">Todos</MudSelectItem>
+                <MudSelectItem Value="@("true")">Activos</MudSelectItem>
+                <MudSelectItem Value="@("false")">Desactivados</MudSelectItem>
+            </MudSelect>
         </ToolBarContent>
         <HeaderContent>
             <MudTh>
-                <MudTableSortLabel SortLabel="Nombre" T="LinkDTO">
+                <MudTableSortLabel SortLabel="name" T="LinkTableDTO">
                     Nombre
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="URL" T="LinkDTO">
+                <MudTableSortLabel SortLabel="slug" T="LinkTableDTO">
                     URL
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="URL Destino" T="LinkDTO">
+                <MudTableSortLabel SortLabel="destiny" T="LinkTableDTO">
                     URL Destino
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="Clicks" T="LinkDTO">
+                <MudTableSortLabel SortLabel="clicks" T="LinkTableDTO">
                     Clics
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="QR" T="LinkDTO">
-                    QR
+                QR
+            </MudTh>
+            <MudTh>
+                <MudTableSortLabel SortLabel="status" T="LinkTableDTO">
+                    Estatus
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
@@ -53,19 +62,22 @@
                 <MudText HtmlTag="a" style="cursor:pointer;"  Typo="Typo.caption">@context.Content</MudText>
             </MudTd>
             <MudTd DataLabel="Clics">
-                1
+                @context.Clicks
             </MudTd>
             <MudTd DataLabel="QR">
                 <MudButton Variant="Variant.Outlined" OnClick="@(async() => { await QREditor(context.ID);})" StartIcon="@Icons.Material.Rounded.QrCode2" IconColor="Color.Error">
                     Ver
                 </MudButton>
             </MudTd>
+            <MudTd DataLabel="Estatus">
+                @(context.Status ? "Activo":"Desactivado")
+            </MudTd>
             <MudTd >
                 <MudMenu Icon="@Icons.Material.Filled.MoreVert"
                          AriaLabel="Open user menu">
                     <MudMenuItem Label="Editar" Icon="@Icons.Material.Rounded.Edit" />
                     <MudDivider/>
-                    <MudMenuItem IconColor="Color.Warning"
+                    <MudMenuItem IconColor="Color.Error"
                                  Label="Eliminar"
                                  OnClick="@(async() => { await DeleteLinkAsync(context.ID);})"
                                  Icon="@Icons.Material.Rounded.DeleteForever" />

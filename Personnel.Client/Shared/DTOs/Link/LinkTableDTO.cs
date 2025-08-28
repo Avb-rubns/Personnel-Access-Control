@@ -1,6 +1,6 @@
 ﻿namespace Personnel.Client.Shared.DTOs.Link
 {
-    public class LinkDTO
+    public class LinkTableDTO
     {
         public int ID { get; set; }
         public string Name { get; set; }
@@ -12,12 +12,7 @@
         public string ColorLight { get; set; }
         public int QuietZone { get; set; }
         public bool Status { get; set; }
-        public DateTimeOffset Registered { get; set; }
-        public string UserRegistered { get; set; }
-        public int UserIdRegistered { get; set; }
-        public DateTimeOffset LastModificated { get; set; }
-        public string UserLastModificated { get; set; }
-        public int UserLastIdModificated { get; set; }
+        public int Clicks { get; set; }
 
     }
 }

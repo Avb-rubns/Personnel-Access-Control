@@ -18,7 +18,7 @@
                 return result;
 
             }
-            catch (Exception)
+            catch
             {
                 throw;
             }

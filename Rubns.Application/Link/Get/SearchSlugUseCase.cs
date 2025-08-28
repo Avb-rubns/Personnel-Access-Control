@@ -17,6 +17,7 @@
                 {
                     query = _utils.CreateSlug(query);
                 }
+
                 result = await _repositoryEFC.FindSlugAsync(query);
 
             }

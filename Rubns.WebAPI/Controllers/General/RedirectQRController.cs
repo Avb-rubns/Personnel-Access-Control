@@ -5,17 +5,17 @@
     [ApiController]
     public class RedirectQRController : ControllerBase
     {
-        private readonly ISearchSlugPort _searchSlugPort;
+        private readonly ICreateClick _createClick;
 
-        public RedirectQRController(ISearchSlugPort searchSlugPort)
+        public RedirectQRController(ICreateClick createClick)
         {
-            _searchSlugPort = searchSlugPort;
+            _createClick = createClick;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index(string slug)
         {
-            var result = await _searchSlugPort.SearchSlugAsync(slug);
+            var result = await _createClick.CreateClick(HttpContext.Request, slug);
 
             if (string.IsNullOrEmpty(result))
             {

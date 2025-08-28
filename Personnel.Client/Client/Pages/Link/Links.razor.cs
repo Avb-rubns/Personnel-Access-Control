@@ -9,10 +9,11 @@
         [Inject] public ISnackbar Snackbar { get; set; } = default!;
         [Inject] public Utils Utils { get; set; } = default!;
 
-        private MudTable<LinkDTO> _table { get; set; } = new();
-        private List<LinkDTO> _links { get; set; } = new();
+        private MudTable<LinkTableDTO> _table { get; set; } = new();
+        private List<LinkTableDTO> _links { get; set; } = new();
         private int totalItems;
         private int _userID = default!;
+        private string _filter = "all";
 
         private readonly DialogOptions dialogOptions = new()
         { BackdropClick = false, MaxWidth = MaxWidth.Medium, FullWidth = true };
@@ -32,21 +33,41 @@
                 }
             }
         }
-        private async Task<TableData<LinkDTO>> ServerReload(TableState state, CancellationToken token)
+        private async Task<TableData<LinkTableDTO>> ServerReload(TableState state, CancellationToken token)
         {
-            var data = await Proxy.GetAsync<ResponseData<List<LinkDTO>>>("/api/v1/link/links");
+            var data = await Proxy.GetAsync<ResponseData<TableLinkDTO>>($"/api/v1/link/links?page={state.Page}&pageSize={state.PageSize}&filter={_filter}");
             switch (data.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    totalItems = data.Data.Count;
-                    _links = data.Data;
+                    totalItems = data.Data.Total;
+                    _links = data.Data.Links;
                     break;
                 case System.Net.HttpStatusCode.NoContent:
                     totalItems = 0;
+                    _links = new();
                     break;
             }
 
-            return new TableData<LinkDTO>() { TotalItems = totalItems, Items = _links };
+            switch (state.SortLabel)
+            {
+                case "name":
+                    _links = _links.OrderByDirection(state.SortDirection, o => o.Name).ToList();
+                    break;
+                case "url":
+                    _links = _links.OrderByDirection(state.SortDirection, o => o.Slug).ToList();
+                    break;
+                case "destiny":
+                    _links = _links.OrderByDirection(state.SortDirection, o => o.Content).ToList();
+                    break;
+                case "clicks":
+                    _links = _links.OrderByDirection(state.SortDirection, o => o.Clicks).ToList();
+                    break;
+                case "status":
+                    _links = _links.OrderByDirection(state.SortDirection, o => o.Status).ToList();
+                    break;
+            }
+
+            return new TableData<LinkTableDTO>() { TotalItems = totalItems, Items = _links };
         }
         private async Task CreateLink()
         {
@@ -137,5 +158,12 @@
             }
             else { Snackbar.Add("Su equipo no permite copiar al portapapeles", severity: Severity.Error); }
         }
+
+        private async Task UpdateFilter(string mudSelect)
+        {
+            _filter = mudSelect;
+            await _table.ReloadServerData();
+        }
+
     }
 }

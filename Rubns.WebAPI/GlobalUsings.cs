@@ -13,6 +13,7 @@ global using Rubns.Core.Ports.ApiKey;
 global using Rubns.Core.Ports.ApiKey.Register;
 global using Rubns.Core.Ports.Auth;
 global using Rubns.Core.Ports.CheckUser;
+global using Rubns.Core.Ports.Click;
 global using Rubns.Core.Ports.Link;
 global using Rubns.Core.Ports.Rol;
 global using Rubns.Core.Ports.Scrapper;

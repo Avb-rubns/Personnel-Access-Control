@@ -38,6 +38,20 @@
             return Link;
         }
 
+        public async Task<int> CountLinksAsync()
+        {
+            try
+            {
+                int total = 0;
+
+                total = await _context.Links.CountAsync();
+
+                return total;
+            }
+            catch
+            { throw; }
+        }
+
         public async Task<int> DeleteLinkAsync(int id)
         {
             Link remove = new Link()
@@ -47,7 +61,6 @@
             _context.Links.Remove(remove);
             return await _context.SaveChangesAsync();
         }
-
         public async Task<string> FindSlugAsync(string slug)
         {
             string result = string.Empty;
@@ -63,7 +76,6 @@
 
             return result;
         }
-
         public async Task<List<LinkDTO>> GetAllLinksForPageAsync(int? page, int? pagesize, string? filter)
         {
             List<LinkDTO> links = new List<LinkDTO>();
@@ -116,7 +128,6 @@
 
             return links;
         }
-
         public async Task<LinkDTO> GetLinkForIdAsync(int id)
         {
             LinkDTO link = new();
@@ -141,6 +152,35 @@
 
 
             return link;
+        }
+
+        public async Task<LinkDTO> GetLinkForSlugAsync(string slug)
+        {
+            LinkDTO linkDTO = new();
+
+            var data = await _context.Links.AsNoTracking()
+                            .SingleOrDefaultAsync(i => i.Slug == slug);
+
+            if (data is { ID: > 0 })
+            {
+                linkDTO.ID = data.ID;
+                linkDTO.Name = data.Name;
+                linkDTO.Slug = data.Slug;
+                linkDTO.Content = data.Content;
+                linkDTO.Url = data.Url;
+                linkDTO.DotScale = data.DotScale;
+                linkDTO.ColorDark = data.ColorDark;
+                linkDTO.ColorLight = data.ColorLight;
+                linkDTO.QuietZone = data.QuietZone;
+                linkDTO.Status = data.Status;
+                linkDTO.Registered = data.Registered;
+                linkDTO.LastModificated = data.LastModificated;
+                linkDTO.UserIdRegistered = data.UserID;
+                linkDTO.UserLastIdModificated = data.LastUserID;
+            }
+
+
+            return linkDTO;
         }
 
         public async Task<int> UpdateQRAsync(int id, int userID, QRDTO qr)

@@ -1,6 +1,4 @@
-﻿using Rubns.Infrastructure.Persistence.Entities.DB_Auth.Links;
-
-namespace Rubns.Infrastructure.Persistence
+﻿namespace Rubns.Infrastructure.Persistence
 {
     public class AuthDbContextEFC : DbContext
     {
@@ -14,6 +12,7 @@ namespace Rubns.Infrastructure.Persistence
         public DbSet<Rol> Rols { get; set; }
         public DbSet<ResetPassword> ResetPasswords { get; set; }
         public DbSet<Link> Links { get; set; }
+        public DbSet<Click> Clicks { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(e =>
@@ -67,6 +66,15 @@ namespace Rubns.Infrastructure.Persistence
                 .ValueGeneratedOnAdd();
                 e.Property(p => p.DotScale)
                 .HasColumnType("float");
+            });
+
+            modelBuilder.Entity<Click>(e =>
+            {
+                e.ToTable("Clicks", schema: "dbo");
+                e.HasKey(e => e.ID);
+                e.Property(p => p.ClickedAt)
+                .HasDefaultValueSql("SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)'")
+                .ValueGeneratedOnAdd();
             });
 
 

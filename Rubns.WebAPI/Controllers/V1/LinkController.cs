@@ -31,8 +31,8 @@
         [HttpGet("links")]
         public async Task<IActionResult> GetQrsAsync(int? page = 0, int? pageSize = 10, string? filter = "")
         {
-            var data = await _getLinksPort.GetPortsAsync(page, pageSize, filter);
-            switch (data.Count)
+            var data = await _getLinksPort.GetPortsAsync(page.Value, pageSize.Value, filter);
+            switch (data.Total)
             {
                 case > 0:
                     return Ok(data);
