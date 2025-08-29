@@ -1,12 +1,14 @@
-﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿using Rubns.Core.Entities.Checker;
+
+namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal class CheckUserRepositoryDapper(IConfiguration configuration) : ICheckUserRepositoryDapper
     {
         private readonly IConfiguration _configuration = configuration;
 
-        public async Task<List<CheckUserTodayDTO>> CheckUserTodayAsync()
+        public async Task<List<UserCheck>> CheckUserTodayAsync()
         {
-            List<CheckUserTodayDTO> result = new();
+            List<UserCheck> result = new();
 
             try
             {
@@ -15,11 +17,25 @@
 
                 var proc = "p_CheckUserToday";
 
-                var data = await connection.QueryAsync<CheckUserTodayDTO>
+                var data = await connection.QueryAsync<CheckUserSpResult>
                     (proc,
                     commandType: CommandType.StoredProcedure);
+                if (data.Count() > 0)
+                {
+                    result = data.Select(c => new UserCheck
+                    {
+                        Name = c.Name,
+                        Rol = c.Rol,
+                        AccessIn = c.AccessIn,
+                        DistanceCheckIn = c.DistanceCheckIn,
+                        HourCheckIn = c.HourCheckIn,
+                        AccessOut = c.AccessOut,
+                        DistanceCheckOut = c.DistanceCheckOut,
+                        HourCheckOut = c.HourCheckOut
+                    }).ToList();
+                }
 
-                return data.Count() > 0 ? data.ToList() : result;
+                return result;
 
             }
             catch

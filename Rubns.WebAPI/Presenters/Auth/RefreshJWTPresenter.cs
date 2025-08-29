@@ -1,6 +1,6 @@
 ﻿namespace Rubns.WebAPI.Presenters.Auth
 {
-    internal sealed class RefreshJWTPresenter : IRefreshJWTOutPort, IPresenter<RefreshTokenResponseDTO>
+    internal sealed class RefreshJWTPresenter : IRefreshJWTOutPort
     {
         public RefreshTokenResponseDTO Content { get; set; }
 

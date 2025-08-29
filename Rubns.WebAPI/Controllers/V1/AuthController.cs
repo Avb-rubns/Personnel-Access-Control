@@ -1,6 +1,5 @@
 ﻿namespace Rubns.WebAPI.Controllers.V1
 {
-
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
@@ -41,62 +40,87 @@
         {
             try
             {
-                if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+                if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
                 {
-                    await _refreshJWT.RefreshJWTAsync(refreshToken);
-                    var RefreshJWT = ((IPresenter<RefreshTokenResponseDTO>)_refreshJWTOutPort).Content;
-                    var accessTokenCookie = new CookieOptions
+                    return Unauthorized(new ProblemDetails
                     {
-                        HttpOnly = true,
-                        Secure = true,
-                        SameSite = SameSiteMode.Strict,
-                        Expires = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(RefreshJWT.Token.ExpiresIn)),
-                        Path = "/"
-                    };
-
-                    Response.Cookies.Append("accessToken", RefreshJWT.Token.AccessToken, accessTokenCookie);
-
-                    var refreshTokenCookie = new CookieOptions
-                    {
-                        HttpOnly = true,
-                        Secure = true,
-                        SameSite = SameSiteMode.Strict,
-                        Expires = DateTimeOffset.FromUnixTimeSeconds(RefreshJWT.Expiration),
-                        Path = "/api/v1/auth"
-                    };
-                    Response.Cookies.Append("refreshToken", RefreshJWT.RefreshToken, refreshTokenCookie);
-
-                    return Ok(new { message = "Tokens renovados" });
+                        Title = "Refresh Token requerido",
+                        Detail = "No se encontró el refresh token en la cookie.",
+                        Status = StatusCodes.Status401Unauthorized,
+                        Type = "https://httpstatuses.com/401"
+                    });
                 }
-            }
-            catch (InvalidOperationException)
-            {
-                Response.Cookies.Delete("accessToken");
-                var refreshTokenCookieDelete = new CookieOptions
+
+                await _refreshJWT.RefreshJWTAsync(refreshToken);
+                var RefreshJWT = _refreshJWTOutPort.Content;
+                var accessTokenCookie = new CookieOptions
                 {
                     HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(RefreshJWT.Token.ExpiresIn)),
+                    Path = "/"
+                };
+
+                Response.Cookies.Append("accessToken", RefreshJWT.Token.AccessToken, accessTokenCookie);
+
+                var refreshTokenCookie = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTimeOffset.FromUnixTimeSeconds(RefreshJWT.Expiration),
                     Path = "/api/v1/auth"
                 };
-                Response.Cookies.Delete("refreshToken", refreshTokenCookieDelete);
-                return Unauthorized(new { message = "Token inválido o expirado" });
+                Response.Cookies.Append("refreshToken", RefreshJWT.RefreshToken, refreshTokenCookie);
+
+                return Ok(new { message = "Tokens renovados" });
+            }
+            catch (InvalidOperationException)
+            {
+                DeleteAuthCookies();
+                return Unauthorized(new ProblemDetails
+                {
+                    Title = "Token inválido o expirado",
+                    Detail = "El refresh token proporcionado no es válido o ya expiró.",
+                    Status = StatusCodes.Status401Unauthorized,
+                    Type = "https://httpstatuses.com/401"
+                });
 
             }
             catch
             {
-                Response.Cookies.Delete("accessToken");
-                var refreshTokenCookieDelete = new CookieOptions
+                DeleteAuthCookies();
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
                 {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
-                    Path = "/api/v1/auth"
-                };
-                Response.Cookies.Delete("refreshToken", refreshTokenCookieDelete);
+                    Title = "Error interno",
+                    Detail = "Ocurrió un error inesperado. Intente nuevamente más tarde.",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Type = "https://httpstatuses.com/500"
+                });
             }
-            return StatusCode(500, new { message = "Token inválido o expirado" });
 
+        }
+
+        private void DeleteAuthCookies()
+        {
+            var refreshTokenCookieDelete = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Path = "/api/v1/auth"
+            };
+            Response.Cookies.Delete("refreshToken", refreshTokenCookieDelete);
+
+            var accessTokenCookieDelete = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Path = "/"
+            };
+            Response.Cookies.Delete("accessToken", accessTokenCookieDelete);
         }
 
         [HttpGet("me")]
@@ -104,18 +128,36 @@
         {
             try
             {
-                if (Request.Cookies.TryGetValue("accessToken", out var cookieToken))
+                if (!Request.Cookies.TryGetValue("accessToken", out var cookieToken))
                 {
-                    await _userInformationInPort.UserInfo(cookieToken);
-                    var user = ((IPresenter<UserInfoDTO>)_userInformationOutPort).Content;
-                    return Ok(user);
-
+                    return Unauthorized(new ProblemDetails
+                    {
+                        Title = "Token requerido",
+                        Detail = "No se encontró el token en la cookie de la petición.",
+                        Status = StatusCodes.Status401Unauthorized,
+                        Type = "https://httpstatuses.com/401"
+                    });
                 }
 
-            }
-            catch { }
+                await _userInformationInPort.UserInfo(cookieToken);
 
-            return Unauthorized(new { message = "Token inválido o expirado" });
+                var user = _userInformationOutPort.Content;
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+
+                return Unauthorized(new ProblemDetails
+                {
+                    Title = "Token inválido o expirado",
+                    Detail = "El token proporcionado no es válido o ya expiró.",
+                    Status = StatusCodes.Status401Unauthorized,
+                    Type = "https://httpstatuses.com/401"
+                });
+            }
+
+
         }
 
         [HttpDelete("logout")]
@@ -123,38 +165,30 @@
         {
             try
             {
-                if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+                if (!Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
                 {
-                    await _logOutPort.LogOut(refreshToken);
-                    var accessTokenCookie = new CookieOptions
+                    return Unauthorized(new ProblemDetails
                     {
-                        HttpOnly = true,
-                        Secure = true,
-                        SameSite = SameSiteMode.Strict,
-                        Path = "/"
-                    };
-                    Response.Cookies.Delete("accessToken", accessTokenCookie);
-
-                    var refreshTokenCookie = new CookieOptions
-                    {
-                        HttpOnly = true,
-                        Secure = true,
-                        SameSite = SameSiteMode.Strict,
-                        Path = "/api/v1/auth"
-                    };
-                    Response.Cookies.Delete("refreshToken", refreshTokenCookie);
-                    return Ok(new { message = "Sesión cerrada." });
+                        Title = "Refresh Token requerido",
+                        Detail = "No se encontró el refresh token en la cookie.",
+                        Status = StatusCodes.Status401Unauthorized,
+                        Type = "https://httpstatuses.com/401"
+                    });
                 }
+                await _logOutPort.LogOut(refreshToken);
+                DeleteAuthCookies();
+                return Ok(new { message = "Sesión cerrada." });
             }
-            catch (ArgumentNullException)
+            catch
             {
-                return BadRequest();
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+                {
+                    Title = "Error interno",
+                    Detail = "Ocurrió un error inesperado. Intente nuevamente más tarde.",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Type = "https://httpstatuses.com/500"
+                });
             }
-            catch (ArithmeticException)
-            {
-                return Unauthorized();
-            }
-            return StatusCode(500, new { Error = "Ocurrió un error inesperado." });
 
         }
         [HttpPost("forgot-password")]
@@ -175,11 +209,23 @@
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(new { Error = ex.Message });
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Token inválido o expirado",
+                    Detail = ex.Message,
+                    Status = StatusCodes.Status400BadRequest,
+                    Type = "https://httpstatuses.com/400"
+                });
             }
             catch
             {
-                return StatusCode(500, new { Error = "Ocurrió un error inesperado." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+                {
+                    Title = "Error interno",
+                    Detail = "Ocurrió un error inesperado. Intente nuevamente más tarde.",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Type = "https://httpstatuses.com/500"
+                });
             }
         }
         [HttpGet("reset-password/validate")]
@@ -191,13 +237,25 @@
                 return Ok();
 
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
-                return BadRequest(new { Error = ex.Message });
+                return BadRequest(new ProblemDetails
+                {
+                    Title = "Token inválido o expirado",
+                    Detail = "El refresh token proporcionado no es válido o ya expiró.",
+                    Status = StatusCodes.Status400BadRequest,
+                    Type = "https://httpstatuses.com/400"
+                });
             }
             catch
             {
-                return StatusCode(500, new { Error = "Ocurrió un error inesperado." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+                {
+                    Title = "Error interno",
+                    Detail = "Ocurrió un error inesperado. Intente nuevamente más tarde.",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Type = "https://httpstatuses.com/500"
+                });
             }
         }
     }

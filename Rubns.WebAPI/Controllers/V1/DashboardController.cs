@@ -3,26 +3,27 @@
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
-    public class DashboardController(IGetCheckUserTodayPort getCheckUserTodayPort)
+    public class DashboardController(IGetCheckUserTodayInPort getCheckUserTodayPort,
+        IGetCheckUserTodayOutPort getCheckUserTodayOutPort)
         : ControllerBase
     {
-        private readonly IGetCheckUserTodayPort checkUserTodayPort = getCheckUserTodayPort;
-
+        private readonly IGetCheckUserTodayInPort _checkUserTodayPort = getCheckUserTodayPort;
+        private readonly IGetCheckUserTodayOutPort _checkUserTodayOutPort = getCheckUserTodayOutPort;
 
         [HttpGet]
         public async Task<IActionResult> GetCheckUsersAsyn()
         {
-            var data = await checkUserTodayPort.CheckTodayAsync();
-            if (data.Count() > 0)
+            try
             {
-                return Ok(data);
+                await _checkUserTodayPort.CheckTodayAsync();
+                var data = _checkUserTodayOutPort.Content;
+                return data.Any() ? Ok(data) : NoContent();
+            }
+            catch
+            {
+                return StatusCode(500, new { message = "Token inválido o expirado" });
 
             }
-            else
-            {
-                return NoContent();
-            }
-
         }
 
     }
