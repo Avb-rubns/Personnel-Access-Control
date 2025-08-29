@@ -2,6 +2,6 @@
 {
     public interface IJWTService
     {
-        public UserInfoDTO JWTtoUserInfo(string jwt);
+        public UserClaim JWTtoUserInfo(string jwt);
     }
 }

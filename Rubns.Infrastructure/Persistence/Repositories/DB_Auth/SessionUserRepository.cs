@@ -1,4 +1,6 @@
-﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.SessionUsers;
+
+namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal class SessionUserRepository : ISessionUserRepositoryEFC
     {

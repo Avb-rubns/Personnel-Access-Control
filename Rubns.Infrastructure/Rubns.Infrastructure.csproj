@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Persistence\Entities\DB_Auth\CheckUsers\" />
+    <Folder Include="Persistence\DataModels\DB_Auth\CheckUsers\" />
   </ItemGroup>
 
 </Project>

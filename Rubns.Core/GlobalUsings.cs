@@ -8,3 +8,5 @@ global using Personnel.Client.Shared.DTOs.LogOut;
 global using Personnel.Client.Shared.DTOs.Rol;
 global using Personnel.Client.Shared.DTOs.Ticket;
 global using Personnel.Client.Shared.DTOs.Users;
+global using Rubns.Core.Entities.Auth;
+global using Rubns.Core.Entities.Users;

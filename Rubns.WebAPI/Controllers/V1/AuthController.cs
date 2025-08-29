@@ -7,61 +7,70 @@
     public class AuthController : ControllerBase
     {
 
-        private readonly IRefreshJWTPort<RefreshTokenResponseDTO> RefreshJWT;
-        private readonly IUserInformationPort UserInformationPort;
-        private readonly IForgotPassword ForgotPasswordPort;
-        private readonly IResetPasswordPort ResetPasswordPort;
-        private readonly IResetPasswordValidatePort ResetPasswordValidatePort;
-        private ILogOutPort LogOutPort { get; }
+        private readonly ILogOutPort _logOutPort;
+        private readonly IForgotPassword _forgotPasswordPort;
+        private readonly IResetPasswordPort _resetPasswordPort;
+        private readonly IResetPasswordValidatePort _resetPasswordValidatePort;
+        private readonly IRefreshJWTInPort _refreshJWT;
+        private readonly IRefreshJWTOutPort _refreshJWTOutPort;
+        private readonly IUserInformationInPort _userInformationInPort;
+        private readonly IUserInformationOutPort _userInformationOutPort;
 
-        public AuthController(IRefreshJWTPort<RefreshTokenResponseDTO> refreshJWTPort
-            , IUserInformationPort userInformationPort
+        public AuthController(IRefreshJWTInPort refreshJWTPort
+            , IUserInformationInPort userInformationPort
             , ILogOutPort logOut
             , IForgotPassword forgotPassword
             , IResetPasswordPort resetPasswordPort
-            , IResetPasswordValidatePort resetPasswordValidatePort)
+            , IResetPasswordValidatePort resetPasswordValidatePort
+            , IRefreshJWTOutPort refreshJWTOutPort
+            , IUserInformationOutPort userInformationOutPort)
         {
-            RefreshJWT = refreshJWTPort;
-            UserInformationPort = userInformationPort;
-            LogOutPort = logOut;
-            ForgotPasswordPort = forgotPassword;
-            ResetPasswordPort = resetPasswordPort;
-            ResetPasswordValidatePort = resetPasswordValidatePort;
+            _logOutPort = logOut;
+            _forgotPasswordPort = forgotPassword;
+            _resetPasswordPort = resetPasswordPort;
+            _refreshJWT = refreshJWTPort;
+            _resetPasswordValidatePort = resetPasswordValidatePort;
+            _refreshJWTOutPort = refreshJWTOutPort;
+            _userInformationInPort = userInformationPort;
+            _userInformationOutPort = userInformationOutPort;
         }
 
 
         [HttpPost("refresh")]
         public async Task<IActionResult> RefreshToken()
         {
-            if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+            try
             {
-                var jwt = await RefreshJWT.RefreshJWTAsync(refreshToken);
-                if (jwt is { Token: not null })
+                if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
                 {
+                    await _refreshJWT.RefreshJWTAsync(refreshToken);
+                    var RefreshJWT = ((IPresenter<RefreshTokenResponseDTO>)_refreshJWTOutPort).Content;
                     var accessTokenCookie = new CookieOptions
                     {
                         HttpOnly = true,
                         Secure = true,
                         SameSite = SameSiteMode.Strict,
-                        Expires = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(jwt.Token.ExpiresIn)),
+                        Expires = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(RefreshJWT.Token.ExpiresIn)),
                         Path = "/"
                     };
 
-                    Response.Cookies.Append("accessToken", jwt.Token.AccessToken, accessTokenCookie);
+                    Response.Cookies.Append("accessToken", RefreshJWT.Token.AccessToken, accessTokenCookie);
 
                     var refreshTokenCookie = new CookieOptions
                     {
                         HttpOnly = true,
                         Secure = true,
                         SameSite = SameSiteMode.Strict,
-                        Expires = DateTimeOffset.FromUnixTimeSeconds(jwt.Expiration),
+                        Expires = DateTimeOffset.FromUnixTimeSeconds(RefreshJWT.Expiration),
                         Path = "/api/v1/auth"
                     };
-                    Response.Cookies.Append("refreshToken", jwt.RefreshToken, refreshTokenCookie);
+                    Response.Cookies.Append("refreshToken", RefreshJWT.RefreshToken, refreshTokenCookie);
 
                     return Ok(new { message = "Tokens renovados" });
                 }
-
+            }
+            catch (InvalidOperationException)
+            {
                 Response.Cookies.Delete("accessToken");
                 var refreshTokenCookieDelete = new CookieOptions
                 {
@@ -71,25 +80,40 @@
                     Path = "/api/v1/auth"
                 };
                 Response.Cookies.Delete("refreshToken", refreshTokenCookieDelete);
+                return Unauthorized(new { message = "Token inválido o expirado" });
 
             }
-            return Unauthorized(new { message = "Token inválido o expirado" });
+            catch
+            {
+                Response.Cookies.Delete("accessToken");
+                var refreshTokenCookieDelete = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Path = "/api/v1/auth"
+                };
+                Response.Cookies.Delete("refreshToken", refreshTokenCookieDelete);
+            }
+            return StatusCode(500, new { message = "Token inválido o expirado" });
+
         }
 
         [HttpGet("me")]
-        public IActionResult Me()
+        public async Task<IActionResult> Me()
         {
-
-            if (Request.Cookies.TryGetValue("accessToken", out var cookieToken))
+            try
             {
-                var user = UserInformationPort.UserInfo(cookieToken);
-
-                if (user is { Status: true })
+                if (Request.Cookies.TryGetValue("accessToken", out var cookieToken))
                 {
+                    await _userInformationInPort.UserInfo(cookieToken);
+                    var user = ((IPresenter<UserInfoDTO>)_userInformationOutPort).Content;
                     return Ok(user);
+
                 }
 
             }
+            catch { }
 
             return Unauthorized(new { message = "Token inválido o expirado" });
         }
@@ -97,10 +121,11 @@
         [HttpDelete("logout")]
         public async Task<IActionResult> LogOut()
         {
-            if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+            try
             {
-                if (await LogOutPort.LogOut(refreshToken))
+                if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
                 {
+                    await _logOutPort.LogOut(refreshToken);
                     var accessTokenCookie = new CookieOptions
                     {
                         HttpOnly = true,
@@ -121,35 +146,59 @@
                     return Ok(new { message = "Sesión cerrada." });
                 }
             }
+            catch (ArgumentNullException)
+            {
+                return BadRequest();
+            }
+            catch (ArithmeticException)
+            {
+                return Unauthorized();
+            }
+            return StatusCode(500, new { Error = "Ocurrió un error inesperado." });
 
-            return BadRequest();
         }
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO request)
         {
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
-            await ForgotPasswordPort.GeneratePasswordResetTokenAsync(request, baseUrl);
-
+            await _forgotPasswordPort.GeneratePasswordResetTokenAsync(request, baseUrl);
             return Ok();
         }
         [HttpPut("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO request)
         {
-            var result = await ResetPasswordPort.ResetPasswordAsync(request);
-            if (result)
+            try
+            {
+                await _resetPasswordPort.ResetPasswordAsync(request);
                 return Ok();
 
-            return BadRequest();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500, new { Error = "Ocurrió un error inesperado." });
+            }
         }
         [HttpGet("reset-password/validate")]
         public async Task<IActionResult> ValidateTokenResetPassword(string token)
         {
-
-            var result = await ResetPasswordValidatePort.ValidateTokenPasswordAsync(token);
-            if (result)
+            try
+            {
+                await _resetPasswordValidatePort.ValidateTokenPasswordAsync(token);
                 return Ok();
 
-            return BadRequest();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch
+            {
+                return StatusCode(500, new { Error = "Ocurrió un error inesperado." });
+            }
         }
     }
 }

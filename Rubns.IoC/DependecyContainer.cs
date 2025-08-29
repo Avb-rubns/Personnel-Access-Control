@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Rubns.Application;
 using Rubns.Infrastructure;
 using Rubns.Infrastructure.Services;
+using Rubns.WebAPI;
 
 namespace Rubns.IoC
 {
@@ -13,6 +14,7 @@ namespace Rubns.IoC
             service.AddInfrastructureAsync(configuration);
             service.AddApplication();
             service.AddLoggerMSSQL(configuration.GetConnectionString("dbAuth"));
+            service.AddPresenters();
 
             return service;
         }

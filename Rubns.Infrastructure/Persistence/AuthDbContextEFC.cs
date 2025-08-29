@@ -1,4 +1,9 @@
-﻿namespace Rubns.Infrastructure.Persistence
+﻿using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Clicks;
+using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Links;
+using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Rols;
+using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.SessionUsers;
+
+namespace Rubns.Infrastructure.Persistence
 {
     public class AuthDbContextEFC : DbContext
     {
@@ -7,15 +12,15 @@
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<UserDb> Users { get; set; }
         public DbSet<SessionUser> SessionUser { get; set; }
         public DbSet<Rol> Rols { get; set; }
-        public DbSet<ResetPassword> ResetPasswords { get; set; }
+        public DbSet<ResetPasswordDb> ResetPasswords { get; set; }
         public DbSet<Link> Links { get; set; }
         public DbSet<Click> Clicks { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>(e =>
+            modelBuilder.Entity<UserDb>(e =>
             {
                 e.ToTable("Users", schema: "dbo");
                 e.HasKey(k => k.UserID);
@@ -33,7 +38,7 @@
                 e.HasKey(k => k.RolID);
             });
 
-            modelBuilder.Entity<ResetPassword>(e =>
+            modelBuilder.Entity<ResetPasswordDb>(e =>
             {
                 e.ToTable("ResetPasswords", schema: "dbo");
                 e.HasKey(k => k.ResetPasswordID);

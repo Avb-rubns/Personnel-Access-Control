@@ -8,9 +8,9 @@
         {
             Configuration = configuration;
         }
-        public async Task<UserDTO> GetUserByEmailAsync(string email)
+        public async Task<UserWithRolInfo> GetUserByEmailAsync(string email)
         {
-            UserDTO result = new();
+            UserWithRolInfo result = new();
             try
             {
                 await using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
@@ -19,12 +19,19 @@
 
                 var proc = "p_UserByEmail";
 
-                var user = await connection.QuerySingleOrDefaultAsync<UserDTO>(proc, new { email }, commandType: CommandType.StoredProcedure);
+                var user = await connection.QuerySingleOrDefaultAsync<UserWithRolInfoSpResultDb>(proc, new { email }, commandType: CommandType.StoredProcedure);
                 await connection.CloseAsync();
 
                 if (user is not null)
                 {
-                    result = user;
+                    result.UserId = user.UserId;
+                    result.UserName = user.UserName;
+                    result.Email = user.Email;
+                    result.Password = user.Password;
+                    result.RolName = user.Value;
+                    result.LevelPermission = user.LevelPermission;
+                    result.Status = user.Status;
+                    result.Phone = user.Phone;
                 }
 
             }
@@ -36,9 +43,9 @@
             return result;
         }
 
-        public async Task<UserDTO> GetUserByIDAsync(int id)
+        public async Task<UserWithRolInfo> GetUserByIDAsync(int id)
         {
-            UserDTO result = new();
+            UserWithRolInfo result = new();
             try
             {
                 await using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
@@ -46,12 +53,19 @@
 
                 var proc = "p_UserByID";
 
-                var user = await connection.QuerySingleOrDefaultAsync<UserDTO>(proc, new { id }, commandType: CommandType.StoredProcedure);
+                var user = await connection.QuerySingleOrDefaultAsync<UserWithRolInfoSpResultDb>(proc, new { id }, commandType: CommandType.StoredProcedure);
                 await connection.CloseAsync();
 
                 if (user is not null)
                 {
-                    result = user;
+                    result.UserId = user.UserId;
+                    result.UserName = user.UserName;
+                    result.Email = user.Email;
+                    result.Password = user.Password;
+                    result.RolName = user.Value;
+                    result.LevelPermission = user.LevelPermission;
+                    result.Status = user.Status;
+
                 }
 
             }
@@ -63,9 +77,9 @@
             return result;
         }
 
-        public async Task<UserDTO> GetUserByPhoneAsync(string number)
+        public async Task<UserWithRolInfo> GetUserByPhoneAsync(string number)
         {
-            UserDTO result = new();
+            UserWithRolInfo result = new();
             try
             {
                 await using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
@@ -73,12 +87,19 @@
 
                 var proc = "p_UserByPhone";
 
-                var user = await connection.QuerySingleOrDefaultAsync<UserDTO>(proc, new { Phone = number }, commandType: CommandType.StoredProcedure);
+                var user = await connection.QuerySingleOrDefaultAsync<UserWithRolInfoSpResultDb>(proc, new { Phone = number }, commandType: CommandType.StoredProcedure);
                 await connection.CloseAsync();
 
                 if (user is not null)
                 {
-                    result = user;
+                    result.UserId = user.UserId;
+                    result.UserName = user.UserName;
+                    result.Email = user.Email;
+                    result.Password = user.Password;
+                    result.RolName = user.Value;
+                    result.LevelPermission = user.LevelPermission;
+                    result.Status = user.Status;
+                    result.Phone = user.Phone;
                 }
 
             }

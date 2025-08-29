@@ -3,7 +3,7 @@
     internal class JWTService : IJWTService
     {
 
-        public UserInfoDTO JWTtoUserInfo(string jwt)
+        public UserClaim JWTtoUserInfo(string jwt)
         {
             var userinfo = ParseUserFromJWT(jwt);
 
@@ -17,7 +17,7 @@
                 return userinfo;
 
             }
-            return new UserInfoDTO();
+            return new UserClaim();
         }
 
         private IEnumerable<Claim> ParseClaimsFromJWT(string jwt)
@@ -47,9 +47,9 @@
             return result;
         }
 
-        private UserInfoDTO ParseUserFromJWT(string jwt)
+        private UserClaim ParseUserFromJWT(string jwt)
         {
-            UserInfoDTO userInfo = new UserInfoDTO();
+            UserClaim userInfo = new();
 
             var payload = jwt.Split('.')[1];
             var jsonBytes = ParseBase64Withoutpadding(payload);

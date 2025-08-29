@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Rubns.Application\Rubns.Application.csproj" />
     <ProjectReference Include="..\Rubns.Infrastructure\Rubns.Infrastructure.csproj" />
+    <ProjectReference Include="..\Rubns.WebAPI\Rubns.WebAPI.csproj" />
   </ItemGroup>
 
 

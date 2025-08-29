@@ -9,7 +9,7 @@
             Configuration = configuration;
         }
 
-        public JWT CreateJWT(UserDTO user)
+        public JWT CreateJWT(UserWithRolInfo user)
         {
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
@@ -34,7 +34,7 @@
         }
 
 
-        public string CreateClaims(UserDTO user, string salt)
+        public string CreateClaims(UserWithRolInfo user, string salt)
         {
             var payload = new JwtPayload
             {
@@ -44,10 +44,10 @@
                 { "validAudience", Configuration["JWT:Audience"] },
                 { "iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds() },
                 { "exp", DateTimeOffset.UtcNow.AddMinutes(Convert.ToInt64(Configuration["JWT:Expiration"])).ToUnixTimeSeconds() },
-                { "role", new List<string> { user.Value } },
+                { "role", new List<string> { user.RolName } },
                 { "levelPermission", user.LevelPermission.ToString() },
                 { "status", user.Status.ToString() },
-                { "userId", user.UserID }
+                { "userId", user.UserId }
             };
             if (Configuration["Enviroment"] == "dev")
             {

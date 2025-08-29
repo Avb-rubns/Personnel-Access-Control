@@ -2,8 +2,8 @@
 {
     public interface ILogInService
     {
-        JWT CreateJWT(UserDTO user);
-        string CreateClaims(UserDTO user, string salt);
+        JWT CreateJWT(UserWithRolInfo user);
+        string CreateClaims(UserWithRolInfo user, string salt);
         string CreateRefreshToken();
     }
 }

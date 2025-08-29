@@ -26,15 +26,15 @@
 
                 var userPhone = await LogInRepository.GetUserByPhoneAsync(checkTicket.Phone);
 
-                if (userEmail is { UserID: <= 0 } && userPhone is { UserID: <= 0 })
+                if (userEmail is { UserId: <= 0 } && userPhone is { UserId: <= 0 })
                 {
                     response.StatusCode = System.Net.HttpStatusCode.NotFound;
                     response.Message = "El usuario no existe.";
 
                     return response;
                 }
-                int userID = userEmail.UserID > 0 ? userEmail.UserID : userPhone.UserID;
-                string name = userEmail.UserID > 0 ? userEmail.UserName : userPhone.UserName;
+                int userID = userEmail.UserId > 0 ? userEmail.UserId : userPhone.UserId;
+                string name = userEmail.UserId > 0 ? userEmail.UserName : userPhone.UserName;
 
                 switch (op)
                 {
