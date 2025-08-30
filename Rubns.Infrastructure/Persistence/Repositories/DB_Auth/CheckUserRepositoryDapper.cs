@@ -1,4 +1,5 @@
-﻿using Rubns.Core.Entities.Checker;
+﻿using Rubns.Core.Abstraccions.Checker;
+using Rubns.Core.Entities.Checker;
 
 namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {

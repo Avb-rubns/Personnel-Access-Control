@@ -1,0 +1,17 @@
+﻿namespace Rubns.Core.Entities.Links
+{
+    public class LinkWithClicks
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public string Slug { get; set; }
+        public string Content { get; set; }
+        public string Url { get; set; }
+        public double DotScale { get; set; }
+        public string ColorDark { get; set; }
+        public string ColorLight { get; set; }
+        public int QuietZone { get; set; }
+        public bool Status { get; set; }
+        public int Clicks { get; set; }
+    }
+}

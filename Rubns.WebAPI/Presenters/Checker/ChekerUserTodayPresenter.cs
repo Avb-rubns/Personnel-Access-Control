@@ -1,6 +1,6 @@
 ﻿namespace Rubns.WebAPI.Presenters.Checker
 {
-    internal class GetChekerUserToday : IGetCheckUserTodayOutPort
+    internal class ChekerUserTodayPresenter : IGetCheckUserTodayOutPort
     {
         public List<CheckUserTodayDTO> Content { get; set; }
 

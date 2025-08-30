@@ -1,6 +1,6 @@
 ﻿namespace Rubns.WebAPI.Presenters.Auth
 {
-    internal sealed class UserInformationOutPort : IUserInformationOutPort
+    internal sealed class UserInformationPresenter : IUserInformationOutPort
     {
         public UserInfoDTO Content { get; set; }
 

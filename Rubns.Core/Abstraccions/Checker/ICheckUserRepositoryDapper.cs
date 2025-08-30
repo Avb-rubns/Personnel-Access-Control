@@ -1,4 +1,4 @@
-﻿namespace Rubns.Core.Ports.CheckUser
+﻿namespace Rubns.Core.Abstraccions.Checker
 {
     public interface ICheckUserRepositoryDapper
     {

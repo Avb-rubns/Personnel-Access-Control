@@ -11,9 +11,11 @@ global using Personnel.Client.Shared.DTOs.Users;
 global using Personnel.Client.Shared.POCO.ResponseAPI;
 global using Rubns.Application.Interface.Auth;
 global using Rubns.Application.Interface.Checker;
+global using Rubns.Application.Interface.Links;
 global using Rubns.Application.Interface.Users;
 global using Rubns.Core.Abstraccions;
 global using Rubns.Core.Entities.Checker;
+global using Rubns.Core.Entities.Links;
 global using Rubns.Core.Entities.Users;
 global using Rubns.Core.Ports.ApiKey;
 global using Rubns.Core.Ports.ApiKey.Register;
@@ -24,4 +26,3 @@ global using Rubns.Core.Ports.Rol;
 global using Rubns.Core.Ports.Scrapper;
 global using Rubns.Core.Ticket;
 global using Rubns.Infrastructure.Middleware;
-

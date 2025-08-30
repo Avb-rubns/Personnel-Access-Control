@@ -101,7 +101,6 @@
             }
 
         }
-
         private void DeleteAuthCookies()
         {
             var refreshTokenCookieDelete = new CookieOptions
@@ -122,7 +121,6 @@
             };
             Response.Cookies.Delete("accessToken", accessTokenCookieDelete);
         }
-
         [HttpGet("me")]
         public async Task<IActionResult> Me()
         {
@@ -145,7 +143,7 @@
 
                 return Ok(user);
             }
-            catch (Exception ex)
+            catch
             {
 
                 return Unauthorized(new ProblemDetails
@@ -159,7 +157,6 @@
 
 
         }
-
         [HttpDelete("logout")]
         public async Task<IActionResult> LogOut()
         {
