@@ -1,7 +1,5 @@
-﻿using DeviceDetectorNET;
-using Microsoft.Extensions.Primitives;
-
-namespace Personnel.Client.Shared.Builder
+﻿
+namespace Rubns.Application.Builder
 {
     public class ClickBuilder
     {
@@ -37,9 +35,9 @@ namespace Personnel.Client.Shared.Builder
             return this;
 
         }
-        public ClickDTO Build()
+        public Click Build()
         {
-            ClickDTO clickDTO = new ClickDTO();
+            Click clickDTO = new Click();
             if (_id.HasValue) { clickDTO.ID = _id.Value; }
             clickDTO.LinkId = _linkId;
             clickDTO.Country = _country;

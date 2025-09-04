@@ -32,7 +32,7 @@
         }
 
         [HttpGet("links")]
-        public async Task<IActionResult> GetQrsAsync(int? page = 0, int? pageSize = 10, string? filter = "")
+        public async Task<IActionResult> GetQrsAsync(int? page = 0, int? pageSize = 10, string? filter = "all")
         {
             try
             {

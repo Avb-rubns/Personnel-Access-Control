@@ -1,6 +1,4 @@
-﻿using Rubns.Core.Ports.Link;
-
-namespace Rubns.Application.Scrapper.Get
+﻿namespace Rubns.Application.Scrapper.Get
 {
     internal class GetTitle(IProxyServer proxyServer,
         IWebPageFetcher playwrighFetcher,

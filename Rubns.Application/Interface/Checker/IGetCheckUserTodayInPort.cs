@@ -1,4 +1,4 @@
-﻿namespace Rubns.Core.Ports.CheckUser
+﻿namespace Rubns.Application.Interface.Checker
 {
     public interface IGetCheckUserTodayInPort
     {

@@ -9,5 +9,6 @@ global using Personnel.Client.Shared.DTOs.Ticket;
 global using Personnel.Client.Shared.DTOs.Users;
 global using Rubns.Core.Entities.Auth;
 global using Rubns.Core.Entities.Checker;
+global using Rubns.Core.Entities.Clicks;
 global using Rubns.Core.Entities.Links;
 global using Rubns.Core.Entities.Users;

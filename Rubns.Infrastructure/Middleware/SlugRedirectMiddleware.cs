@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using Rubns.Core.Ports.Link;
 
 namespace Rubns.Infrastructure.Middleware
 {

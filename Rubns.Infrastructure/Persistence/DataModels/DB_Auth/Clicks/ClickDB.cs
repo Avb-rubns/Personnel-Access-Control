@@ -1,6 +1,6 @@
 ﻿namespace Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Clicks
 {
-    public class Click
+    public class ClickDB
     {
         public int ID { get; set; }
         public int LinkId { get; set; }

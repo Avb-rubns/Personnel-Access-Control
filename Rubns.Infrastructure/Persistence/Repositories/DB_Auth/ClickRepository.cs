@@ -1,17 +1,13 @@
-﻿using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Clicks;
-
-namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal class ClickRepository(AuthDbContextEFC authDbContextEFC)
         : IClickRepositoryEFC
     {
         private readonly AuthDbContextEFC _contextEFC = authDbContextEFC;
 
-        public async Task<int> InsertAsync(ClickDTO click)
+        public async Task<int> InsertAsync(Click click)
         {
-            int result = 0;
-
-            Click ClicNew = new()
+            ClickDB ClicNew = new()
             {
                 LinkId = click.LinkId,
                 Country = click.Country,

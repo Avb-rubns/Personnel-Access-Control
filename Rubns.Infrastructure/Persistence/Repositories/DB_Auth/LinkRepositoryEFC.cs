@@ -1,43 +1,27 @@
-﻿using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Links;
-
-namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal class LinkRepositoryEFC(AuthDbContextEFC contextEFC)
         : ILinkRepositoryEFC
     {
 
         private readonly AuthDbContextEFC _context = contextEFC;
-        public async Task<LinkDTO> AddAsync(LinkCreateDTO link)
+        public async Task<Link> AddAsync(Link link)
         {
-            LinkDTO Link = new LinkDTO();
-            Link linkCreate = new Link()
+            LinkDB newLink = new LinkDB()
             {
                 Name = link.Name,
                 Slug = link.Slug,
                 Content = link.Content,
                 Url = link.Url,
-                UserID = link.UserIDRegistered,
-                LastUserID = link.UserIDRegistered,
                 Status = link.Status,
+                UserID = link.UserIdRegistered
             };
 
-            await _context.Links.AddAsync(linkCreate);
+            await _context.Links.AddAsync(newLink);
             var result = await _context.SaveChangesAsync();
-            if (result > 0)
-            {
-                Link.ID = linkCreate.ID;
-                Link.Name = linkCreate.Name;
-                Link.Slug = linkCreate.Slug;
-                Link.Content = linkCreate.Content;
-                Link.Url = linkCreate.Url;
-                Link.Status = linkCreate.Status;
-                Link.Registered = linkCreate.Registered;
-                Link.LastModificated = linkCreate.Registered;
 
-            }
-
-
-            return Link;
+            link.ID = newLink.ID;
+            return link;
         }
 
         public async Task<int> CountLinksAsync()
@@ -56,7 +40,7 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 
         public async Task<int> DeleteLinkAsync(int id)
         {
-            Link remove = new Link()
+            LinkDB remove = new()
             {
                 ID = id,
             };
@@ -78,10 +62,10 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 
             return result;
         }
-        public async Task<List<LinkDTO>> GetAllLinksForPageAsync(int? page, int? pagesize, string? filter)
+        public async Task<List<Link>> GetAllLinksForPageAsync(int? page, int? pagesize, string? filter)
         {
-            List<LinkDTO> links = new List<LinkDTO>();
-            IEnumerable<Link> data;
+            List<Link> links = new();
+            IEnumerable<LinkDB> data;
             int pageSize = ((pagesize.HasValue && pagesize.Value > 0) ? pagesize.Value : 25);
             int pageNumber = ((page.HasValue && page.Value > 0) ? page.Value : 1);
 
@@ -109,7 +93,7 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 
             if (data.Count() > 0)
             {
-                links = data.Select(s => new LinkDTO
+                links = data.Select(s => new Link
                 {
                     ID = s.ID,
                     Name = s.Name,
@@ -130,9 +114,9 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 
             return links;
         }
-        public async Task<LinkDTO> GetLinkForIdAsync(int id)
+        public async Task<Link> GetLinkForIdAsync(int id)
         {
-            LinkDTO link = new();
+            Link link = new();
 
             var data = await _context.Links.Where(s => s.ID == id)
                 .AsNoTracking()
@@ -156,9 +140,9 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
             return link;
         }
 
-        public async Task<LinkDTO> GetLinkForSlugAsync(string slug)
+        public async Task<Link> GetLinkForSlugAsync(string slug)
         {
-            LinkDTO linkDTO = new();
+            Link linkDTO = new();
 
             var data = await _context.Links.AsNoTracking()
                             .SingleOrDefaultAsync(i => i.Slug == slug);
@@ -185,9 +169,9 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
             return linkDTO;
         }
 
-        public async Task<int> UpdateQRAsync(int id, int userID, QRDTO qr)
+        public async Task<int> UpdateQRAsync(int id, int userID, QR qr)
         {
-            Link link = new()
+            LinkDB link = new()
             {
                 ID = id,
                 DotScale = qr.DotScale,

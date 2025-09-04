@@ -1,6 +1,4 @@
-﻿using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Clicks;
-using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Links;
-using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Rols;
+﻿using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Rols;
 using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.SessionUsers;
 
 namespace Rubns.Infrastructure.Persistence
@@ -16,8 +14,8 @@ namespace Rubns.Infrastructure.Persistence
         public DbSet<SessionUser> SessionUser { get; set; }
         public DbSet<Rol> Rols { get; set; }
         public DbSet<ResetPasswordDb> ResetPasswords { get; set; }
-        public DbSet<Link> Links { get; set; }
-        public DbSet<Click> Clicks { get; set; }
+        public DbSet<LinkDB> Links { get; set; }
+        public DbSet<ClickDB> Clicks { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserDb>(e =>
@@ -47,7 +45,7 @@ namespace Rubns.Infrastructure.Persistence
                 .ValueGeneratedOnAdd();
             });
 
-            modelBuilder.Entity<Link>(e =>
+            modelBuilder.Entity<LinkDB>(e =>
             {
                 e.ToTable("Links", schema: "dbo");
                 e.HasKey(k => k.ID);
@@ -73,7 +71,7 @@ namespace Rubns.Infrastructure.Persistence
                 .HasColumnType("float");
             });
 
-            modelBuilder.Entity<Click>(e =>
+            modelBuilder.Entity<ClickDB>(e =>
             {
                 e.ToTable("Clicks", schema: "dbo");
                 e.HasKey(e => e.ID);

@@ -1,5 +1,4 @@
-﻿
-namespace Rubns.Application.Link.Delete
+﻿namespace Rubns.Application.Link.Delete
 {
     internal class LinkUseCase(ILinkRepositoryEFC linkRepositoryEFC
         , ILogger logger)

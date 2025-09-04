@@ -5,23 +5,46 @@
     [ApiController]
     public class RedirectQRController : ControllerBase
     {
-        private readonly ICreateClick _createClick;
+        private readonly IGetLinkforSlugInPort _getLinkforSlugInPort;
+        private readonly IGetLinkforSlugOutport _linkforSlugOutport;
 
-        public RedirectQRController(ICreateClick createClick)
+        public RedirectQRController(IGetLinkforSlugInPort getLinkforSlugInPort,
+            IGetLinkforSlugOutport linkforSlugOutport)
         {
-            _createClick = createClick;
+            _getLinkforSlugInPort = getLinkforSlugInPort;
+            _linkforSlugOutport = linkforSlugOutport;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index(string slug)
         {
-            var result = await _createClick.CreateClick(HttpContext.Request, slug);
+            try
+            {
+                await _getLinkforSlugInPort.SearchLinkforSlug(HttpContext.Request, slug);
+                var url = _linkforSlugOutport.Content;
+                return Redirect(url);
 
-            if (string.IsNullOrEmpty(result))
+            }
+            catch (ResourceInactiveException)
             {
                 return NotFound();
             }
-            return Redirect(result);
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
+                {
+                    Title = "Error interno",
+                    Detail = "Ocurrió un error inesperado. Intente nuevamente más tarde.",
+                    Status = StatusCodes.Status500InternalServerError,
+                    Type = "https://httpstatuses.com/500"
+                });
+            }
+
         }
     }
 
