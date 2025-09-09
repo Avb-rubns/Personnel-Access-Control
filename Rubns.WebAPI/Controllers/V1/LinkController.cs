@@ -70,12 +70,7 @@
         [HttpGet("check")]
         public async Task<IActionResult> CheckSlugAsync(string slug)
         {
-            var result = await _searchSlugPort.SearchSlugAsync(slug, true);
-
-            if (string.IsNullOrEmpty(result))
-            {
-                return NotFound();
-            }
+            await _searchSlugPort.SearchSlugAsync(slug, true);
             return Ok();
         }
     }

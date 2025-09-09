@@ -1,6 +1,5 @@
 ﻿
 using Personnel.Client.Shared.DTOs.Link;
-using Rubns.Core.Ports.Link;
 
 namespace Rubns.Application.Links.Post
 {

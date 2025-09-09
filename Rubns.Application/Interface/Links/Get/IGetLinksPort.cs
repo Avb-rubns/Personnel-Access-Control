@@ -1,4 +1,4 @@
-﻿namespace Rubns.Core.Ports.Link
+﻿namespace Rubns.Application.Interface.Links.Get
 {
     public interface IGetLinksPort
     {

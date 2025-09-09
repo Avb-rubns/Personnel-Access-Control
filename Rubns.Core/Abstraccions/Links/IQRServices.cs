@@ -1,6 +1,4 @@
-﻿using Personnel.Client.Shared.DTOs.Link;
-
-namespace Rubns.Core.Ports.Link
+﻿namespace Rubns.Core.Abstraccions.Links
 {
     public interface IQRServices
     {

@@ -1,4 +1,4 @@
-﻿namespace Rubns.Application.Links.Get
+﻿namespace Rubns.Application.UseCases.Links.Get
 {
     internal class SearchSlugUseCase(ILinkRepositoryEFC repositoryEFC
         , ILogger logger
@@ -8,7 +8,7 @@
         private readonly ILinkRepositoryEFC _repositoryEFC = repositoryEFC;
         private readonly ILogger _logger = logger;
         private readonly IUtils _utils = utils;
-        public async Task<string> SearchSlugAsync(string query, bool? check = false)
+        public async Task SearchSlugAsync(string query, bool? check = false)
         {
             string result = string.Empty;
             try
@@ -20,13 +20,18 @@
 
                 result = await _repositoryEFC.FindSlugAsync(query);
 
+                if (string.IsNullOrEmpty(result))
+                {
+                    throw new NotFoundException("No existe el slug.", "El elemento no existe");
+                }
+
             }
             catch (Exception e)
             {
                 _logger.Error(e, "Error SearchSlugAsync:{error}", e.Message);
+                throw;
             }
 
-            return result;
         }
     }
 }
