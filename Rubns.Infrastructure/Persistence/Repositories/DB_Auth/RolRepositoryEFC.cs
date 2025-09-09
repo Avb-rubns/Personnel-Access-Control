@@ -4,9 +4,9 @@
     {
         AuthDbContextEFC Context { get; } = contextEFC;
 
-        public async Task<List<RolDTO>> GetRolsAsync()
+        public async Task<List<Rol>> GetRolsAsync()
         {
-            List<RolDTO> rols = new();
+            List<Rol> rols = new();
 
             var data = await Context.Rols
                 .AsNoTracking()
@@ -15,7 +15,7 @@
             if (data.Count() > 0)
             {
                 rols = data.Select(
-                    r => new RolDTO()
+                    r => new Rol()
                     {
                         RolID = r.RolID,
                         Name = r.Name,

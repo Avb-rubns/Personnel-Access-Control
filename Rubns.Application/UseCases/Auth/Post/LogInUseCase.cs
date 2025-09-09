@@ -73,6 +73,7 @@
             catch (Exception e)
             {
                 _logger.Error(e, "LogIn an error occurred: {ErrorMessage}", e.Message);
+                throw;
             }
 
         }

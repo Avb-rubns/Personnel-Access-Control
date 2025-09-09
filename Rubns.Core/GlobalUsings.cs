@@ -1,14 +1,13 @@
 ﻿global using Microsoft.AspNetCore.Http;
-global using Microsoft.AspNetCore.JsonPatch;
 global using Personnel.Client.Shared.DTOs.ApiKey;
 global using Personnel.Client.Shared.DTOs.Link;
 global using Personnel.Client.Shared.DTOs.LogIn;
 global using Personnel.Client.Shared.DTOs.LogOut;
-global using Personnel.Client.Shared.DTOs.Rol;
 global using Personnel.Client.Shared.DTOs.Ticket;
 global using Personnel.Client.Shared.DTOs.Users;
 global using Rubns.Core.Entities.Auth;
 global using Rubns.Core.Entities.Checker;
 global using Rubns.Core.Entities.Clicks;
 global using Rubns.Core.Entities.Links;
+global using Rubns.Core.Entities.Rols;
 global using Rubns.Core.Entities.Users;

@@ -1,7 +1,4 @@
-﻿using Personnel.Client.Shared.DTOs.Maileroo;
-using Rubns.Application.Interface.Users;
-using System.Net;
-using System.Net.Http.Json;
+﻿using Rubns.Application.Interface.Users;
 
 namespace Rubns.Application.UseCases.Users.Post
 {
@@ -29,11 +26,18 @@ namespace Rubns.Application.UseCases.Users.Post
             Configuration = configuration;
         }
 
-        public async Task<int> RegisterUserAsync(RegisterUserDTO registerUser)
+        public async Task RegisterUserAsync(RegisterUserDTO registerUser)
         {
-            int result = 400;
             try
             {
+
+                var UserFinded = await UserRepository.FindUserByPhoneOrEmailAsync(registerUser.Email, registerUser.Phone);
+                if (UserFinded is { UserID: >= 0 })
+                {
+                    throw new ResourceExistException($"El usuario:{registerUser.Email} ya esta registrado.", "El elemento ya existe");
+                }
+
+
                 User userRegisted = new User
                 {
                     Name = registerUser.UserName,
@@ -44,45 +48,29 @@ namespace Rubns.Application.UseCases.Users.Post
                     Status = registerUser.Status,
 
                 };
-                var UserFinded = await UserRepository.FindUserByPhoneOrEmailAsync(registerUser.Email, registerUser.Phone);
-                if (UserFinded is { UserID: <= 0 })
+
+                string passTemp = EncryptionService.GeneratePassTemp(registerUser);
+                int create = await UserRepository.RegisterAsync(userRegisted, passTemp);
+
+                var mail = await TemplateRepositoryDapper.GetMailRegistedAsync(registerUser);
+                RequestMailDTO requestMail = new()
                 {
-                    string passTemp = EncryptionService.GeneratePassTemp(registerUser);
-                    int create = await UserRepository.RegisterAsync(userRegisted, passTemp);
+                    To = registerUser.Email,
+                    From = Configuration.GetSection("Maileroo")["Email"],
+                    Html = mail,
+                    Subject = "Registro de usuario",
 
-                    if (create > 0)
-                    {
-                        if (true)
-                        {
-                            var mail = await TemplateRepositoryDapper.GetMailRegistedAsync(registerUser);
-                            RequestMailDTO requestMail = new()
-                            {
-                                To = registerUser.Email,
-                                From = Configuration.GetSection("Maileroo")["Email"],
-                                Html = mail,
-                                Subject = "Registro de usuario",
-
-                            };
-                            var IsSendMail = await ProxyServer.PostAsFormDataAsync<HttpResponseMessage, RequestMailDTO>(
-                                                    "maileroo",
-                                                    "send",
-                                                    requestMail);
-                            switch (IsSendMail.StatusCode)
-                            {
-                                case HttpStatusCode.OK:
-                                    return 201;
-                                default:
-                                    var content = await IsSendMail.Content.ReadFromJsonAsync<ResponseMailDTO>();
-                                    Logger.Error("Error Send MailRegister:{error}", content.Message);
-                                    return 201;
-
-                            }
-
-                        }
-                        return 201;
-
-                    }
-
+                };
+                var IsSendMail = await ProxyServer.PostAsFormDataAsync<HttpResponseMessage, RequestMailDTO>(
+                                        "maileroo",
+                                        "send",
+                                        requestMail);
+                switch (IsSendMail.StatusCode)
+                {
+                    default:
+                        var content = await IsSendMail.Content.ReadFromJsonAsync<ResponseMailDTO>();
+                        Logger.Error("Error Send MailRegister:{error}", content.Message);
+                        break;
 
                 }
 
@@ -91,10 +79,9 @@ namespace Rubns.Application.UseCases.Users.Post
             catch (Exception e)
             {
                 Logger.Error(e, "RegitserUserAsync an error occurred: {ErrorMessage}", e.Message);
-                result = 500;
+                throw;
             }
 
-            return result;
         }
     }
 }

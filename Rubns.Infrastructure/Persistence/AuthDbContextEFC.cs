@@ -12,7 +12,7 @@ namespace Rubns.Infrastructure.Persistence
 
         public DbSet<UserDb> Users { get; set; }
         public DbSet<SessionUser> SessionUser { get; set; }
-        public DbSet<Rol> Rols { get; set; }
+        public DbSet<RolDB> Rols { get; set; }
         public DbSet<ResetPasswordDb> ResetPasswords { get; set; }
         public DbSet<LinkDB> Links { get; set; }
         public DbSet<ClickDB> Clicks { get; set; }
@@ -30,7 +30,7 @@ namespace Rubns.Infrastructure.Persistence
                 e.HasKey(k => k.ID);
             });
 
-            modelBuilder.Entity<Rol>(e =>
+            modelBuilder.Entity<RolDB>(e =>
             {
                 e.ToTable("Rols", schema: "dbo");
                 e.HasKey(k => k.RolID);
