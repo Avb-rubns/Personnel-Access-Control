@@ -1,26 +1,33 @@
-﻿namespace Rubns.Application.Scrapper.Get
+﻿namespace Rubns.Application.UseCases.Scrapper.Get
 {
-    internal class GetMeta(IProxyServer proxyServer,
+    internal sealed class GetMeta(IProxyServer proxyServer,
         ILogger logger,
         IHtmlParser webScrappynService,
         IWebPageFetcher PlaywrighFetcher,
         ILinkRepositoryEFC qRRepositoryEFC,
+        IMetasOutputPort metasOutputPort,
         IUtils utilitis)
-        : IMetaProxyPort
+        : IMetaProxyInputPort
     {
 
-        readonly IProxyServer _proxyServer = proxyServer;
+        private readonly IProxyServer _proxyServer = proxyServer;
         private readonly ILogger _logger = logger;
         private readonly IHtmlParser _webScrappynService = webScrappynService;
         private readonly IWebPageFetcher _playwrighFetcher = PlaywrighFetcher;
-        readonly IUtils _utils = utilitis;
-        readonly ILinkRepositoryEFC _qRRepositoryEFC = qRRepositoryEFC;
+        private readonly IUtils _utils = utilitis;
+        private readonly ILinkRepositoryEFC _qRRepositoryEFC = qRRepositoryEFC;
+        private readonly IMetasOutputPort _metasOutputPort = metasOutputPort;
 
-        public async Task<Dictionary<string, string>> GetMetaAsync(string url)
+        public async Task GetMetaAsync(string url)
         {
             Dictionary<string, string> metas = new();
             try
             {
+                if (string.IsNullOrEmpty(url))
+                {
+                    throw new ArgumentException("url");
+                }
+
                 var data = await _proxyServer.GetStringAsync<string>("clean", url);
                 metas = _webScrappynService.GetMeta(data);
 
@@ -28,11 +35,16 @@
                 {
                     data = await _playwrighFetcher.GetHeadHtmlAsync(url);
                     if (string.IsNullOrEmpty(data))
-                        return metas;
+                    {
+                        throw new NotFoundException("El scrapper no puedo recuperar informacion", "No se recupero informacion.");
+                    }
 
                     metas = _webScrappynService.GetMeta(data);
                     if (!metas.TryGetValue("title", out title) || string.IsNullOrEmpty(title))
-                        return metas;
+                    {
+                        throw new NotFoundException("El scrapper no puedo recuperar informacion", "No se recupero informacion.");
+                    }
+
                 }
 
                 // Generar slug si no existe
@@ -43,15 +55,14 @@
                     metas.Add("slug", slug);
                 }
 
-                return metas;
-
+                await _metasOutputPort.Handeler(metas);
 
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Error GetMetaAsync:{e} ", ex.Message);
+                throw;
             }
-            return metas;
         }
     }
 }

@@ -59,9 +59,6 @@
                     problemDetails.Status = StatusCodes.Status400BadRequest;
                     problemDetails.Type = "https://httpstatuses.com/400";
                     break;
-                    // Aquí podrías agregar más casos:
-                    // case BadRequestException: ...
-                    // case UnauthorizedException: ...
             }
 
 
