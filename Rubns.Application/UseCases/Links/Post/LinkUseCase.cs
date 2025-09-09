@@ -28,7 +28,7 @@
                 var isExistSlug = await _repositoryEFC.FindSlugAsync(createDTO.Slug);
                 if (!string.IsNullOrEmpty(isExistSlug))
                 {
-                    throw new Exception();
+                    throw new ResourceExistException("El nombre descriptivo ya existe.", "Enlace ya existenete");
                 }
 
                 createDTO.Url = $"{createDTO.Url}/qr/{createDTO.Slug}";
@@ -38,7 +38,8 @@
                                .WithContent(createDTO.Content)
                                .WithURL(createDTO.Url)
                                .WithStatus(createDTO.Status)
-                               .WithUserId(createDTO.UserIDRegistered)
+                               .WithUserIdRegisted(createDTO.UserIDRegistered)
+                               .WithUserLastIdModificated(createDTO.UserIDRegistered)
                                .Build();
 
                 await _repositoryEFC.AddAsync(create);

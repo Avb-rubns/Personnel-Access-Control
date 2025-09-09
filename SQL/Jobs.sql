@@ -34,7 +34,7 @@ BEGIN TRY
 
     -- 1. Eliminar registros antiguos (por tiempo de vida)
     DELETE FROM SessionUsers
-    WHERE Expiration >= GETDATE();
+    WHERE Expiration < GETDATE();
 
     SET @DeletedRows = @DeletedRows + @@ROWCOUNT;
 

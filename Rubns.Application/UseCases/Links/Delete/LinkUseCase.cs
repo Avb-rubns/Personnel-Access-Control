@@ -14,7 +14,7 @@
                 var link = await _linkRepositoryEFC.GetLinkForIdAsync(id);
                 if (link is { ID: <= 0 })
                 {
-                    throw new Exception();
+                    throw new NotFoundException("El enlace no existe.", "Enlace no encontrado");
                 }
 
                 await _linkRepositoryEFC.DeleteLinkAsync(id);
@@ -22,8 +22,8 @@
             }
             catch (Exception e)
             {
-
                 _logger.Error(e, "Error in LinkUseCase:{error}", e.Message);
+                throw;
             }
 
         }

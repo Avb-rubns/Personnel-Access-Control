@@ -32,6 +32,7 @@ namespace Personnel.Client.Server
                {
                    apiApp.UseRouting();
                    apiApp.UseCors("AllowFrontend");
+                   apiApp.UseMiddleware<GlobalExceptionMiddlewware>();
                    apiApp.UseMiddleware<JwtValidationMiddleware>();
                    apiApp.UseAuthorization();
                    apiApp.UseEndpoints(endpoints =>
@@ -40,13 +41,9 @@ namespace Personnel.Client.Server
                    });
                }
            );
-
-
-
-
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers(); // Esto permite que rutas como /r/{slug} lleguen a su controlador
+                endpoints.MapControllers(); // Esto permite que rutas como /qr/{slug} lleguen a su controlador
                 endpoints.MapRazorPages();
             });
 

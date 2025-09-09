@@ -14,7 +14,8 @@
                 Content = link.Content,
                 Url = link.Url,
                 Status = link.Status,
-                UserID = link.UserIdRegistered
+                UserID = link.UserIdRegistered,
+                LastUserID = link.UserLastIdModificated
             };
 
             await _context.Links.AddAsync(newLink);

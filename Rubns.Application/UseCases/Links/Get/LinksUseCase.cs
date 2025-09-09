@@ -16,10 +16,28 @@
         {
             try
             {
+                if (page <= 0)
+                {
+                    throw new ArgumentException("La pagina no esta en el rango permitido.");
+                }
+                if (pagesize <= 0)
+                {
+                    throw new ArgumentException("El numero de registros no puede ser cero.");
+                }
+
                 int total = 0;
                 var links = await _linkRepositoryDapper.GetLinksAsync(page, pagesize, filter);
-                total = await _linkRepositoryEFC.CountLinksAsync();
-                await _getLinksOurPort.Handler(links, total);
+                if (filter.Equals("all"))
+                {
+                    total = await _linkRepositoryEFC.CountLinksAsync();
+                }
+                else
+                {
+                    total = await _linkRepositoryDapper.CountLinks(filter);
+                }
+                bool hasNextPage = (page * pagesize) < total;
+                bool hasPreviousPage = page > 1;
+                await _getLinksOurPort.Handler(links, total, page, pagesize, hasNextPage, hasPreviousPage);
             }
             catch (Exception ex)
             {

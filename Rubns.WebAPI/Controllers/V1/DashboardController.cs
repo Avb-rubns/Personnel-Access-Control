@@ -13,23 +13,9 @@
         [HttpGet]
         public async Task<IActionResult> GetCheckUsersAsyn()
         {
-            try
-            {
-                await _checkUserTodayPort.CheckTodayAsync();
-                var data = _checkUserTodayOutPort.Content;
-                return data?.Count > 0 ? Ok(data) : NoContent();
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
-                {
-                    Title = "Error interno",
-                    Detail = "Ocurrió un error inesperado. Intente nuevamente más tarde.",
-                    Status = StatusCodes.Status500InternalServerError,
-                    Type = "https://httpstatuses.com/500"
-                });
-
-            }
+            await _checkUserTodayPort.CheckTodayAsync();
+            var data = _checkUserTodayOutPort.Content;
+            return data?.Count > 0 ? Ok(data) : NoContent();
         }
 
     }

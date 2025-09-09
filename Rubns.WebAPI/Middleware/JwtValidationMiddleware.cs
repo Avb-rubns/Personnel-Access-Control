@@ -126,14 +126,19 @@
                 });
                 return;
             }
-            catch (Exception ex)
+            catch (SecurityTokenValidationException)
             {
-                _logger.LogWarning(ex, "Token inválido en request para {Path}", path);
+                _logger.LogInformation("Token no valido  para path {Path}", path);
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync("Unauthorized - token invalid.");
+                await context.Response.WriteAsJsonAsync(new ProblemDetails
+                {
+                    Title = "Token no valido",
+                    Detail = "El token a vencido, genere un nuevos tokens.",
+                    Status = StatusCodes.Status401Unauthorized,
+                    Type = "https://httpstatuses.com/404"
+                });
                 return;
             }
-
         }
     }
 
