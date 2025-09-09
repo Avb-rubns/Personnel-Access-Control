@@ -30,13 +30,15 @@
                 DateTime nzDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, nzTimeZone);
                 if (session?.UserID <= 0 || session.Expiration <= nzDateTime)
                 {
-                    throw new InvalidOperationException("Token caducado.");
+                    throw new TokenInvalidException("El refresh token proporcionado no es válido o ya expiró.");
                 }
 
                 var user = await _logInRepository.GetUserByIDAsync(session.UserID);
                 if (user?.UserId <= 0)
                 {
-                    throw new ArgumentException("El usuario no existe");
+                    //Usuario no existe
+                    _logger.Information("El usuario:{0} no existe.", session.ID);
+                    throw new ArgumentException("Los datos proporcionados no son correctos.");
                 }
 
                 var newJwt = _logInService.CreateJWT(user);

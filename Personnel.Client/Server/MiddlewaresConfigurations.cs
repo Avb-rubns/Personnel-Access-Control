@@ -1,4 +1,6 @@
-﻿namespace Personnel.Client.Server
+﻿using Rubns.WebAPI.Middleware;
+
+namespace Personnel.Client.Server
 {
     internal static class MiddlewaresConfigurations
     {
@@ -17,7 +19,9 @@
                 app.UseHsts();
 
             }
-
+            app.UseMiddleware<GlobalExceptionMiddlewware>();
+            app.UseRouting();
+            app.UseCors("AllowFrontend");
             app.MapWhen(
                context =>
                {
@@ -27,6 +31,7 @@
                apiApp =>
                {
                    apiApp.UseRouting();
+                   apiApp.UseCors("AllowFrontend");
                    apiApp.UseMiddleware<JwtValidationMiddleware>();
                    apiApp.UseAuthorization();
                    apiApp.UseEndpoints(endpoints =>
@@ -37,13 +42,6 @@
            );
 
 
-            app.UseRouting();
-            app.UseCors(option =>
-            {
-                option.AllowAnyOrigin();
-                option.AllowAnyMethod();
-                option.AllowAnyHeader();
-            });
 
 
             app.UseEndpoints(endpoints =>
@@ -54,8 +52,6 @@
 
             app.MapOpenApi();
             app.MapScalarApiReference();
-
-
 
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();

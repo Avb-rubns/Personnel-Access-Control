@@ -2,7 +2,7 @@
 using Personnel.Client.Shared.DTOs.Link;
 using Rubns.Core.Ports.Link;
 
-namespace Rubns.Application.Link.Post
+namespace Rubns.Application.Links.Post
 {
     internal class GenerateQRUseCases(IQRServices qRServices
         , ILogger logger)

@@ -2,14 +2,14 @@
 {
     internal sealed class LinkforSlug(ILinkRepositoryEFC linkRepositoryEFC,
         ILogger logger,
-        IGetLinkforSlugOutport linkforSlugOutport,
+        IGetLinkforSlugOutputport linkforSlugOutport,
         ICreateClickPort createClick)
-        : IGetLinkforSlugInPort
+        : IGetLinkforSlugInputPort
     {
 
         private readonly ILinkRepositoryEFC _linkRepositoryEFC = linkRepositoryEFC;
         private readonly ILogger _logger = logger;
-        private readonly IGetLinkforSlugOutport _linkforSlugOutport = linkforSlugOutport;
+        private readonly IGetLinkforSlugOutputport _linkforSlugOutport = linkforSlugOutport;
         private readonly ICreateClickPort _createClickPort = createClick;
         public async Task SearchLinkforSlug(HttpRequest request, string slug)
         {
@@ -19,7 +19,7 @@
                 if (link is { ID: <= 0 })
                 {
                     _logger.Warning($"El slug:{slug} no se encontro.");
-                    throw new NotFoundException($"El slug:{slug} no se encontro.");
+                    throw new Exception();
                 }
                 if (!link.Status)
                 {

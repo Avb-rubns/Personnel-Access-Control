@@ -1,6 +1,8 @@
-﻿namespace Rubns.WebAPI.Presenters.Links
+﻿using Rubns.Application.Interface.Links.Get;
+
+namespace Rubns.WebAPI.Presenters.Links
 {
-    internal class LinksPresenter : IGetLinksOurPort
+    internal class LinksPresenter : IGetLinksOutputPort
     {
         public TableLinkDTO Content { get; private set; }
 

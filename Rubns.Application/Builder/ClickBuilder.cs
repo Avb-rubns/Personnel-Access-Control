@@ -37,17 +37,17 @@ namespace Rubns.Application.Builder
         }
         public Click Build()
         {
-            Click clickDTO = new Click();
-            if (_id.HasValue) { clickDTO.ID = _id.Value; }
-            clickDTO.LinkId = _linkId;
-            clickDTO.Country = _country;
-            clickDTO.Region = _region;
-            clickDTO.City = _city;
-            clickDTO.DeviceType = _deviceType;
-            clickDTO.OS = _os;
-            clickDTO.Browser = _browser;
-            clickDTO.IpAddress = _ipAddress;
-            return clickDTO;
+            Click click = new Click();
+            if (_id.HasValue) { click.ID = _id.Value; }
+            click.LinkId = _linkId;
+            click.Country = _country;
+            click.Region = _region;
+            click.City = _city;
+            click.DeviceType = _deviceType;
+            click.OS = _os;
+            click.Browser = _browser;
+            click.IpAddress = _ipAddress;
+            return click;
         }
 
 

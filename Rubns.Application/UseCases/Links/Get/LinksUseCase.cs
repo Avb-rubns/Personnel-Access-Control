@@ -1,16 +1,16 @@
-﻿namespace Rubns.Application.Link.Get
+﻿namespace Rubns.Application.UseCases.Links.Get
 {
     internal class LinksUseCase(ILinkRepositoryDapper linkRepositoryDapper
         , ILinkRepositoryEFC linkRepositoryEFC
         , ILogger logger
-        , IGetLinksOurPort getLinksOurPort)
+        , IGetLinksOutputPort getLinksOurPort)
         : IGetLinksPort
     {
 
         private readonly ILinkRepositoryDapper _linkRepositoryDapper = linkRepositoryDapper;
         private readonly ILogger _logger = logger;
         private readonly ILinkRepositoryEFC _linkRepositoryEFC = linkRepositoryEFC;
-        private readonly IGetLinksOurPort _getLinksOurPort = getLinksOurPort;
+        private readonly IGetLinksOutputPort _getLinksOurPort = getLinksOurPort;
 
         public async Task GetPortsAsync(int page, int pagesize, string filter)
         {
@@ -18,10 +18,7 @@
             {
                 int total = 0;
                 var links = await _linkRepositoryDapper.GetLinksAsync(page, pagesize, filter);
-                if (links.Count >= pagesize)
-                {
-                    total = await _linkRepositoryEFC.CountLinksAsync();
-                }
+                total = await _linkRepositoryEFC.CountLinksAsync();
                 await _getLinksOurPort.Handler(links, total);
             }
             catch (Exception ex)

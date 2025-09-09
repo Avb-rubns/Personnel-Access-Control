@@ -1,4 +1,4 @@
-﻿namespace Rubns.Application.Link.Delete
+﻿namespace Rubns.Application.UseCases.Links.Delete
 {
     internal class LinkUseCase(ILinkRepositoryEFC linkRepositoryEFC
         , ILogger logger)
@@ -6,15 +6,18 @@
     {
         private readonly ILinkRepositoryEFC _linkRepositoryEFC = linkRepositoryEFC;
         private readonly ILogger _logger = logger;
-        public async Task<int> DeleteLinkPortAsync(int id)
+        public async Task DeleteLinkPortAsync(int id)
         {
-            int result = -1;
 
             try
             {
-                var remove = await _linkRepositoryEFC.DeleteLinkAsync(id);
+                var link = await _linkRepositoryEFC.GetLinkForIdAsync(id);
+                if (link is { ID: <= 0 })
+                {
+                    throw new Exception();
+                }
 
-                return remove >= 0 ? 1 : remove;
+                await _linkRepositoryEFC.DeleteLinkAsync(id);
 
             }
             catch (Exception e)
@@ -23,7 +26,6 @@
                 _logger.Error(e, "Error in LinkUseCase:{error}", e.Message);
             }
 
-            return result;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Rubns.Infrastructure.Middleware
+﻿namespace Rubns.WebAPI.Middleware
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class RoleAndStatusAuthAttribute : Attribute, IAsyncAuthorizationFilter

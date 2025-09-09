@@ -1,6 +1,8 @@
-﻿namespace Rubns.WebAPI.Presenters.Links
+﻿using Rubns.Application.Interface.Links.Get;
+
+namespace Rubns.WebAPI.Presenters.Links
 {
-    internal class LinkforSlug : IGetLinkforSlugOutport
+    internal class LinkforSlug : IGetLinkforSlugOutputport
     {
         public string Content { get; set; }
 

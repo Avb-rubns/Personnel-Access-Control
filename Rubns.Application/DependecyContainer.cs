@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Rubns.Application.Builder;
 
 namespace Rubns.Application
 {
@@ -9,6 +8,7 @@ namespace Rubns.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.TryAddScoped<ClickBuilder>();
+            services.TryAddScoped<LinkBuilder>();
             return services.ConfigureServices(Assembly.GetExecutingAssembly().Location);
         }
     }

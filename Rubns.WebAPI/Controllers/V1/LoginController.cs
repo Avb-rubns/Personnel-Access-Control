@@ -16,41 +16,30 @@
         [HttpPost]
         public async Task<IActionResult> LogIn(LoginRequestDTO loginRequest)
         {
-            try
+            await _logInPort.LogIn(loginRequest);
+
+            var result = ((IPresenter<AuthResponseDTO>)_logOutPort).Content;
+            var accessTokenCookie = new CookieOptions
             {
-                await _logInPort.LogIn(loginRequest);
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(result.AccessToken.ExpiresIn)),
+                Path = "/"
+            };
+            Response.Cookies.Append("accessToken", result.AccessToken.AccessToken, accessTokenCookie);
 
-                var result = ((IPresenter<AuthResponseDTO>)_logOutPort).Content;
-
-                if (result is not null)
-                {
-                    var accessTokenCookie = new CookieOptions
-                    {
-                        HttpOnly = true,
-                        Secure = true,
-                        SameSite = SameSiteMode.Strict,
-                        Expires = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(result.AccessToken.ExpiresIn)),
-                        Path = "/"
-                    };
-                    Response.Cookies.Append("accessToken", result.AccessToken.AccessToken, accessTokenCookie);
-
-                    var refreshTokenCookie = new CookieOptions
-                    {
-                        HttpOnly = true,
-                        Secure = true,
-                        SameSite = SameSiteMode.Strict,
-                        Expires = DateTimeOffset.FromUnixTimeSeconds(result.Expiration),
-                        Path = "/api/v1/auth"
-                    };
-                    Response.Cookies.Append("refreshToken", result.RefreshToken, refreshTokenCookie);
-                    return Ok(new { message = "Login exitoso" });
-                }
-            }
-            catch
+            var refreshTokenCookie = new CookieOptions
             {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.FromUnixTimeSeconds(result.Expiration),
+                Path = "/api/v1/auth"
+            };
+            Response.Cookies.Append("refreshToken", result.RefreshToken, refreshTokenCookie);
+            return Ok(new { message = "Login exitoso" });
 
-            }
-            return Unauthorized(new { message = "Credenciales incorrectas o usuario no registrado." });
         }
 
     }

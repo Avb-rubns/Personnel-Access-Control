@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace Rubns.Infrastructure.Middleware
+﻿namespace Rubns.WebAPI.Middleware
 {
     public class JwtValidationMiddleware
     {
@@ -21,13 +19,10 @@ namespace Rubns.Infrastructure.Middleware
 
             _publicRoutes = _config.GetSection("PublicRoutes").Get<List<string>>() ?? new();
 
-            _jwtSecret = config["Jwt:Secret"] ?? config["WordSecretJWT"] ?? throw new InvalidOperationException("Jwt secret no configurado.");
+            _jwtSecret = config["Jwt:Secret"] ?? config["WordSecretJWT"] ??
+                throw new InvalidOperationException("Jwt secret no configurado.");
 
             _cookieName = config["Jwt:CookieName"] ?? "accessToken";
-
-
-
-
         }
 
         public async Task Invoke(HttpContext context, IUserContextService userContext)
@@ -58,9 +53,7 @@ namespace Rubns.Infrastructure.Middleware
             if (string.IsNullOrWhiteSpace(token))
             {
                 _logger.LogWarning("No token provided for path {Path}", path);
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync("Unauthorized - token missing.");
-                return;
+                throw new UnauthorizedException("Falta el token de autorización.", "No autorizado");
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -91,9 +84,7 @@ namespace Rubns.Infrastructure.Middleware
                     && !jwt.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.LogWarning("Token algorithm no permitido: {Alg}", jwt.Header.Alg);
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    await context.Response.WriteAsync("Unauthorized - invalid token algorithm.");
-                    return;
+                    throw new UnauthorizedException("Falta el token de autorización.", "No autorizado");
                 }
 
                 context.User = principal;
@@ -126,7 +117,13 @@ namespace Rubns.Infrastructure.Middleware
             {
                 _logger.LogInformation("Token expirado para path {Path}", path);
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync("Unauthorized - token expired.");
+                await context.Response.WriteAsJsonAsync(new ProblemDetails
+                {
+                    Title = "Token vencido",
+                    Detail = "El token a vencido, genere un nuevos tokens.",
+                    Status = StatusCodes.Status401Unauthorized,
+                    Type = "https://httpstatuses.com/401"
+                });
                 return;
             }
             catch (Exception ex)

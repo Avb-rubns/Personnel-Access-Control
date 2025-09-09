@@ -1,12 +1,13 @@
 ﻿namespace Rubns.Application.Exceptions
 {
-    public class NotFoundException : Exception
+    public class UnauthorizedException : Exception
     {
         public string Title { get; }
 
-        public NotFoundException(string message, string title) : base(message)
+        public UnauthorizedException(string message, string title) : base(message)
         {
             Title = title;
+
         }
     }
 }

@@ -4,8 +4,23 @@
     {
         public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
         {
-
+            if (builder.Configuration.GetSection(EnvironmentOptions.SectionKey).Get<EnvironmentOptions>() is { } environmentOptions)
+            {
+                builder.Configuration.AddJsonFile($"appsettings.{environmentOptions.EnvironmentName}.json", optional: true, reloadOnChange: true);
+            }
+            builder.Services.AddServices(builder.Configuration);
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>())
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials(); // 👈 esto habilita cookies / credenciales
+
+                });
+            });
             builder.Services.AddControllers()
                     .AddNewtonsoftJson();
             builder.Services.AddOpenApi();
@@ -38,13 +53,6 @@
                 options.ApiVersionReader = new UrlSegmentApiVersionReader();
             });
 
-
-            if (builder.Configuration.GetSection(EnvironmentOptions.SectionKey).Get<EnvironmentOptions>() is { } environmentOptions)
-            {
-                builder.Configuration.AddJsonFile($"appsettings.{environmentOptions.EnvironmentName}.json", optional: true, reloadOnChange: true);
-            }
-
-            builder.Services.AddServices(builder.Configuration);
             builder.Services.AddHttpClient("maileroo", c =>
             {
                 c.BaseAddress = new Uri("https://smtp.maileroo.com");
@@ -64,6 +72,8 @@
                     policy.RequireClaim("Status", "Active");
                 });
             });
+
+
 
 
             return builder.Build();

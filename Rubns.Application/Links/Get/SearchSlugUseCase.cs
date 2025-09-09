@@ -1,4 +1,4 @@
-﻿namespace Rubns.Application.Link.Get
+﻿namespace Rubns.Application.Links.Get
 {
     internal class SearchSlugUseCase(ILinkRepositoryEFC repositoryEFC
         , ILogger logger

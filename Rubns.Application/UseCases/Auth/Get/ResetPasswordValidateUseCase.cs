@@ -21,7 +21,7 @@
                 && resetPassword.Registed.AddMinutes(15) < nowWithSameOffset)
                 {
                     await _resetPasswordEFC.DeleteResetPasswordAsync(resetPassword);
-                    throw new InvalidOperationException("Caduco el token.");
+                    throw new TokenInvalidException("El refresh token proporcionado no es válido o ya expiró.");
                 }
 
 

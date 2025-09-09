@@ -24,7 +24,8 @@
                 var resetPassword = await _resetPasswordEFC.FindResetPasswordAsync(request.ResetCode);
                 if (resetPassword is { ResetPasswordID: < 0 })
                 {
-                    throw new ArgumentException("No tiene un token en para reinicio de contraseña.");
+                    //No tiene un token en para reinicio de contraseña.
+                    throw new TokenInvalidException("El refresh token proporcionado no es válido o ya expiró.");
                 }
 
                 var referenceOffset = resetPassword.Registed.Offset;
@@ -33,19 +34,21 @@
                 if (resetPassword.Registed.AddMinutes(16) < nowWithSameOffset)
                 {
                     await _resetPasswordEFC.DeleteResetPasswordAsync(resetPassword);
-                    throw new ArgumentException("No el token ya caduco.");
+                    throw new TokenInvalidException("El refresh token proporcionado no es válido o ya expiró.");
                 }
 
                 var user = await _userRepositoryEFC.FindUserforIDAsync(resetPassword.UserId);
                 if (user is { UserID: < 0 })
                 {
-                    throw new ArgumentException("No existe el usuario.");
+                    //No existe el usuario.
+                    throw new ArgumentException("Los datos proporcionados no son correctos.");
                 }
 
                 if (!request.Password.Equals(request.NewPassword))
                 {
                     throw new ArgumentException("Las contraseñas no son iguales.");
                 }
+
                 var newPassword = _encryptionService.GenerateNewPass(request.NewPassword);
 
                 user.Password = newPassword;

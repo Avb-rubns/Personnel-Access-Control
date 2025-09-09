@@ -17,7 +17,8 @@ namespace ServicesRegister
                             && type.IsInterface == false
                             && type.IsEnum == false
                             && Regex.IsMatch(type.Name, "Nullable|Attribute|[<>]") == false
-                            && type.BaseType?.Name != "DbContext");
+                            && type.BaseType?.Name != "DbContext"
+                            && typeof(Exception).IsAssignableFrom(type) == false);
             service
                     .ToList().ForEach(type =>
                         type.GetInterfaces().ToList()

@@ -36,29 +36,33 @@
 
                 if (user is { Status: false })
                 {
-                    throw new Exception("Usuario no esta activo");
+                    _logger.Information("Usuario no esta activo");
+                    throw new LoginException("Credenciales incorrectas o usuario no registrado.", "Datos incorrectos");
                 }
 
                 if (user.Email is null)
                 {
-                    throw new Exception("Usuario no existe");
+                    _logger.Information($"Usuario no existe:{login.Email}");
+                    throw new LoginException("Credenciales incorrectas o usuario no registrado.", "Datos incorrectos");
                 }
                 if (!_encryptionService.ValidatePass(login.Password, user.Password))
                 {
-                    throw new Exception("Usuario no existe");
+                    throw new LoginException("Credenciales incorrectas o usuario no registrado.", "Datos incorrectos");
                 }
 
                 JWT = _logInService.CreateJWT(user);
                 RefreshToken = _logInService.CreateRefreshToken();
                 if (JWT is null && string.IsNullOrEmpty(RefreshToken))
                 {
-                    throw new Exception("No se genero la sesion.");
+                    _logger.Information($"No se genero la sesion para {login.Email}.");
+                    throw new Exception();
                 }
                 var saveSessionUser = await _sessionUserRepository.AddSessionAsync(user.UserId, RefreshToken);
 
                 if (saveSessionUser <= 0)
                 {
-                    throw new Exception("No se genero la sesion.");
+                    _logger.Information($"No se genero la sesion para {login.Email}.");
+                    throw new Exception();
                 }
 
                 var Expiration = DateTimeOffset.UtcNow.AddDays(Convert.ToInt64(_configuration["DaysRefresh"])).ToUnixTimeSeconds();
