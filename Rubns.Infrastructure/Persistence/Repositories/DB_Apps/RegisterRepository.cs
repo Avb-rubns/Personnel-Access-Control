@@ -1,4 +1,6 @@
-﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Apps
+﻿using Rubns.Core.POCO.ApiKey.Register;
+
+namespace Rubns.Infrastructure.Persistence.Repositories.DB_Apps
 {
     internal class RegisterRepository : IRegisterRepository
     {

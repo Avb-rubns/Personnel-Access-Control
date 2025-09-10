@@ -1,4 +1,4 @@
-﻿namespace Rubns.Core.Ports.Template
+﻿namespace Rubns.Core.Abstraccions.Templates
 {
     public interface ITemplateRepositoryDapper
     {

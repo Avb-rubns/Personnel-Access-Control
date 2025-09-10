@@ -1,4 +1,4 @@
-﻿namespace Rubns.Core.Ports.Link
+﻿namespace Rubns.Core.POCO.Link
 {
     public interface IGenerateQRPort<T>
     {

@@ -1,5 +1,6 @@
 ﻿
 using Personnel.Client.Shared.DTOs.Link;
+using Rubns.Core.POCO.Link;
 
 namespace Rubns.Application.Links.Post
 {

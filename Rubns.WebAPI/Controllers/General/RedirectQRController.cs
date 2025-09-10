@@ -18,7 +18,7 @@
         [HttpGet]
         public async Task<IActionResult> Index(string slug)
         {
-            await _getLinkforSlugInPort.SearchLinkforSlug(HttpContext.Request, slug);
+            await _getLinkforSlugInPort.SearchLinkbySlug(HttpContext.Request, slug);
             var url = _linkforSlugOutport.Content;
             return Redirect(url);
 

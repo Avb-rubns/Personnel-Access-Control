@@ -4,7 +4,6 @@
     {
         private readonly RequestDelegate _next = next;
 
-
         public async Task InvokeAsync(HttpContext context)
         {
             try
@@ -17,57 +16,47 @@
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var problemDetails = new ProblemDetails
-            {
-                Title = "Error interno",
-                Detail = "Ocurrió un error inesperado. Intente nuevamente más tarde.",
-                Status = StatusCodes.Status500InternalServerError,
-                Type = "https://httpstatuses.com/500"
-            };
 
             switch (exception)
             {
                 case NotFoundException e:
-                    problemDetails.Title = e.Title;
-                    problemDetails.Detail = exception.Message;
-                    problemDetails.Status = StatusCodes.Status404NotFound;
-                    problemDetails.Type = "https://httpstatuses.com/404";
-                    break;
+                    await WriteProblemDetails(context, StatusCodes.Status404NotFound, e.Title, exception.Message);
+                    return;
                 case ResourceExistException e:
-                    problemDetails.Title = e.Title;
-                    problemDetails.Detail = exception.Message;
-                    problemDetails.Status = StatusCodes.Status400BadRequest;
-                    problemDetails.Type = "https://httpstatuses.com/404";
-                    break;
+                    await WriteProblemDetails(context, StatusCodes.Status400BadRequest, e.Title, exception.Message);
+                    return;
                 case UnauthorizedException e:
-                    problemDetails.Title = e.Title;
-                    problemDetails.Detail = exception.Message;
-                    problemDetails.Status = StatusCodes.Status401Unauthorized;
-                    problemDetails.Type = "https://httpstatuses.com/401";
-                    break;
+                    await WriteProblemDetails(context, StatusCodes.Status401Unauthorized, e.Title, exception.Message);
+                    return;
                 case TokenInvalidException e:
-                    problemDetails.Title = e.Title;
-                    problemDetails.Detail = exception.Message;
-                    problemDetails.Status = StatusCodes.Status400BadRequest;
-                    problemDetails.Type = "https://httpstatuses.com/400";
-                    break;
+                    await WriteProblemDetails(context, StatusCodes.Status401Unauthorized, e.Title, exception.Message);
+                    return;
                 case ArgumentException e:
-                    problemDetails.Title = "Datos no validos";
-                    problemDetails.Detail = exception.Message;
-                    problemDetails.Status = StatusCodes.Status400BadRequest;
-                    problemDetails.Type = "https://httpstatuses.com/400";
-                    break;
+                    await WriteProblemDetails(context, StatusCodes.Status400BadRequest, "Datos no validos", exception.Message);
+                    return;
+                default:
+                    await WriteProblemDetails(context, StatusCodes.Status500InternalServerError, "Error interno", "Ocurrió un error inesperado. Intente nuevamente más tarde.");
+                    return;
             }
 
-
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = problemDetails.Status ?? StatusCodes.Status500InternalServerError;
-
-            var result = JsonSerializer.Serialize(problemDetails);
-            return context.Response.WriteAsync(result);
         }
 
+        private static async Task WriteProblemDetails(HttpContext context, int statusCode, string title, string detail)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = statusCode;
+
+            var problem = new ProblemDetails
+            {
+                Title = title,
+                Detail = detail,
+                Status = statusCode,
+                Type = $"https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/{statusCode}"
+            };
+
+            await context.Response.WriteAsJsonAsync(problem);
+        }
     }
 }

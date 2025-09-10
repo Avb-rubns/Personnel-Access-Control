@@ -1,4 +1,4 @@
-﻿namespace Rubns.Core.Ports.SessionUser
+﻿namespace Rubns.Core.Abstraccions.Sessions
 {
     public interface ISessionUserRepositoryDapper
     {

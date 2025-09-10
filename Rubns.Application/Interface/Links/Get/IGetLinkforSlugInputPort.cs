@@ -2,6 +2,6 @@
 {
     public interface IGetLinkforSlugInputPort
     {
-        Task SearchLinkforSlug(HttpRequest request, string slug);
+        Task SearchLinkbySlug(HttpRequest request, string slug);
     }
 }

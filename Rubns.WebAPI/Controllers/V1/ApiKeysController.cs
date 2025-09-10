@@ -1,5 +1,8 @@
 ﻿
 
+using Rubns.Core.POCO.ApiKey;
+using Rubns.Core.POCO.ApiKey.Register;
+
 namespace Rubns.WebAPI.Controllers.V1
 {
     [ApiController]

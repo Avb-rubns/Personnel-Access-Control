@@ -1,4 +1,6 @@
-﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿using Rubns.Core.Abstraccions.Tickets;
+
+namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal class TicketRepository : ITicketRepository
     {

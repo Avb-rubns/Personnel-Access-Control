@@ -1,4 +1,6 @@
-﻿namespace Rubns.Application.UseCases.Auth.Post
+﻿using Rubns.Core.Abstraccions.Sessions;
+
+namespace Rubns.Application.UseCases.Auth.Post
 {
     internal sealed class LogOutUseCase : ILogOutPort
     {
@@ -12,7 +14,7 @@
             _logger = logger;
         }
 
-        public async Task LogOut(string token)
+        public async Task LogOutAsync(string token)
         {
             try
             {

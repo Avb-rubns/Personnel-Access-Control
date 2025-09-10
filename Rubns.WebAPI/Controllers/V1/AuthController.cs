@@ -89,7 +89,7 @@
         public async Task<IActionResult> LogOut()
         {
             Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
-            await _logOutPort.LogOut(refreshToken);
+            await _logOutPort.LogOutAsync(refreshToken);
             DeleteAuthCookies();
             return Ok(new { message = "Sesión cerrada." });
 

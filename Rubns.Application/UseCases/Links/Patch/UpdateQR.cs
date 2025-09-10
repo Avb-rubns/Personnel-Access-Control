@@ -12,7 +12,7 @@ namespace Rubns.Application.UseCases.Links.Patch
         private readonly ILogger _logger = logger;
         private readonly IUserContextService _userContextService = userContext;
 
-        public async Task UpdateQREditorPortAsync(int id, JsonPatchDocument<QRDTO> qr)
+        public async Task UpdateQRAsync(int id, JsonPatchDocument<QRDTO> qr)
         {
             try
             {
@@ -20,7 +20,7 @@ namespace Rubns.Application.UseCases.Links.Patch
                 if (link is { ID: <= 0 })
                 {
                     _logger.Information($"Se intento actualizar:{id} por usuario:{_userContextService.UserId}");
-                    throw new Exception();
+                    throw new NotFoundException("No se encotro el QR del enlace", "No se encontro informacion");
                 }
 
                 QRDTO qrEdit = new();
@@ -40,6 +40,7 @@ namespace Rubns.Application.UseCases.Links.Patch
             catch (Exception e)
             {
                 _logger.Error(e, "Error in UpdateQREditorPortAsync:{error}", e.Message);
+                throw;
             }
         }
     }

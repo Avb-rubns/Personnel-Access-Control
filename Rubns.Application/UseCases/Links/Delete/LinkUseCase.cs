@@ -6,7 +6,7 @@
     {
         private readonly ILinkRepositoryEFC _linkRepositoryEFC = linkRepositoryEFC;
         private readonly ILogger _logger = logger;
-        public async Task DeleteLinkPortAsync(int id)
+        public async Task DeleteLinkAsync(int id)
         {
 
             try

@@ -11,7 +11,7 @@
         private readonly ILogger _logger = logger;
         private readonly IGetLinkforSlugOutputport _linkforSlugOutport = linkforSlugOutport;
         private readonly ICreateClickPort _createClickPort = createClick;
-        public async Task SearchLinkforSlug(HttpRequest request, string slug)
+        public async Task SearchLinkbySlug(HttpRequest request, string slug)
         {
             try
             {

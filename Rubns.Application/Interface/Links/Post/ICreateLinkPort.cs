@@ -2,6 +2,6 @@
 {
     public interface ICreateLinkPort
     {
-        Task CreateQRAsync(LinkCreateDTO createDTO);
+        Task CreateLinkAsync(LinkCreateDTO createDTO);
     }
 }

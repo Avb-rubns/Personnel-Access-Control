@@ -1,4 +1,4 @@
-﻿namespace Rubns.Core.Ticket
+﻿namespace Rubns.Core.Abstraccions.Tickets
 {
     public interface ITicketRepository
     {

@@ -116,29 +116,31 @@
             catch (SecurityTokenExpiredException)
             {
                 _logger.LogInformation("Token expirado para path {Path}", path);
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsJsonAsync(new ProblemDetails
-                {
-                    Title = "Token vencido",
-                    Detail = "El token a vencido, genere un nuevos tokens.",
-                    Status = StatusCodes.Status401Unauthorized,
-                    Type = "https://httpstatuses.com/401"
-                });
+                await WriteProblemDetails(context, StatusCodes.Status401Unauthorized, "Datos no validos", "El token a vencido, genere un nuevos tokens.");
                 return;
             }
             catch (SecurityTokenValidationException)
             {
                 _logger.LogInformation("Token no valido  para path {Path}", path);
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsJsonAsync(new ProblemDetails
-                {
-                    Title = "Token no valido",
-                    Detail = "El token a vencido, genere un nuevos tokens.",
-                    Status = StatusCodes.Status401Unauthorized,
-                    Type = "https://httpstatuses.com/404"
-                });
+                await WriteProblemDetails(context, StatusCodes.Status401Unauthorized, "Token no valido", "El token a vencido, genere un nuevos tokens.");
                 return;
             }
+        }
+
+        private static async Task WriteProblemDetails(HttpContext context, int statusCode, string title, string detail)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = statusCode;
+
+            var problem = new ProblemDetails
+            {
+                Title = title,
+                Detail = detail,
+                Status = statusCode,
+                Type = $"https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/{statusCode}"
+            };
+
+            await context.Response.WriteAsJsonAsync(problem);
         }
     }
 

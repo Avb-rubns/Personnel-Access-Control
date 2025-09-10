@@ -1,6 +1,6 @@
 ﻿namespace Rubns.Infrastructure.Persistence.DataModels.DB_Auth.SessionUsers
 {
-    public class SessionUser
+    public class SessionUserDb
     {
         public int ID { get; set; }
         public int UserID { get; set; }

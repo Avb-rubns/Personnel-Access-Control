@@ -1,4 +1,6 @@
-﻿namespace Rubns.Application.ApiKeys.Post
+﻿using Rubns.Core.POCO.ApiKey;
+
+namespace Rubns.Application.ApiKeys.Post
 {
     internal class GenerateKeyUseCase : IGenerateKeyPort<ResponseData<string>>
     {

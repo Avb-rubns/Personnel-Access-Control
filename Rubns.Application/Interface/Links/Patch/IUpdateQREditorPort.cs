@@ -2,6 +2,6 @@
 {
     public interface IUpdateQREditorPort
     {
-        Task UpdateQREditorPortAsync(int id, JsonPatchDocument<QRDTO> qr);
+        Task UpdateQRAsync(int id, JsonPatchDocument<QRDTO> qr);
     }
 }

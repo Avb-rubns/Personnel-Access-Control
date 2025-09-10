@@ -93,11 +93,6 @@ BEGIN
 		VALUES (1);
 	END
 
-	if(@page = 0)
-	BEGIN
-		SET @page = 1;
-	END
-
 	SELECT 
 		COUNT(link.ID)
 	FROM Links as link

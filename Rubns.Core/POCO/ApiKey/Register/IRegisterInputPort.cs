@@ -1,4 +1,4 @@
-﻿namespace Rubns.Core.Ports.ApiKey.Register
+﻿namespace Rubns.Core.POCO.ApiKey.Register
 {
     public interface IRegisterInputPort
     {

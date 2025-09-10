@@ -1,6 +1,4 @@
-﻿using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.SessionUsers;
-
-namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal class SessionUserRepository : ISessionUserRepositoryEFC
     {
@@ -13,7 +11,7 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
         }
         public async Task<int> AddSessionAsync(int userId, string token)
         {
-            SessionUser sessionUser = new()
+            SessionUserDb sessionUser = new()
             {
                 Token = token,
                 UserID = userId,
@@ -24,9 +22,9 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
             return await AuthDbContextEFC.SaveChangesAsync();
         }
 
-        public async Task<SessionUserDTO> FindAsyn(string token)
+        public async Task<Session> FindAsyn(string token)
         {
-            SessionUserDTO session = new();
+            Session session = new();
 
             var sessionUser = await AuthDbContextEFC.SessionUser.SingleOrDefaultAsync(s => s.Token == token);
 
@@ -42,9 +40,9 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
             return session;
         }
 
-        public async Task<int> UpdateSessionUserAsync(SessionUserDTO session)
+        public async Task<int> UpdateSessionUserAsync(Session session)
         {
-            SessionUser sessionUser = new()
+            SessionUserDb sessionUser = new()
             {
                 ID = session.ID,
                 Token = session.Token,

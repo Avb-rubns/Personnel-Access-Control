@@ -1,4 +1,6 @@
-﻿namespace Rubns.Application.UseCases.Auth.Post
+﻿using Rubns.Core.Abstraccions.Sessions;
+
+namespace Rubns.Application.UseCases.Auth.Post
 {
     internal sealed class LogInUseCase : ILogInPort
     {

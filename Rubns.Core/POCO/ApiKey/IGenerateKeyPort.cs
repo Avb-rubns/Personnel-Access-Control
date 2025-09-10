@@ -1,4 +1,4 @@
-﻿namespace Rubns.Core.Ports.ApiKey
+﻿namespace Rubns.Core.POCO.ApiKey
 {
     public interface IGenerateKeyPort<T>
     {

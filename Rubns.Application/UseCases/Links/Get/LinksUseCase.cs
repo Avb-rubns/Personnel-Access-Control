@@ -12,7 +12,7 @@
         private readonly ILinkRepositoryEFC _linkRepositoryEFC = linkRepositoryEFC;
         private readonly IGetLinksOutputPort _getLinksOurPort = getLinksOurPort;
 
-        public async Task GetPortsAsync(int page, int pagesize, string filter)
+        public async Task GetLinksAsync(int page, int pagesize, string filter)
         {
             try
             {

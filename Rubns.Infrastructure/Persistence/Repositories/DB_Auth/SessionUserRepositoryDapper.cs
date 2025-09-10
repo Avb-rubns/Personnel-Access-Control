@@ -1,4 +1,6 @@
-﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿using Rubns.Core.Abstraccions.Sessions;
+
+namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal sealed class SessionUserRepositoryDapper(IConfiguration configuration) : ISessionUserRepositoryDapper
     {

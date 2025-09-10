@@ -2,6 +2,6 @@
 {
     public interface IDeleteLinkPort
     {
-        Task DeleteLinkPortAsync(int id);
+        Task DeleteLinkAsync(int id);
     }
 }

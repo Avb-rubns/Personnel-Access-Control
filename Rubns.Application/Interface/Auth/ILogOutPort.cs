@@ -2,6 +2,6 @@
 {
     public interface ILogOutPort
     {
-        Task LogOut(string token);
+        Task LogOutAsync(string token);
     }
 }

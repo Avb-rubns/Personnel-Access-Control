@@ -1,4 +1,5 @@
 ﻿using Rubns.Application.Interface.Users;
+using Rubns.Core.Abstraccions.Templates;
 
 namespace Rubns.Application.UseCases.Users.Post
 {

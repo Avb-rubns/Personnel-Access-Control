@@ -12,7 +12,7 @@
         private readonly ILogger _logger = logger;
         private readonly ISlugHelper _slugHelper = slugHelper;
 
-        public async Task CreateQRAsync(LinkCreateDTO createDTO)
+        public async Task CreateLinkAsync(LinkCreateDTO createDTO)
         {
             try
             {

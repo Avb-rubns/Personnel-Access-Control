@@ -10,4 +10,5 @@ global using Rubns.Core.Entities.Checker;
 global using Rubns.Core.Entities.Clicks;
 global using Rubns.Core.Entities.Links;
 global using Rubns.Core.Entities.Rols;
+global using Rubns.Core.Entities.Sessions;
 global using Rubns.Core.Entities.Users;

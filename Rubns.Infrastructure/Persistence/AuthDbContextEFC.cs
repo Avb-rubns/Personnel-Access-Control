@@ -11,7 +11,7 @@ namespace Rubns.Infrastructure.Persistence
         }
 
         public DbSet<UserDb> Users { get; set; }
-        public DbSet<SessionUser> SessionUser { get; set; }
+        public DbSet<SessionUserDb> SessionUser { get; set; }
         public DbSet<RolDB> Rols { get; set; }
         public DbSet<ResetPasswordDb> ResetPasswords { get; set; }
         public DbSet<LinkDB> Links { get; set; }
@@ -24,7 +24,7 @@ namespace Rubns.Infrastructure.Persistence
                 e.HasKey(k => k.UserID);
             });
 
-            modelBuilder.Entity<SessionUser>(e =>
+            modelBuilder.Entity<SessionUserDb>(e =>
             {
                 e.ToTable("SessionUsers", schema: "dbo");
                 e.HasKey(k => k.ID);

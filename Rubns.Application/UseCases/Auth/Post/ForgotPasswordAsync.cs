@@ -1,4 +1,6 @@
-﻿namespace Rubns.Application.UseCases.Auth.Post
+﻿using Rubns.Core.Abstraccions.Templates;
+
+namespace Rubns.Application.UseCases.Auth.Post
 {
     internal sealed class ForgotPasswordAsync(IResetPasswordEFC resetPasswordEFC
         , ILogger logger

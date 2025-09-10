@@ -2,6 +2,6 @@
 {
     public interface IGetLinksPort
     {
-        Task GetPortsAsync(int page, int pagesize, string filter);
+        Task GetLinksAsync(int page, int pagesize, string filter);
     }
 }

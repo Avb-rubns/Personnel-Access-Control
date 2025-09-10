@@ -1,6 +1,4 @@
-﻿using Rubns.Core.Abstraccions.Checker;
-
-namespace Rubns.Application.CheckUser.Get
+﻿namespace Rubns.Application.UseCases.Ticket.Get
 {
     internal class CheckTodayUseCase(ICheckUserRepositoryDapper checkUserRepositoryDapper
         , IGetCheckUserTodayOutPort getChetUserTodayOutPort
