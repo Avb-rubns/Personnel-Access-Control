@@ -32,7 +32,7 @@
         }
 
         [HttpGet("links")]
-        public async Task<IActionResult> GetQrsAsync(int? page = 0, int? pageSize = 10, string? filter = "all")
+        public async Task<IActionResult> GetQrsAsync(int? page = 1, int? pageSize = 10, string? filter = "all")
         {
             await _getLinksPort.GetPortsAsync(page.Value, pageSize.Value, filter);
             var links = _getLinksOurPort.Content;
