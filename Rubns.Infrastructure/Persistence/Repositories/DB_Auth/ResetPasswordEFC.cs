@@ -1,9 +1,9 @@
 ﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
-    internal sealed class ResetPasswordEFC(AuthDbContextEFC context) : IResetPasswordEFC
+    internal sealed class ResetPasswordEFC(AuthDbContextEFC context) : IResetPasswordRepositoryEFC
     {
         AuthDbContextEFC _contextEFC = context;
-        public async Task<int> AddResetPasswordAsync(ResetPassword reset)
+        public async Task<int> AddAsync(ResetPassword reset)
         {
             ResetPasswordDb resetPassword = new()
             {
@@ -17,7 +17,7 @@
             return await _contextEFC.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteResetPasswordAsync(ResetPassword reset)
+        public async Task<int> DeleteAsync(ResetPassword reset)
         {
             ResetPasswordDb resetPassword = new()
             {
@@ -32,7 +32,7 @@
             return await _contextEFC.SaveChangesAsync();
         }
 
-        public async Task<ResetPassword> FindResetPasswordAsync(string token)
+        public async Task<ResetPassword> FindbyTokenAsync(string token)
         {
             ResetPassword resetPasswordDTO = new();
 
@@ -53,7 +53,7 @@
             return resetPasswordDTO;
         }
 
-        public async Task<bool> FindUserIDResetPasswordAsync(int userID)
+        public async Task<bool> FindByUserIdAsync(int userID)
         {
 
             var resetPassword = await _contextEFC.ResetPasswords

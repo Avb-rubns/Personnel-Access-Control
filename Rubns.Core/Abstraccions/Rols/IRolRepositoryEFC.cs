@@ -2,6 +2,6 @@
 {
     public interface IRolRepositoryEFC
     {
-        Task<List<Rol>> GetRolsAsync();
+        Task<List<Rol>> GetAllAsync();
     }
 }

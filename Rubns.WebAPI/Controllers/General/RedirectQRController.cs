@@ -5,21 +5,21 @@
     [ApiController]
     public class RedirectQRController : ControllerBase
     {
-        private readonly IGetLinkforSlugInputPort _getLinkforSlugInPort;
-        private readonly IGetLinkforSlugOutputport _linkforSlugOutport;
+        private readonly IGetLinkbySlugUseCase _getLinkbySlugUseCase;
+        private readonly IGetLinkbySlugOutputPort _getLinkbySlugOutputPort;
 
-        public RedirectQRController(IGetLinkforSlugInputPort getLinkforSlugInPort,
-            IGetLinkforSlugOutputport linkforSlugOutport)
+        public RedirectQRController(IGetLinkbySlugUseCase getLinkforSlugInPort,
+            IGetLinkbySlugOutputPort linkforSlugOutport)
         {
-            _getLinkforSlugInPort = getLinkforSlugInPort;
-            _linkforSlugOutport = linkforSlugOutport;
+            _getLinkbySlugUseCase = getLinkforSlugInPort;
+            _getLinkbySlugOutputPort = linkforSlugOutport;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index(string slug)
         {
-            await _getLinkforSlugInPort.SearchLinkbySlug(HttpContext.Request, slug);
-            var url = _linkforSlugOutport.Content;
+            await _getLinkbySlugUseCase.ExecuteAsync(HttpContext.Request, slug);
+            var url = _getLinkbySlugOutputPort.Result;
             return Redirect(url);
 
         }

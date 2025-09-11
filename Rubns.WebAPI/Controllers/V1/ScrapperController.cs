@@ -6,28 +6,28 @@
     public class ScrapperController : ControllerBase
     {
 
-        private readonly IMetaProxyInputPort _metaProxyPort;
-        private readonly IMetasOutputPort _metasOutputPort;
+        private readonly IGetMetasUseCase _getMetasUseCase;
+        private readonly IGetMetasOutputPort _getMetasOutputPort;
 
-        private readonly IHeadInputPort _headPort;
-        private readonly IHeadOutputPort _headOutputPort;
+        private readonly IGetHeadUseCase _getHeadUseCase;
+        private readonly IGetHeadOutputPort _getHeadOutputPort;
 
-        private readonly ITitleInputPort _titlePort;
-        private readonly ITitleOutputPort _titleOutputPort;
+        private readonly IGetTitleUseCase _getTitleUseCase;
+        private readonly IGetTitleOutputPort _getTitleOutputPort;
 
-        public ScrapperController(IMetaProxyInputPort metaProxyPort,
-            IMetasOutputPort metasOutputPort,
-            IHeadInputPort headPort,
-            IHeadOutputPort headOutputPort,
-            ITitleInputPort titlePort,
-            ITitleOutputPort titleOutputPort)
+        public ScrapperController(IGetMetasUseCase metaProxyPort,
+            IGetMetasOutputPort metasOutputPort,
+            IGetHeadUseCase headPort,
+            IGetHeadOutputPort headOutputPort,
+            IGetTitleUseCase titlePort,
+            IGetTitleOutputPort titleOutputPort)
         {
-            _metaProxyPort = metaProxyPort;
-            _metasOutputPort = metasOutputPort;
-            _headPort = headPort;
-            _titlePort = titlePort;
-            _headOutputPort = headOutputPort;
-            _titleOutputPort = titleOutputPort;
+            _getMetasUseCase = metaProxyPort;
+            _getMetasOutputPort = metasOutputPort;
+            _getHeadUseCase = headPort;
+            _getTitleUseCase = titlePort;
+            _getHeadOutputPort = headOutputPort;
+            _getTitleOutputPort = titleOutputPort;
 
 
         }
@@ -35,8 +35,8 @@
         [HttpGet("metas")]
         public async Task<IActionResult> GetMeta([FromQuery] string url)
         {
-            await _metaProxyPort.GetMetaAsync(url);
-            var data = _metasOutputPort.Content;
+            await _getMetasUseCase.ExecuteAsync(url);
+            var data = _getMetasOutputPort.Result;
             return Ok(data);
         }
 
@@ -44,8 +44,8 @@
         public async Task<IActionResult> GetHeadAsync([FromQuery] string url)
         {
 
-            await _headPort.GetHeadAsync(url);
-            var data = _headOutputPort.Content;
+            await _getHeadUseCase.ExecuteAsync(url);
+            var data = _getHeadOutputPort.Result;
             return Ok(data);
 
         }
@@ -54,8 +54,8 @@
         public async Task<IActionResult> GetTitleAsync([FromQuery] string url)
         {
 
-            await _titlePort.GetPortPort(url);
-            var data = _titleOutputPort.Content;
+            await _getTitleUseCase.ExecuteAsync(url);
+            var data = _getTitleOutputPort.Result;
             return Ok(data);
 
         }

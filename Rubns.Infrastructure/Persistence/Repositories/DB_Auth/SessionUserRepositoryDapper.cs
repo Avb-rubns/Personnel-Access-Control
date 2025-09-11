@@ -1,11 +1,9 @@
-﻿using Rubns.Core.Abstraccions.Sessions;
-
-namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal sealed class SessionUserRepositoryDapper(IConfiguration configuration) : ISessionUserRepositoryDapper
     {
         IConfiguration Configuration = configuration;
-        public async Task<int> DeleteSessionforTokenAsync(string token)
+        public async Task<int> DeleteByTokenAsync(string token)
         {
             try
             {
@@ -27,7 +25,7 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 
         }
 
-        public async Task<int> DeleteSessionforUserIdAsync(int userID)
+        public async Task<int> DeleteByUserIdAsync(int userID)
         {
             try
             {

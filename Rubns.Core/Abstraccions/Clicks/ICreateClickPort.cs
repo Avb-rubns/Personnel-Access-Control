@@ -2,6 +2,6 @@
 {
     internal interface ICreateClickPort
     {
-        Task CreateAsyn(Click click);
+        Task AddAsyn(Click click);
     }
 }

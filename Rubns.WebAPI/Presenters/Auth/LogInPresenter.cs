@@ -1,10 +1,12 @@
-﻿namespace Rubns.WebAPI.Presenters.Auth
-{
-    public class LogInPresenter : ILogInOutPort, IPresenter<AuthResponseDTO>
-    {
-        public AuthResponseDTO Content { get; set; }
+﻿using Rubns.Application.Interface.Auth.Queries;
 
-        public Task Handler(JWT jwt, string refreshToken, long expiration)
+namespace Rubns.WebAPI.Presenters.Auth
+{
+    public class LogInPresenter : ILoginOutputPort, IPresenter<AuthResponseDTO>
+    {
+        public AuthResponseDTO Result { get; set; }
+
+        public Task Success(JWT jwt, string refreshToken, long expiration)
         {
             AuthResponseDTO authResponseDTO = new AuthResponseDTO()
             {
@@ -12,7 +14,7 @@
                 RefreshToken = refreshToken,
                 Expiration = expiration
             };
-            Content = authResponseDTO;
+            Result = authResponseDTO;
             return Task.CompletedTask;
         }
     }

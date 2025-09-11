@@ -39,7 +39,7 @@
             switch (data.StatusCode)
             {
                 case HttpStatusCode.OK:
-                    totalItems = data.Data.Total;
+                    totalItems = data.Data.Pagination.Total;
                     _links = data.Data.Links;
                     break;
                 case System.Net.HttpStatusCode.NoContent:

@@ -9,7 +9,7 @@
             AuthDbContextEFC = authDbContext;
             Configuration = configuration;
         }
-        public async Task<int> AddSessionAsync(int userId, string token)
+        public async Task<int> AddAsync(int userId, string token)
         {
             SessionUserDb sessionUser = new()
             {
@@ -22,7 +22,7 @@
             return await AuthDbContextEFC.SaveChangesAsync();
         }
 
-        public async Task<Session> FindAsyn(string token)
+        public async Task<Session> FindByTokenAsyn(string token)
         {
             Session session = new();
 
@@ -40,7 +40,7 @@
             return session;
         }
 
-        public async Task<int> UpdateSessionUserAsync(Session session)
+        public async Task<int> UpdateAsync(Session session)
         {
             SessionUserDb sessionUser = new()
             {

@@ -15,7 +15,7 @@
             return BitConverter.ToString(bytes, 0, 4).Replace("-", "").ToLower();
         }
 
-        public async Task<string> GenerateUniqueSlugAsync(string nameOrSlug)
+        public async Task<string> GenerateUniqueSlugByNameOrSlugAsync(string nameOrSlug)
         {
             if (string.IsNullOrWhiteSpace(nameOrSlug))
                 throw new ArgumentException("El valor no puede estar vacío.", nameof(nameOrSlug));
@@ -30,7 +30,7 @@
                     uniqueSlug = $"{baseSlug}-{counter}";
                 }
 
-                if (string.IsNullOrEmpty(await _linkRepositoryEFC.FindSlugAsync(uniqueSlug)))
+                if (string.IsNullOrEmpty(await _linkRepositoryEFC.FindBySlugAsync(uniqueSlug)))
                 {
                     return uniqueSlug;
                 }

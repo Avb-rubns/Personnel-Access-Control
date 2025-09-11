@@ -2,9 +2,9 @@
 {
     internal class LinksPresenter : IGetLinksOutputPort
     {
-        public TableLinkDTO Content { get; private set; }
+        public TableLinkDTO Result { get; private set; }
 
-        public Task Handler(List<LinkWithClicks> links, int total, int currentPage, int pageSize, bool hasNextPage, bool hasPreviousPage)
+        public Task Success(List<LinkWithClicks> links, int total, int currentPage, int pageSize, bool hasNextPage, bool hasPreviousPage)
         {
             TableLinkDTO table = new();
 
@@ -23,12 +23,16 @@
                 Clicks = link.Clicks,
             }).ToList();
 
-            table.Total = total;
-            Content = table;
-            table.CurrentPage = currentPage;
-            table.PageSize = pageSize;
-            table.HasPreviousPage = hasPreviousPage;
-            table.HasNextPage = hasNextPage;
+            PaginationDTO pagination = new PaginationDTO()
+            {
+                Total = total,
+                CurrentPage = currentPage,
+                PageSize = pageSize,
+                HasPreviousPage = hasPreviousPage,
+                HasNextPage = hasNextPage,
+            };
+            table.Pagination = pagination;
+            Result = table;
             return Task.CompletedTask;
         }
 

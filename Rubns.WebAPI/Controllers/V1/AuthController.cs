@@ -6,32 +6,32 @@
     public class AuthController : ControllerBase
     {
 
-        private readonly ILogOutPort _logOutPort;
-        private readonly IForgotPassword _forgotPasswordPort;
-        private readonly IResetPasswordPort _resetPasswordPort;
-        private readonly IResetPasswordValidatePort _resetPasswordValidatePort;
-        private readonly IRefreshJWTInPort _refreshJWT;
-        private readonly IRefreshJWTOutPort _refreshJWTOutPort;
-        private readonly IUserInformationInPort _userInformationInPort;
-        private readonly IUserInformationOutPort _userInformationOutPort;
+        private readonly ILogoutUseCase _logoutUseCase;
+        private readonly IForgotPasswordUseCase _forgotPasswordUseCase;
+        private readonly IResetPasswordUseCase _resetPasswordUseCase;
+        private readonly IValidateTokenUseCase _validateTokenUseCase;
+        private readonly IRefreshJWTUseCase _refreshJWTUseCase;
+        private readonly IRefreshJWTOutputPort _refreshJWTOutPort;
+        private readonly IGetUserInformationUseCase _getUserInformationUseCase;
+        private readonly IGetUserInformationOutputPort _gGetUserInformationOutputPort;
 
-        public AuthController(IRefreshJWTInPort refreshJWTPort
-            , IUserInformationInPort userInformationPort
-            , ILogOutPort logOut
-            , IForgotPassword forgotPassword
-            , IResetPasswordPort resetPasswordPort
-            , IResetPasswordValidatePort resetPasswordValidatePort
-            , IRefreshJWTOutPort refreshJWTOutPort
-            , IUserInformationOutPort userInformationOutPort)
+        public AuthController(IRefreshJWTUseCase refreshJWTPort
+            , IGetUserInformationUseCase userInformationPort
+            , ILogoutUseCase logOut
+            , IForgotPasswordUseCase forgotPassword
+            , IResetPasswordUseCase resetPasswordPort
+            , IValidateTokenUseCase resetPasswordValidatePort
+            , IRefreshJWTOutputPort refreshJWTOutPort
+            , IGetUserInformationOutputPort userInformationOutPort)
         {
-            _logOutPort = logOut;
-            _forgotPasswordPort = forgotPassword;
-            _resetPasswordPort = resetPasswordPort;
-            _refreshJWT = refreshJWTPort;
-            _resetPasswordValidatePort = resetPasswordValidatePort;
+            _logoutUseCase = logOut;
+            _forgotPasswordUseCase = forgotPassword;
+            _resetPasswordUseCase = resetPasswordPort;
+            _refreshJWTUseCase = refreshJWTPort;
+            _validateTokenUseCase = resetPasswordValidatePort;
             _refreshJWTOutPort = refreshJWTOutPort;
-            _userInformationInPort = userInformationPort;
-            _userInformationOutPort = userInformationOutPort;
+            _getUserInformationUseCase = userInformationPort;
+            _gGetUserInformationOutputPort = userInformationOutPort;
         }
 
 
@@ -49,8 +49,8 @@
                 });
             }
 
-            await _refreshJWT.RefreshJWTAsync(refreshToken);
-            var RefreshJWT = _refreshJWTOutPort.Content;
+            await _refreshJWTUseCase.ExecuteAsync(refreshToken);
+            var RefreshJWT = _refreshJWTOutPort.Result;
             var accessTokenCookie = new CookieOptions
             {
                 HttpOnly = true,
@@ -80,8 +80,8 @@
         public async Task<IActionResult> Me()
         {
             Request.Cookies.TryGetValue("accessToken", out var cookieToken);
-            await _userInformationInPort.UserInfo(cookieToken);
-            var user = _userInformationOutPort.Content;
+            await _getUserInformationUseCase.ExecuteAsync(cookieToken);
+            var user = _gGetUserInformationOutputPort.Result;
             return Ok(user);
 
         }
@@ -89,7 +89,7 @@
         public async Task<IActionResult> LogOut()
         {
             Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
-            await _logOutPort.LogOutAsync(refreshToken);
+            await _logoutUseCase.ExecuteAsync(refreshToken);
             DeleteAuthCookies();
             return Ok(new { message = "Sesión cerrada." });
 
@@ -98,19 +98,19 @@
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO request)
         {
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
-            await _forgotPasswordPort.GeneratePasswordResetTokenAsync(request, baseUrl);
+            await _forgotPasswordUseCase.ExecuteAsyn(request, baseUrl);
             return Ok();
         }
         [HttpPut("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDTO request)
         {
-            await _resetPasswordPort.ResetPasswordAsync(request);
+            await _resetPasswordUseCase.ExecuteAsync(request);
             return Ok();
         }
         [HttpGet("reset-password/validate")]
         public async Task<IActionResult> ValidateTokenResetPassword(string token)
         {
-            await _resetPasswordValidatePort.ValidateTokenPasswordAsync(token);
+            await _validateTokenUseCase.ExecuteAsync(token);
             return Ok();
         }
         private void DeleteAuthCookies()

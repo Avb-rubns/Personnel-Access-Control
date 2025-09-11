@@ -5,20 +5,20 @@
     [ApiVersion("1.0")]
     public class LoginController : ControllerBase
     {
-        private readonly ILogInPort _logInPort;
-        private readonly ILogInOutPort _logOutPort;
-        public LoginController(ILogInPort postLogIn, ILogInOutPort logInOutPort)
+        private readonly ILoginUseCase _loginUseCase;
+        private readonly ILoginOutputPort _loginOutputPort;
+        public LoginController(ILoginUseCase postLogIn, ILoginOutputPort logInOutPort)
         {
-            _logInPort = postLogIn;
-            _logOutPort = logInOutPort;
+            _loginUseCase = postLogIn;
+            _loginOutputPort = logInOutPort;
         }
 
         [HttpPost]
         public async Task<IActionResult> LogIn(LoginRequestDTO loginRequest)
         {
-            await _logInPort.LogIn(loginRequest);
+            await _loginUseCase.ExecuteAsync(loginRequest);
 
-            var result = ((IPresenter<AuthResponseDTO>)_logOutPort).Content;
+            var result = ((IPresenter<AuthResponseDTO>)_loginOutputPort).Result;
             var accessTokenCookie = new CookieOptions
             {
                 HttpOnly = true,

@@ -5,17 +5,17 @@
     [ApiVersion("1.0")]
     public class RegisterController : ControllerBase
     {
-        private readonly IPostUserPort _postUserPort;
+        private readonly ICreateUserUseCase _createUserUseCase;
 
-        public RegisterController(IPostUserPort postUserPort)
+        public RegisterController(ICreateUserUseCase postUserPort)
         {
-            _postUserPort = postUserPort;
+            _createUserUseCase = postUserPort;
         }
 
         [HttpPost]
         public async Task<IActionResult> RegisterUserAsync(RegisterUserDTO registerUser)
         {
-            await _postUserPort.RegisterUserAsync(registerUser);
+            await _createUserUseCase.ExecuteAsync(registerUser);
             return Created();
 
         }

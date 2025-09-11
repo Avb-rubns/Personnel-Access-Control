@@ -4,7 +4,7 @@
     {
         AuthDbContextEFC Context { get; } = contextEFC;
 
-        public async Task<List<Rol>> GetRolsAsync()
+        public async Task<List<Rol>> GetAllAsync()
         {
             List<Rol> rols = new();
 

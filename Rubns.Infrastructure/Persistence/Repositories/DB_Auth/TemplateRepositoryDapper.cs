@@ -1,6 +1,4 @@
-﻿using Rubns.Core.Abstraccions.Templates;
-
-namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal class TemplateRepositoryDapper(IConfiguration configuration) : ITemplateRepositoryDapper
     {

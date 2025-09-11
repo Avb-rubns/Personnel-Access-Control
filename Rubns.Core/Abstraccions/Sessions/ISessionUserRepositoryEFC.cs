@@ -2,9 +2,9 @@
 {
     public interface ISessionUserRepositoryEFC
     {
-        Task<Session> FindAsyn(string token);
-        Task<int> AddSessionAsync(int userId, string token);
-        Task<int> UpdateSessionUserAsync(Session session);
+        Task<Session> FindByTokenAsyn(string token);
+        Task<int> AddAsync(int userId, string token);
+        Task<int> UpdateAsync(Session session);
 
     }
 }

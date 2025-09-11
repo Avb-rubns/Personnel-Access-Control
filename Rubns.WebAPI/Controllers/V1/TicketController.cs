@@ -6,11 +6,11 @@
     public class TicketController : ControllerBase
     {
 
-        private readonly ICheckPort _checkInUseCase;
+        private readonly ICreateCheckUseCase _createCheckUseCase;
 
-        public TicketController(ICheckPort checkInUseCase)
+        public TicketController(ICreateCheckUseCase checkInUseCase)
         {
-            _checkInUseCase = checkInUseCase;
+            _createCheckUseCase = checkInUseCase;
         }
 
         [HttpPost("check-in")]
@@ -18,7 +18,7 @@
         {
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
             checkTicket.IP = ip;
-            await _checkInUseCase.CheckAsync(checkTicket, "in");
+            await _createCheckUseCase.ExecuteAsync(checkTicket, "in");
             return Created();
         }
         [HttpPost("check-out")]
@@ -26,7 +26,7 @@
         {
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
             checkTicket.IP = ip;
-            await _checkInUseCase.CheckAsync(checkTicket, "out");
+            await _createCheckUseCase.ExecuteAsync(checkTicket, "out");
             return Created();
         }
     }

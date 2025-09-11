@@ -1,13 +1,10 @@
-﻿using Rubns.Core.Abstraccions.Checker;
-using Rubns.Core.Entities.Checker;
-
-namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal class CheckUserRepositoryDapper(IConfiguration configuration) : ICheckUserRepositoryDapper
     {
         private readonly IConfiguration _configuration = configuration;
 
-        public async Task<List<UserCheck>> CheckUserTodayAsync()
+        public async Task<List<UserCheck>> GetAllAsync()
         {
             List<UserCheck> result = new();
 

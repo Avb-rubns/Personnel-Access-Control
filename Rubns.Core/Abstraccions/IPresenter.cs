@@ -2,6 +2,6 @@
 {
     public interface IPresenter<FormatType>
     {
-        FormatType Content { get; }
+        FormatType Result { get; }
     }
 }

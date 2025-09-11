@@ -1,14 +1,14 @@
-﻿using Rubns.Application.Interface.Links.Get;
+﻿using Rubns.Application.Interface.Links.Queries;
 
 namespace Rubns.WebAPI.Presenters.Links
 {
-    internal class LinkforSlug : IGetLinkforSlugOutputport
+    internal class LinkforSlug : IGetLinkbySlugOutputPort
     {
-        public string Content { get; set; }
+        public string Result { get; set; }
 
-        public Task Handler(string urlDestinecion)
+        public Task Success(string urlDestinecion)
         {
-            Content = urlDestinecion;
+            Result = urlDestinecion;
             return Task.CompletedTask;
         }
     }

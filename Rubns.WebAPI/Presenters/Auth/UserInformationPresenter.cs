@@ -1,10 +1,12 @@
-﻿namespace Rubns.WebAPI.Presenters.Auth
-{
-    internal sealed class UserInformationPresenter : IUserInformationOutPort
-    {
-        public UserInfoDTO Content { get; set; }
+﻿using Rubns.Application.Interface.Auth.Queries;
 
-        public Task Handler(UserClaim userClaim)
+namespace Rubns.WebAPI.Presenters.Auth
+{
+    internal sealed class UserInformationPresenter : IGetUserInformationOutputPort
+    {
+        public UserInfoDTO Result { get; set; }
+
+        public Task ExecuteAsync(UserClaim userClaim)
         {
             UserInfoDTO userInfo = new UserInfoDTO()
             {
@@ -17,7 +19,7 @@
                 Status = userClaim.Status,
                 Expiration = userClaim.Expiration,
             };
-            Content = userInfo;
+            Result = userInfo;
             return Task.CompletedTask;
         }
     }

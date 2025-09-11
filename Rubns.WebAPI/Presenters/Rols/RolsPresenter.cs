@@ -1,12 +1,14 @@
-﻿namespace Rubns.WebAPI.Presenters.Rols
-{
-    internal class RolsPresenter : IGetRolsOutPort
-    {
-        public List<Rol> Content { get; private set; }
+﻿using Rubns.Application.Interface.Rols.Queries;
 
-        public Task Handler(List<Rol> rols)
+namespace Rubns.WebAPI.Presenters.Rols
+{
+    internal class RolsPresenter : IGetRolsOutputPort
+    {
+        public List<Rol> Result { get; private set; }
+
+        public Task Success(List<Rol> rols)
         {
-            Content = rols;
+            Result = rols;
             return Task.CompletedTask;
         }
     }

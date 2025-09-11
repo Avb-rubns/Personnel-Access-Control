@@ -1,7 +1,4 @@
-﻿using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Rols;
-using Rubns.Infrastructure.Persistence.DataModels.DB_Auth.SessionUsers;
-
-namespace Rubns.Infrastructure.Persistence
+﻿namespace Rubns.Infrastructure.Persistence
 {
     public class AuthDbContextEFC : DbContext
     {

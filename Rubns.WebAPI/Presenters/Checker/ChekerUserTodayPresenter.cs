@@ -1,10 +1,12 @@
-﻿namespace Rubns.WebAPI.Presenters.Checker
-{
-    internal class ChekerUserTodayPresenter : IGetCheckUserTodayOutPort
-    {
-        public List<CheckUserTodayDTO> Content { get; set; }
+﻿using Rubns.Application.Interface.Checker.Queries;
 
-        public Task Handler(List<UserCheck> checks)
+namespace Rubns.WebAPI.Presenters.Checker
+{
+    internal class ChekerUserTodayPresenter : IGetCheckUserTodayOutputPort
+    {
+        public List<CheckUserTodayDTO> Result { get; set; }
+
+        public Task Success(List<UserCheck> checks)
         {
             List<CheckUserTodayDTO> result = new List<CheckUserTodayDTO>();
 
@@ -20,7 +22,7 @@
                 HourCheckOut = c.HourCheckOut,
             }).ToList();
 
-            Content = result;
+            Result = result;
             return Task.CompletedTask;
         }
     }

@@ -2,7 +2,7 @@
 {
     public interface ISessionUserRepositoryDapper
     {
-        Task<int> DeleteSessionforTokenAsync(string token);
-        Task<int> DeleteSessionforUserIdAsync(int userID);
+        Task<int> DeleteByTokenAsync(string token);
+        Task<int> DeleteByUserIdAsync(int userID);
     }
 }

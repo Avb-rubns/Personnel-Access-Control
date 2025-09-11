@@ -2,6 +2,6 @@
 {
     public interface ICheckUserRepositoryDapper
     {
-        Task<List<UserCheck>> CheckUserTodayAsync();
+        Task<List<UserCheck>> GetAllAsync();
     }
 }

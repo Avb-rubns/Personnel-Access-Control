@@ -1,6 +1,4 @@
-﻿using Rubns.Core.Abstraccions.Tickets;
-
-namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
+﻿namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
 {
     internal class TicketRepository : ITicketRepository
     {
@@ -9,7 +7,7 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
         {
             Configuration = configuration;
         }
-        public async Task<int> InsertCheckInAsync(CheckDTO check, int userID)
+        public async Task<int> InsertAsync(CheckDTO check, int userID, string p)
         {
             try
             {
@@ -24,35 +22,7 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
                 };
 
                 int result = await connection.ExecuteScalarAsync<int>(
-                    "p_InsertCheckInPersonal",
-                    parameters,
-                    commandType: CommandType.StoredProcedure
-                );
-
-                return result;
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<int> InsertCheckOutAsync(CheckDTO check, int userID)
-        {
-            try
-            {
-                using var connection = new SqlConnection(Configuration.GetConnectionString("dbAuth"));
-                await connection.OpenAsync();
-                var parameters = new
-                {
-                    UserID = userID,
-                    Latitude = check.Latitude,
-                    Longitude = check.Longitude,
-                };
-
-                int result = await connection.ExecuteScalarAsync<int>(
-                    "p_InsertCheckOutPersonal",
+                    p,
                     parameters,
                     commandType: CommandType.StoredProcedure
                 );

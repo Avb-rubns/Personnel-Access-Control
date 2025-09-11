@@ -1,12 +1,14 @@
-﻿namespace Rubns.WebAPI.Presenters.Scrapper
-{
-    internal class ITitlePresenter : ITitleOutputPort
-    {
-        public Dictionary<string, string> Content { get; private set; }
+﻿using Rubns.Application.Interface.Scrapper.Queries;
 
-        public Task Handler(Dictionary<string, string> titles)
+namespace Rubns.WebAPI.Presenters.Scrapper
+{
+    internal class ITitlePresenter : IGetTitleOutputPort
+    {
+        public Dictionary<string, string> Result { get; private set; }
+
+        public Task Success(Dictionary<string, string> titles)
         {
-            Content = titles;
+            Result = titles;
             return Task.CompletedTask;
         }
     }

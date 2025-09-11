@@ -3,18 +3,18 @@
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
-    public class DashboardController(IGetCheckUserTodayInPort getCheckUserTodayPort,
-        IGetCheckUserTodayOutPort getCheckUserTodayOutPort)
+    public class DashboardController(IGetCheckUserTodayUseCase getCheckUserTodayPort,
+        IGetCheckUserTodayOutputPort getCheckUserTodayOutPort)
         : ControllerBase
     {
-        private readonly IGetCheckUserTodayInPort _checkUserTodayPort = getCheckUserTodayPort;
-        private readonly IGetCheckUserTodayOutPort _checkUserTodayOutPort = getCheckUserTodayOutPort;
+        private readonly IGetCheckUserTodayUseCase _getCheckUserTodayUseCase = getCheckUserTodayPort;
+        private readonly IGetCheckUserTodayOutputPort _getCheckUserTodayOutputPort = getCheckUserTodayOutPort;
 
         [HttpGet]
         public async Task<IActionResult> GetCheckUsersAsyn()
         {
-            await _checkUserTodayPort.CheckTodayAsync();
-            var data = _checkUserTodayOutPort.Content;
+            await _getCheckUserTodayUseCase.ExecuteAsync();
+            var data = _getCheckUserTodayOutputPort.Result;
             return data?.Count > 0 ? Ok(data) : NoContent();
         }
 

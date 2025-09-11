@@ -1,11 +1,13 @@
-﻿namespace Rubns.WebAPI.Presenters.Scrapper
+﻿using Rubns.Application.Interface.Scrapper.Queries;
+
+namespace Rubns.WebAPI.Presenters.Scrapper
 {
-    internal class MetasPresenter : IMetasOutputPort
+    internal class MetasPresenter : IGetMetasOutputPort
     {
-        public Dictionary<string, string> Content { get; private set; }
-        public Task Handeler(Dictionary<string, string> metas)
+        public Dictionary<string, string> Result { get; private set; }
+        public Task Success(Dictionary<string, string> metas)
         {
-            Content = metas;
+            Result = metas;
             return Task.CompletedTask;
         }
     }

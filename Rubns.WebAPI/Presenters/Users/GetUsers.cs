@@ -1,10 +1,12 @@
-﻿namespace Rubns.WebAPI.Presenters.Users
-{
-    public class GetUsers : IGetUsersOutPort, IPresenter<TableUserDTO>
-    {
-        public TableUserDTO Content { get; set; }
+﻿using Rubns.Application.Interface.Users.Queries;
 
-        public Task Handler(List<User> users, int total)
+namespace Rubns.WebAPI.Presenters.Users
+{
+    public class GetUsers : IGetUsersOutputPort, IPresenter<TableUserDTO>
+    {
+        public TableUserDTO Result { get; set; }
+
+        public Task Success(List<User> users, int total)
         {
             List<UserRegistedDTO> userRegistedDTOs = new List<UserRegistedDTO>();
 
@@ -21,7 +23,7 @@
             }).ToList();
 
 
-            Content = new TableUserDTO()
+            Result = new TableUserDTO()
             {
                 RegisteredUsers = userRegistedDTOs,
                 Total = total

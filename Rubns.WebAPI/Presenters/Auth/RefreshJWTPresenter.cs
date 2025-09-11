@@ -1,10 +1,12 @@
-﻿namespace Rubns.WebAPI.Presenters.Auth
-{
-    internal sealed class RefreshJWTPresenter : IRefreshJWTOutPort
-    {
-        public RefreshTokenResponseDTO Content { get; set; }
+﻿using Rubns.Application.Interface.Auth.Queries;
 
-        public Task Handler(JWT jtw, string refreshToken, long expiration)
+namespace Rubns.WebAPI.Presenters.Auth
+{
+    internal sealed class RefreshJWTPresenter : IRefreshJWTOutputPort
+    {
+        public RefreshTokenResponseDTO Result { get; set; }
+
+        public Task Success(JWT jtw, string refreshToken, long expiration)
         {
             RefreshTokenResponseDTO response = new()
             {
@@ -13,7 +15,7 @@
                 Token = jtw
             };
 
-            Content = response;
+            Result = response;
 
             return Task.CompletedTask;
         }

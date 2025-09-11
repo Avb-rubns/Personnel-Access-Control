@@ -2,7 +2,7 @@
 {
     public interface ISlugHelper
     {
-        Task<string> GenerateUniqueSlugAsync(string nameOrSlug);
+        Task<string> GenerateUniqueSlugByNameOrSlugAsync(string nameOrSlug);
         string GenerateShortHash(string input);
     }
 }

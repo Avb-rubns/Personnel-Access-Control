@@ -39,7 +39,7 @@
             { throw; }
         }
 
-        public async Task<int> DeleteLinkAsync(int id)
+        public async Task<int> DeleteAsync(int id)
         {
             LinkDB remove = new()
             {
@@ -48,7 +48,7 @@
             _context.Links.Remove(remove);
             return await _context.SaveChangesAsync();
         }
-        public async Task<string> FindSlugAsync(string slug)
+        public async Task<string> FindBySlugAsync(string slug)
         {
             string result = string.Empty;
 
@@ -63,7 +63,7 @@
 
             return result;
         }
-        public async Task<List<Link>> GetAllLinksForPageAsync(int? page, int? pagesize, string? filter)
+        public async Task<List<Link>> GetAllLinksAsync(int? page, int? pagesize, string? filter)
         {
             List<Link> links = new();
             IEnumerable<LinkDB> data;
@@ -115,7 +115,7 @@
 
             return links;
         }
-        public async Task<Link> GetLinkForIdAsync(int id)
+        public async Task<Link> GetLinkByIdAsync(int id)
         {
             Link link = new();
 
@@ -141,7 +141,7 @@
             return link;
         }
 
-        public async Task<Link> GetLinkForSlugAsync(string slug)
+        public async Task<Link> GetLinkBySlugAsync(string slug)
         {
             Link linkDTO = new();
 

@@ -2,7 +2,6 @@
 global using Personnel.Client.Shared.DTOs.ApiKey;
 global using Personnel.Client.Shared.DTOs.Link;
 global using Personnel.Client.Shared.DTOs.LogIn;
-global using Personnel.Client.Shared.DTOs.LogOut;
 global using Personnel.Client.Shared.DTOs.Ticket;
 global using Personnel.Client.Shared.DTOs.Users;
 global using Rubns.Core.Entities.Auth;
