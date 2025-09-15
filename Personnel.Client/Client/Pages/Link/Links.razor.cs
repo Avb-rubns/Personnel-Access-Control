@@ -114,7 +114,7 @@
                 await _table.ReloadServerData();
             }
         }
-        private async Task DeleteLinkAsync(int id)
+        private async Task DeleteLinkAsync(string id)
         {
             var link = _links.Find(x => x.ID == id);
 

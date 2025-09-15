@@ -2,7 +2,7 @@
 {
     public class LinkDTO
     {
-        public int ID { get; set; }
+        public string ID { get; set; }
         public string Name { get; set; }
         public string Slug { get; set; }
         public string Content { get; set; }

@@ -11,20 +11,20 @@
 
             table.Links = links.Select(link => new LinkDTO
             {
-                ID = link.ID,
+                ID = link.FriendlyId,
                 Name = link.Name,
                 Slug = link.Slug,
                 Content = link.Content,
                 Url = link.Url,
                 QR = new QRDTO()
                 {
-                    Id = link.QR.Id,
-                    LinkId = link.QR.LinkId,
+                    Id = link.QR.FriendlyId,
+                    LinkId = link.QR.FriendlyId,
                     DotScale = link.QR.DotScale,
                     ColorDark = link.QR.ColorDark,
                     ColorLight = link.QR.ColorLight,
                     QuietZone = link.QR.QuietZone,
-                    LastUserID = link.QR.LastUserID,
+                    LastUserID = link.QR.FriendLastUserID,
                     LastModificated = link.QR.LastModificated
                 },
                 Status = link.Status,

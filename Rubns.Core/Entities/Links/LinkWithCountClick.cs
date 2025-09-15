@@ -3,6 +3,7 @@
     public class LinkWithCountClick
     {
         public int ID { get; set; }
+        public string FriendlyId { get; set; }
         public string Name { get; set; }
         public string Slug { get; set; }
         public string Content { get; set; }

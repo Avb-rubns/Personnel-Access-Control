@@ -43,6 +43,7 @@ global using Serilog;
 global using Serilog.Events;
 global using Serilog.Sinks.MSSqlServer;
 global using ServicesRegister;
+global using Sqids;
 global using System.Data;
 global using System.Globalization;
 global using System.IdentityModel.Tokens.Jwt;
