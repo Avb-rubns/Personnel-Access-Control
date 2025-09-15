@@ -3,7 +3,7 @@
     public partial class DialogQREditor
     {
         [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
-        [Parameter] public LinkTableDTO link { get; set; }
+        [Parameter] public LinkDTO link { get; set; }
         [Parameter] public QRCode qrCode { get; set; } = new();
         [Inject] public IJSRuntime JS { get; set; } = default!;
         [Inject] public IProxy Proxy { get; set; } = default!;

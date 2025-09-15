@@ -1,7 +1,7 @@
 ﻿namespace Rubns.Application.Interface.Links.Queries
 {
-    public interface IGetLinkbySlugUseCase
+    public interface IGetLinkBySlugUseCase
     {
-        Task ExecuteAsync(HttpRequest request, string slug);
+        Task ExecuteAsync(string slug);
     }
 }

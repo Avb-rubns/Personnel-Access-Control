@@ -6,7 +6,7 @@
         , PublicRoutesService publicRoutesService) : AuthenticationStateProvider
     {
         public ISnackbar Snackbar { get; set; } = snackbar;
-        private readonly HttpClient HttpClient = httpClient;
+        private readonly HttpClient _httpClient = httpClient;
         private readonly NavigationManager _navigation = navigation;
         private readonly PublicRoutesService _publicRoutes = publicRoutesService;
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -21,7 +21,7 @@
                     return new AuthenticationState(anonymous);
                 }
 
-                var httpResponse = await HttpClient.GetAsync("api/v1/auth/me");
+                var httpResponse = await _httpClient.GetAsync("api/v1/auth/me");
 
                 switch (httpResponse.StatusCode)
                 {
@@ -53,7 +53,7 @@
         public async Task<bool> MarkUserAsLoggedOutAsync()
         {
             bool closed = false;
-            var response = await HttpClient.DeleteAsync("api/v1/auth/logout");
+            var response = await _httpClient.DeleteAsync("api/v1/auth/logout");
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
@@ -75,7 +75,7 @@
             try
             {
 
-                var response = await HttpClient.PostAsync("api/v1/auth/refresh", null);
+                var response = await _httpClient.PostAsync("api/v1/auth/refresh", null);
                 switch (response.StatusCode)
                 {
                     case System.Net.HttpStatusCode.OK:
@@ -92,7 +92,7 @@
         }
         private async Task<ClaimsPrincipal> RefreshTokensAsync()
         {
-            var httpResponse = await HttpClient.GetAsync("api/v1/auth/me");
+            var httpResponse = await _httpClient.GetAsync("api/v1/auth/me");
 
             switch (httpResponse.StatusCode)
             {

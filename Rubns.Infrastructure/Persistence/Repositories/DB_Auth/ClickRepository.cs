@@ -7,7 +7,7 @@
 
         public async Task<int> InsertAsync(Click click)
         {
-            ClickDB ClicNew = new()
+            ClickDb ClicNew = new()
             {
                 LinkId = click.LinkId,
                 Country = click.Country,

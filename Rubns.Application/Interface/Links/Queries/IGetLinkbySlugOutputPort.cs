@@ -1,7 +1,7 @@
 ﻿namespace Rubns.Application.Interface.Links.Queries
 {
-    public interface IGetLinkbySlugOutputPort : IPresenter<string>
+    public interface IGetLinkBySlugOutputPort : IPresenter<LinkDTO>
     {
-        Task Success(string urlDestinecion);
+        Task Success(Link link);
     }
 }

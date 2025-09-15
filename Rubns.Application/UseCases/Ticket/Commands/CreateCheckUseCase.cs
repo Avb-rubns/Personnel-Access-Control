@@ -1,4 +1,6 @@
-﻿namespace Rubns.Application.UseCases.Ticket.Post
+﻿using Rubns.Application.Interface.Tickets.Commands;
+
+namespace Rubns.Application.UseCases.Ticket.Commands
 {
     internal sealed class CreateCheckUseCase : ICreateCheckUseCase
     {

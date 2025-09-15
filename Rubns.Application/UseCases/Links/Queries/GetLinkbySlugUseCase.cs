@@ -1,42 +1,41 @@
-﻿using Rubns.Application.Interface.Links.Queries;
-
-namespace Rubns.Application.UseCases.Links.Queries
+﻿namespace Rubns.Application.UseCases.Links.Queries
 {
-    internal sealed class GetLinkbySlugUseCase(ILinkRepositoryEFC linkRepositoryEFC,
-        ILogger logger,
-        IGetLinkbySlugOutputPort linkforSlugOutport,
-        ICreateClickUseCase createClick)
-        : IGetLinkbySlugUseCase
+    internal class GetLinkBySlugUseCase : IGetLinkBySlugUseCase
     {
+        private readonly ILogger _logger;
+        private readonly ILinkRepositoryEFC _linkRepositoryEFC;
+        private readonly IGetLinkBySlugOutputPort _outputPort;
 
-        private readonly ILinkRepositoryEFC _linkRepositoryEFC = linkRepositoryEFC;
-        private readonly ILogger _logger = logger;
-        private readonly IGetLinkbySlugOutputPort _linkforSlugOutport = linkforSlugOutport;
-        private readonly ICreateClickUseCase _createClickPort = createClick;
-        public async Task ExecuteAsync(HttpRequest request, string slug)
+        public GetLinkBySlugUseCase(ILogger logger, ILinkRepositoryEFC linkRepositoryEFC,
+            IGetLinkBySlugOutputPort outputPort)
+        {
+            _linkRepositoryEFC = linkRepositoryEFC;
+            _logger = logger;
+            _outputPort = outputPort;
+        }
+
+        public async Task ExecuteAsync(string slug)
         {
             try
             {
-                var link = await _linkRepositoryEFC.GetLinkBySlugAsync(slug);
-                if (link is { ID: <= 0 })
+                if (string.IsNullOrEmpty(slug))
                 {
-                    _logger.Warning($"El slug:{slug} no se encontro.");
-                    throw new Exception();
-                }
-                if (!link.Status)
-                {
-                    throw new ResourceInactiveException($"El slug:{slug} se encuentra desactivado.");
+                    throw new ArgumentException("Datos invalidos");
                 }
 
-                await _createClickPort.ExecuteAsync(request, link.ID);
-                await _linkforSlugOutport.Success(link.Content);
+                var result = await _linkRepositoryEFC.GetLinkBySlugAsync(slug);
+                if (result is { ID: <= 0 })
+                {
+                    throw new NotFoundException("No se encontro el enlace.", "Sin informacion");
+                }
+                await _outputPort.Success(result);
+
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.Error(e, "Error SearchLinkforSlug", e.Message);
-
+                _logger.Error(ex, "Error in GetLinkBySlugUseCase:{error}", ex.Message);
+                throw;
             }
-
         }
     }
 }

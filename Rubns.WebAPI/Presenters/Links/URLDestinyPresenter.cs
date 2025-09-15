@@ -1,8 +1,6 @@
-﻿using Rubns.Application.Interface.Links.Queries;
-
-namespace Rubns.WebAPI.Presenters.Links
+﻿namespace Rubns.WebAPI.Presenters.Links
 {
-    internal class LinkforSlug : IGetLinkbySlugOutputPort
+    internal class URLDestinyPresenter : IGetURLDestinationBySlugOutputPort
     {
         public string Result { get; set; }
 

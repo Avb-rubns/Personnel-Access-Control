@@ -1,6 +1,6 @@
 ﻿namespace Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Clicks
 {
-    public class ClickDB
+    public class ClickDb
     {
         public int ID { get; set; }
         public int LinkId { get; set; }
@@ -12,5 +12,7 @@
         public string? OS { get; set; }
         public string? Browser { get; set; }
         public string? IpAddress { get; set; }
+
+        public LinkDb Link {  get; set; }
     }
 }

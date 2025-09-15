@@ -11,8 +11,9 @@
         public DbSet<SessionUserDb> SessionUser { get; set; }
         public DbSet<RolDB> Rols { get; set; }
         public DbSet<ResetPasswordDb> ResetPasswords { get; set; }
-        public DbSet<LinkDB> Links { get; set; }
-        public DbSet<ClickDB> Clicks { get; set; }
+        public DbSet<LinkDb> Links { get; set; }
+        public DbSet<ClickDb> Clicks { get; set; }
+        public DbSet<QRDb> QRs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserDb>(e =>
@@ -36,13 +37,13 @@
             modelBuilder.Entity<ResetPasswordDb>(e =>
             {
                 e.ToTable("ResetPasswords", schema: "dbo");
-                e.HasKey(k => k.ResetPasswordID);
+                e.HasKey(reset => reset.ResetPasswordID);
                 e.Property(p => p.Registed)
                 .HasDefaultValueSql("SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)'")
                 .ValueGeneratedOnAdd();
             });
 
-            modelBuilder.Entity<LinkDB>(e =>
+            modelBuilder.Entity<LinkDb>(e =>
             {
                 e.ToTable("Links", schema: "dbo");
                 e.HasKey(k => k.ID);
@@ -52,6 +53,14 @@
                 e.Property(p => p.LastModificated)
                 .HasDefaultValueSql("SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)'")
                 .ValueGeneratedOnAdd();
+                e.HasOne(link => link.QR).WithOne(qr => qr.Link).HasForeignKey<QRDb>(qr => qr.LinkId);
+                e.HasMany(click => click.Clicks).WithOne(link => link.Link).HasForeignKey(link => link.LinkId);
+            });
+
+            modelBuilder.Entity<QRDb>(e =>
+            {
+                e.ToTable("QRs", schema: "dbo");
+                e.HasKey(k => k.Id);
                 e.Property(p => p.ColorDark)
                 .HasDefaultValueSql("#000000")
                 .ValueGeneratedOnAdd();
@@ -66,9 +75,12 @@
                 .ValueGeneratedOnAdd();
                 e.Property(p => p.DotScale)
                 .HasColumnType("float");
+                e.Property(p => p.LastModificated)
+                .HasDefaultValueSql("SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)'")
+                .ValueGeneratedOnAdd();
             });
 
-            modelBuilder.Entity<ClickDB>(e =>
+            modelBuilder.Entity<ClickDb>(e =>
             {
                 e.ToTable("Clicks", schema: "dbo");
                 e.HasKey(e => e.ID);

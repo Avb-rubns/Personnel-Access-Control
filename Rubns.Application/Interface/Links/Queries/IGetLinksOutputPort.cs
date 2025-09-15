@@ -1,7 +1,7 @@
 ﻿namespace Rubns.Application.Interface.Links.Queries
 {
-    public interface IGetLinksOutputPort : IPresenter<TableLinkDTO>
+    public interface IGetLinksOutputPort : IPresenter<LinksDTO>
     {
-        Task Success(List<LinkWithClicks> links, int total, int currentPage, int pageSize, bool hasNextPage, bool hasPreviousPage);
+        Task Success(List<LinkWithCountClick> links, int total, int currentPage, int pageSize, bool hasNextPage, bool hasPreviousPage);
     }
 }

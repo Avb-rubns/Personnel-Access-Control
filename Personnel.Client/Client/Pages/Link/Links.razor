@@ -18,22 +18,22 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh>
-                <MudTableSortLabel SortLabel="name" T="LinkTableDTO">
+                <MudTableSortLabel SortLabel="name" T="LinkDTO">
                     Nombre
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="slug" T="LinkTableDTO">
+                <MudTableSortLabel SortLabel="slug" T="LinkDTO">
                     URL
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="destiny" T="LinkTableDTO">
+                <MudTableSortLabel SortLabel="destiny" T="LinkDTO">
                     URL Destino
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="clicks" T="LinkTableDTO">
+                <MudTableSortLabel SortLabel="clicks" T="LinkDTO">
                     Clics
                 </MudTableSortLabel>
             </MudTh>
@@ -41,7 +41,7 @@
                 QR
             </MudTh>
             <MudTh>
-                <MudTableSortLabel SortLabel="status" T="LinkTableDTO">
+                <MudTableSortLabel SortLabel="status" T="LinkDTO">
                     Estatus
                 </MudTableSortLabel>
             </MudTh>
@@ -65,7 +65,7 @@
                 @context.Clicks
             </MudTd>
             <MudTd DataLabel="QR">
-                <MudButton Variant="Variant.Outlined" OnClick="@(async() => { await QREditor(context.ID);})" StartIcon="@Icons.Material.Rounded.QrCode2" IconColor="Color.Error">
+                <MudButton Variant="Variant.Outlined" OnClick="@(async() => { await QREditor(context);})" StartIcon="@Icons.Material.Rounded.QrCode2" IconColor="Color.Error">
                     Ver
                 </MudButton>
             </MudTd>

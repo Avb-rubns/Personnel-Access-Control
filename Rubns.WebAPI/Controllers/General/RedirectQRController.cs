@@ -5,11 +5,11 @@
     [ApiController]
     public class RedirectQRController : ControllerBase
     {
-        private readonly IGetLinkbySlugUseCase _getLinkbySlugUseCase;
-        private readonly IGetLinkbySlugOutputPort _getLinkbySlugOutputPort;
+        private readonly IGetURLDestinationBySlugUseCase _getLinkbySlugUseCase;
+        private readonly IGetURLDestinationBySlugOutputPort _getLinkbySlugOutputPort;
 
-        public RedirectQRController(IGetLinkbySlugUseCase getLinkforSlugInPort,
-            IGetLinkbySlugOutputPort linkforSlugOutport)
+        public RedirectQRController(IGetURLDestinationBySlugUseCase getLinkforSlugInPort,
+            IGetURLDestinationBySlugOutputPort linkforSlugOutport)
         {
             _getLinkbySlugUseCase = getLinkforSlugInPort;
             _getLinkbySlugOutputPort = linkforSlugOutport;

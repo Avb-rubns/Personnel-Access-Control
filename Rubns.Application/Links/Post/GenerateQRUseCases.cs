@@ -1,8 +1,4 @@
-﻿
-using Personnel.Client.Shared.DTOs.Link;
-using Rubns.Core.POCO.Link;
-
-namespace Rubns.Application.Links.Post
+﻿namespace Rubns.Application.Links.Post
 {
     internal class GenerateQRUseCases(IQRServices qRServices
         , ILogger logger)

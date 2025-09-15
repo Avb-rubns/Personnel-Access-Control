@@ -9,8 +9,8 @@
         [Inject] public ISnackbar Snackbar { get; set; } = default!;
         [Inject] public Utils Utils { get; set; } = default!;
 
-        private MudTable<LinkTableDTO> _table { get; set; } = new();
-        private List<LinkTableDTO> _links { get; set; } = new();
+        private MudTable<LinkDTO> _table { get; set; } = new();
+        private List<LinkDTO> _links { get; set; } = new();
         private int totalItems;
         private int _userID = default!;
         private string _filter = "all";
@@ -27,15 +27,15 @@
                     var authState = await _authenticationState;
                     var user = authState?.User;
 
-                    var id = user.Claims
-                                        .FirstOrDefault(c => c.Type.Equals("userId", StringComparison.OrdinalIgnoreCase));
+                    var id = user.Claims.FirstOrDefault(c => c.Type.Equals("userId", StringComparison.OrdinalIgnoreCase));
                     _userID = int.TryParse(id.Value, out int idUser) ? idUser : 0;
                 }
             }
         }
-        private async Task<TableData<LinkTableDTO>> ServerReload(TableState state, CancellationToken token)
+        private async Task<TableData<LinkDTO>> ServerReload(TableState state, CancellationToken token)
         {
-            var data = await Proxy.GetAsync<ResponseData<TableLinkDTO>>($"/api/v1/link/links?page={state.Page}&pageSize={state.PageSize}&filter={_filter}");
+            int page = state.Page == 0 ? 1 : state.Page;
+            var data = await Proxy.GetAsync<ResponseData<LinksDTO>>($"/api/v1/link/links?page={page}&pageSize={state.PageSize}&filter={_filter}");
             switch (data.StatusCode)
             {
                 case HttpStatusCode.OK:
@@ -67,7 +67,7 @@
                     break;
             }
 
-            return new TableData<LinkTableDTO>() { TotalItems = totalItems, Items = _links };
+            return new TableData<LinkDTO>() { TotalItems = totalItems, Items = _links };
         }
         private async Task CreateLink()
         {
@@ -83,20 +83,19 @@
                 await _table.ReloadServerData();
             }
         }
-        private async Task QREditor(int IDQR)
+        private async Task QREditor(LinkDTO link)
         {
-            var link = _links.Find(x => x.ID == IDQR);
-            QRCode qrCode = new QRCode()
+            QRCode qrCode = new()
             {
                 Text = link.Url,
-                ColorDark = link.ColorDark,
-                PO = link.ColorDark,
-                PI = link.ColorDark,
-                ColorLight = link.ColorLight,
-                DotScale = link.DotScale,
-                DotScaleA = link.DotScale,
-                DotScaleTiming = link.DotScale,
-                QuietZone = link.QuietZone,
+                ColorDark = link.QR.ColorDark,
+                PO = link.QR.ColorDark,
+                PI = link.QR.ColorDark,
+                ColorLight = link.QR.ColorLight,
+                DotScale = link.QR.DotScale,
+                DotScaleA = link.QR.DotScale,
+                DotScaleTiming = link.QR.DotScale,
+                QuietZone = link.QR.QuietZone,
 
             };
             var parameters = new DialogParameters<DialogQREditor>

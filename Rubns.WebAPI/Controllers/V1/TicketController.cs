@@ -1,4 +1,6 @@
-﻿namespace Rubns.WebAPI.Controllers.V1
+﻿using Rubns.Application.Interface.Tickets.Commands;
+
+namespace Rubns.WebAPI.Controllers.V1
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]

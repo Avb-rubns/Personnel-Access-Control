@@ -1,4 +1,4 @@
-﻿namespace Rubns.Application.UseCases.Users.Get
+﻿namespace Rubns.Application.UseCases.Users.Queries
 {
     internal class GetUsersUseCase(IUserRepositoryEFC repositoryEFC
         , IGetUsersOutputPort getUsersOutPort

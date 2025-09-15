@@ -1,4 +1,6 @@
-﻿namespace Rubns.Infrastructure.Services
+﻿using Personnel.Client.Shared.DTOs.Link.Commands;
+
+namespace Rubns.Infrastructure.Services
 {
     internal class QRServices : IQRServices
     {

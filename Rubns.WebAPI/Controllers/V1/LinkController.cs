@@ -1,4 +1,6 @@
-﻿namespace Rubns.WebAPI.Controllers.V1
+﻿using Personnel.Client.Shared.DTOs.Link.Commands;
+
+namespace Rubns.WebAPI.Controllers.V1
 {
     [ApiController]
     [ApiVersion("1.0")]
@@ -13,6 +15,8 @@
         private readonly IUpdateQRUseCase _updateQRUseCase;
         private readonly IDeleteLinkUseCase _deleteLinkUseCase;
         private readonly ISearchSlugUseCase _searchSlugUseCase;
+        private readonly IGetLinkBySlugUseCase _getLinkBySlugUseCase;
+        private readonly IGetLinkBySlugOutputPort _getLinkBySlugOutputPort;
 
         public LinkController(IGenerateQRPort<MemoryStream> qrGeneratePort
             , ICreateLinkUseCase qrCreatePort
@@ -20,7 +24,9 @@
             , IUpdateQRUseCase updateQREditorPort
             , IDeleteLinkUseCase deleteLinkPort
             , ISearchSlugUseCase searchSlugPort
-            , IGetLinksOutputPort getLinksOurPort)
+            , IGetLinksOutputPort getLinksOurPort,
+            IGetLinkBySlugUseCase getLinkUseCase,
+            IGetLinkBySlugOutputPort getLinkOutputPort)
         {
             _generateQRPort = qrGeneratePort;
             _createLinkUseCase = qrCreatePort;
@@ -29,6 +35,8 @@
             _deleteLinkUseCase = deleteLinkPort;
             _searchSlugUseCase = searchSlugPort;
             _getLinksOutputPort = getLinksOurPort;
+            _getLinkBySlugUseCase = getLinkUseCase;
+            _getLinkBySlugOutputPort = getLinkOutputPort;
         }
 
         [HttpGet("links")]
@@ -70,6 +78,13 @@
         {
             await _searchSlugUseCase.SearchSlugAsync(slug, true);
             return Ok();
+        }
+        [HttpGet("{slug}")]
+        public async Task<IActionResult> GetLinkAsync(string slug)
+        {
+            await _getLinkBySlugUseCase.ExecuteAsync(slug);
+            var link = _getLinkBySlugOutputPort.Result;
+            return Ok(link);
         }
     }
 }

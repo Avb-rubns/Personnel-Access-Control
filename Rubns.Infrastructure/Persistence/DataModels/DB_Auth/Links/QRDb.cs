@@ -1,6 +1,6 @@
-﻿namespace Rubns.Core.Entities.Links
+﻿namespace Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Links
 {
-    public class QR
+    public class QRDb
     {
         public int Id { get; set; }
         public int LinkId { get; set; }
@@ -10,5 +10,6 @@
         public int QuietZone { get; set; }
         public DateTimeOffset LastModificated { get; set; }
         public int LastUserID { get; set; }
+        public LinkDb Link { get; set; }
     }
 }

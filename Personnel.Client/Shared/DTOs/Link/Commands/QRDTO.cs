@@ -1,6 +1,6 @@
-﻿namespace Rubns.Core.Entities.Links
+﻿namespace Personnel.Client.Shared.DTOs.Link.Commands
 {
-    public class QR
+    public class QRDTO
     {
         public int Id { get; set; }
         public int LinkId { get; set; }

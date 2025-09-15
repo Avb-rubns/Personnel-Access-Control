@@ -1,4 +1,6 @@
-﻿namespace Rubns.Application.Interface.Links.Commands
+﻿using Personnel.Client.Shared.DTOs.Link.Commands;
+
+namespace Rubns.Application.Interface.Links.Commands
 {
     public interface IUpdateQRUseCase
     {

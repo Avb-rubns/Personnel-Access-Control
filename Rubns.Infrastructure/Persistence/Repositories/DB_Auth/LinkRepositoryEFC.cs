@@ -7,7 +7,7 @@
         private readonly AuthDbContextEFC _context = contextEFC;
         public async Task<Link> AddAsync(Link link)
         {
-            LinkDB newLink = new LinkDB()
+            LinkDb newLink = new LinkDb()
             {
                 Name = link.Name,
                 Slug = link.Slug,
@@ -17,7 +17,11 @@
                 UserID = link.UserIdRegistered,
                 LastUserID = link.UserLastIdModificated
             };
-
+            QRDb qr = new()
+            {
+                LastUserID = link.UserLastIdModificated
+            };
+            newLink.QR = qr;
             await _context.Links.AddAsync(newLink);
             var result = await _context.SaveChangesAsync();
 
@@ -41,7 +45,7 @@
 
         public async Task<int> DeleteAsync(int id)
         {
-            LinkDB remove = new()
+            LinkDb remove = new()
             {
                 ID = id,
             };
@@ -63,58 +67,7 @@
 
             return result;
         }
-        public async Task<List<Link>> GetAllLinksAsync(int? page, int? pagesize, string? filter)
-        {
-            List<Link> links = new();
-            IEnumerable<LinkDB> data;
-            int pageSize = ((pagesize.HasValue && pagesize.Value > 0) ? pagesize.Value : 25);
-            int pageNumber = ((page.HasValue && page.Value > 0) ? page.Value : 1);
 
-            if (!string.IsNullOrEmpty(filter))
-            {
-                bool status = filter.Equals("true") ? true : false;
-                data = await _context.Links.Where(s => s.Status == status)
-                                .OrderBy(id => id.ID)
-                                .Skip((pageNumber - 1) * pageSize)
-                                .Take(pageSize)
-                                .AsNoTracking()
-                                .ToListAsync();
-            }
-            else
-            {
-
-                data = await _context.Links.OrderBy(id => id.ID)
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .AsNoTracking()
-                    .ToListAsync();
-            }
-
-
-
-            if (data.Count() > 0)
-            {
-                links = data.Select(s => new Link
-                {
-                    ID = s.ID,
-                    Name = s.Name,
-                    Slug = s.Slug,
-                    Content = s.Content,
-                    Url = s.Url,
-                    DotScale = s.DotScale,
-                    ColorDark = s.ColorDark,
-                    ColorLight = s.ColorLight,
-                    QuietZone = s.QuietZone,
-                    Status = s.Status,
-                    Registered = s.Registered,
-                    LastModificated = s.LastModificated,
-
-                }).ToList();
-            }
-
-
-            return links;
-        }
         public async Task<Link> GetLinkByIdAsync(int id)
         {
             Link link = new();
@@ -129,10 +82,6 @@
                 link.Name = data.Name;
                 link.Slug = data.Slug;
                 link.Url = data.Url;
-                link.DotScale = data.DotScale;
-                link.ColorDark = data.ColorDark;
-                link.ColorLight = data.ColorLight;
-                link.QuietZone = data.QuietZone;
                 link.Status = data.Status;
                 link.Registered = data.Registered;
             }
@@ -140,55 +89,121 @@
 
             return link;
         }
-
         public async Task<Link> GetLinkBySlugAsync(string slug)
         {
-            Link linkDTO = new();
+            Link link = new();
 
             var data = await _context.Links.AsNoTracking()
                             .SingleOrDefaultAsync(i => i.Slug == slug);
 
             if (data is { ID: > 0 })
             {
-                linkDTO.ID = data.ID;
-                linkDTO.Name = data.Name;
-                linkDTO.Slug = data.Slug;
-                linkDTO.Content = data.Content;
-                linkDTO.Url = data.Url;
-                linkDTO.DotScale = data.DotScale;
-                linkDTO.ColorDark = data.ColorDark;
-                linkDTO.ColorLight = data.ColorLight;
-                linkDTO.QuietZone = data.QuietZone;
-                linkDTO.Status = data.Status;
-                linkDTO.Registered = data.Registered;
-                linkDTO.LastModificated = data.LastModificated;
-                linkDTO.UserIdRegistered = data.UserID;
-                linkDTO.UserLastIdModificated = data.LastUserID;
+                link.ID = data.ID;
+                link.Name = data.Name;
+                link.Slug = data.Slug;
+                link.Content = data.Content;
+                link.Url = data.Url;
+                link.Status = data.Status;
+                link.Registered = data.Registered;
+                link.LastModificated = data.LastModificated;
+                link.UserIdRegistered = data.UserID;
+                link.UserLastIdModificated = data.LastUserID;
             }
 
 
-            return linkDTO;
+            return link;
         }
 
-        public async Task<int> UpdateQRAsync(int id, int userID, QR qr)
+        public async Task<List<LinkWithCountClick>> GetLinkWithClickByPaginationAsync(int page, int pageSize, string filter)
         {
-            LinkDB link = new()
+            List<LinkWithCountClick> links = new();
+            IEnumerable<LinkWithClick> data;
+
+            if (filter.Equals("all"))
             {
-                ID = id,
-                DotScale = qr.DotScale,
-                ColorDark = qr.ColorDark,
-                ColorLight = qr.ColorLight,
-                QuietZone = qr.QuietZone,
-                LastUserID = userID,
-            };
+                data = await _context.Links
+                            .AsNoTracking()
+                            .Include(link => link.QR)
+                            .Select(link => new LinkWithClick
+                            {
+                                ID = link.ID,
+                                Name = link.Name,
+                                Slug = link.Slug,
+                                Content = link.Content,
+                                Url = link.Url,
+                                Status = link.Status,
+                                Registered = link.Registered,
+                                UserID = link.UserID,
+                                LastModificated = link.LastModificated,
+                                LastUserID = link.LastUserID,
+                                QR = link.QR,
+                                Clicks = link.Clicks.Count(),
+                            })
+                            .OrderBy(link => link.ID)
+                            .Skip((page - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToListAsync();
 
-            _context.Entry(link).Property(u => u.DotScale).IsModified = true;
-            _context.Entry(link).Property(u => u.ColorDark).IsModified = true;
-            _context.Entry(link).Property(u => u.ColorLight).IsModified = true;
-            _context.Entry(link).Property(u => u.QuietZone).IsModified = true;
-            _context.Entry(link).Property(u => u.LastUserID).IsModified = true;
+            }
+            else
+            {
+                bool status = filter.Equals("true") ? true : false;
+                data = await _context.Links
+                        .AsNoTracking()
+                        .Include(i => i.QR)
+                        .Where(i => i.Status == status)
+                        .Select(link => new LinkWithClick
+                        {
+                            ID = link.ID,
+                            Name = link.Name,
+                            Slug = link.Slug,
+                            Content = link.Content,
+                            Url = link.Url,
+                            Status = link.Status,
+                            Registered = link.Registered,
+                            UserID = link.UserID,
+                            LastModificated = link.LastModificated,
+                            LastUserID = link.LastUserID,
+                            QR = link.QR,
+                            Clicks = link.Clicks.Count(),
+                        })
+                            .OrderBy(link => link.ID)
+                            .Skip((page - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToListAsync();
 
-            return await _context.SaveChangesAsync();
+            }
+
+            if (data.Count() > 0)
+            {
+                links = data.Select(link => new LinkWithCountClick()
+                {
+                    ID = link.ID,
+                    Name = link.Name,
+                    Slug = link.Slug,
+                    Content = link.Content,
+                    Url = link.Url,
+                    Status = link.Status,
+                    Registered = link.Registered,
+                    UserID = link.UserID,
+                    LastUserID = link.LastUserID,
+                    LastModificated = link.LastModificated,
+                    QR = new QR()
+                    {
+                        Id = link.QR.Id,
+                        LinkId = link.QR.LinkId,
+                        DotScale = link.QR.DotScale,
+                        ColorDark = link.QR.ColorDark,
+                        ColorLight = link.QR.ColorLight,
+                        QuietZone = link.QR.QuietZone,
+                        LastModificated = link.QR.LastModificated,
+                        LastUserID = link.QR.LastUserID,
+                    },
+                    Clicks = link.Clicks
+                }).ToList();
+            }
+
+            return links;
         }
     }
 }

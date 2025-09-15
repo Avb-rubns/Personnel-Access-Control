@@ -1,4 +1,4 @@
-﻿namespace Rubns.Application.UseCases.Users.Post
+﻿namespace Rubns.Application.UseCases.Users.Commands
 {
     internal sealed class UserUseCase : ICreateUserUseCase
     {

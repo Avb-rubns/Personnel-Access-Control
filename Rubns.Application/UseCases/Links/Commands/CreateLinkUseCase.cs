@@ -1,4 +1,6 @@
-﻿namespace Rubns.Application.UseCases.Links.Commands
+﻿using Personnel.Client.Shared.DTOs.Link.Commands;
+
+namespace Rubns.Application.UseCases.Links.Commands
 {
     internal class CreateLinkUseCase(ILinkRepositoryEFC repositoryEFC,
         ILogger logger,

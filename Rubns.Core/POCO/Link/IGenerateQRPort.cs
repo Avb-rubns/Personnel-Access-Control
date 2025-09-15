@@ -1,4 +1,6 @@
-﻿namespace Rubns.Core.POCO.Link
+﻿using Personnel.Client.Shared.DTOs.Link.Commands;
+
+namespace Rubns.Core.POCO.Link
 {
     public interface IGenerateQRPort<T>
     {

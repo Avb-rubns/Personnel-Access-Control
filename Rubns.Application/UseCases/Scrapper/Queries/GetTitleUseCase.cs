@@ -1,4 +1,4 @@
-﻿namespace Rubns.Application.UseCases.Scrapper.Get
+﻿namespace Rubns.Application.UseCases.Scrapper.Queries
 {
     internal class GetTitleUseCase(
         IWebPageFetcher playwrighFetcher,

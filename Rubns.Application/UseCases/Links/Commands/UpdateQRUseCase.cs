@@ -1,12 +1,12 @@
 ﻿namespace Rubns.Application.UseCases.Links.Commands
 {
-    internal class UpdateQRUseCase(ILinkRepositoryEFC linkRepositoryEFC,
+    internal class UpdateQRUseCase(IQRRepository qrRepositoryEFC,
         ILogger logger,
         IUserContextService userContext
         )
         : IUpdateQRUseCase
     {
-        private readonly ILinkRepositoryEFC _linkRepositoryEFC = linkRepositoryEFC;
+        private readonly IQRRepository _qrRepositoryEFC = qrRepositoryEFC;
         private readonly ILogger _logger = logger;
         private readonly IUserContextService _userContextService = userContext;
 
@@ -14,8 +14,8 @@
         {
             try
             {
-                var link = await _linkRepositoryEFC.GetLinkByIdAsync(id);
-                if (link is { ID: <= 0 })
+                var qrUpdate = await _qrRepositoryEFC.FindById(id);
+                if (qrUpdate is { Id: <= 0 })
                 {
                     _logger.Information($"Se intento actualizar:{id} por usuario:{_userContextService.UserId}");
                     throw new NotFoundException("No se encotro el QR del enlace", "No se encontro informacion");
@@ -24,15 +24,19 @@
                 QRDTO qrEdit = new();
 
                 qr.ApplyTo(qrEdit);
+
+                int.TryParse(_userContextService.UserId, out int userId);
+
                 QR update = new()
                 {
+                    Id = id,
                     DotScale = qrEdit.DotScale,
                     ColorDark = qrEdit.ColorDark,
                     ColorLight = qrEdit.ColorLight,
                     QuietZone = qrEdit.QuietZone,
+                    LastUserID = userId,
                 };
-                int.TryParse(_userContextService.UserId, out int userId);
-                await _linkRepositoryEFC.UpdateQRAsync(id, userId, update);
+                await _qrRepositoryEFC.UpdateAsync(update);
 
             }
             catch (Exception e)

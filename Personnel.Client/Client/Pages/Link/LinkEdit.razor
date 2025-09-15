@@ -1,4 +1,44 @@
 ﻿@page "/link/{slug}"
 <Space>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudText Typo="Typo.body2">Enlaces > @_link.Slug </MudText>
+        </MudItem>
 
+        <MudItem xs="12">
+            <MudTextField T="string"
+                          Label="Nombre"
+                          Variant="Variant.Filled"
+                          For="@(() => _link.Name)"
+                          @bind-Value="_link.Name"/>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudTextField T="string"
+                          Label="Nombre descriptivo"
+                          Variant="Variant.Filled"
+                          For="@(() => _link.Slug)"
+                          @bind-Value="_link.Slug" />
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudTextField T="string"
+                          Label="URL de destino"
+                          Variant="Variant.Filled"
+                          For="@(() => _link.Content)"
+                          @bind-Value="_link.Content" />
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudText Typo="Typo.body2">
+                Creado por: @_link.UserRegistered el @_link.Registered.ToString("dd/MMM/yyy") 
+            </MudText>
+            <MudText Typo="Typo.body2">
+                Ultima modificacion: @_link.LastModificated el @_link.LastModificated.ToString("dd/MMM/yyy")
+            </MudText>
+        </MudItem>
+
+
+
+    </MudGrid>
 </Space>

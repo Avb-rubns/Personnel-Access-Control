@@ -1,6 +1,4 @@
-﻿using Rubns.Application.Interface.Links.Queries;
-
-namespace Rubns.Application.UseCases.Links.Queries
+﻿namespace Rubns.Application.UseCases.Links.Queries
 {
     internal class GetLinksUseCase(ILinkRepositoryDapper linkRepositoryDapper
         , ILinkRepositoryEFC linkRepositoryEFC
@@ -28,7 +26,7 @@ namespace Rubns.Application.UseCases.Links.Queries
                 }
 
                 int total = 0;
-                var links = await _linkRepositoryDapper.GetLinksAsync(page, pagesize, filter);
+                var links = await _linkRepositoryEFC.GetLinkWithClickByPaginationAsync(page, pagesize, filter);
                 if (filter.Equals("all"))
                 {
                     total = await _linkRepositoryEFC.CountLinksAsync();

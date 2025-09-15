@@ -1,4 +1,4 @@
-﻿namespace Personnel.Client.Shared.DTOs.Link
+﻿namespace Personnel.Client.Shared.DTOs.Link.Queries
 {
     public class LinkDTO
     {
@@ -7,17 +7,13 @@
         public string Slug { get; set; }
         public string Content { get; set; }
         public string Url { get; set; }
-        public double DotScale { get; set; }
-        public string ColorDark { get; set; }
-        public string ColorLight { get; set; }
-        public int QuietZone { get; set; }
+        public QRDTO QR { get; set; }
         public bool Status { get; set; }
         public DateTimeOffset Registered { get; set; }
         public string UserRegistered { get; set; }
-        public int UserIdRegistered { get; set; }
         public DateTimeOffset LastModificated { get; set; }
         public string UserLastModificated { get; set; }
-        public int UserLastIdModificated { get; set; }
+        public int Clicks { get; set; }
 
     }
 }

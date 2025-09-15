@@ -2,28 +2,38 @@
 {
     internal class LinksPresenter : IGetLinksOutputPort
     {
-        public TableLinkDTO Result { get; private set; }
+        public LinksDTO Result { get; private set; }
 
-        public Task Success(List<LinkWithClicks> links, int total, int currentPage, int pageSize, bool hasNextPage, bool hasPreviousPage)
+        public Task Success(List<LinkWithCountClick> links, int total, int currentPage, int pageSize, bool hasNextPage, bool hasPreviousPage)
         {
-            TableLinkDTO table = new();
+            LinksDTO table = new();
+            QRDTO qr = new();
 
-            table.Links = links.Select(link => new LinkTableDTO
+            table.Links = links.Select(link => new LinkDTO
             {
                 ID = link.ID,
                 Name = link.Name,
                 Slug = link.Slug,
                 Content = link.Content,
                 Url = link.Url,
-                DotScale = link.DotScale,
-                ColorDark = link.ColorDark,
-                ColorLight = link.ColorLight,
-                QuietZone = link.QuietZone,
+                QR = new QRDTO()
+                {
+                    Id = link.QR.Id,
+                    LinkId = link.QR.LinkId,
+                    DotScale = link.QR.DotScale,
+                    ColorDark = link.QR.ColorDark,
+                    ColorLight = link.QR.ColorLight,
+                    QuietZone = link.QR.QuietZone,
+                    LastUserID = link.QR.LastUserID,
+                    LastModificated = link.QR.LastModificated
+                },
                 Status = link.Status,
                 Clicks = link.Clicks,
+                Registered = link.Registered,
+
             }).ToList();
 
-            PaginationDTO pagination = new PaginationDTO()
+            PaginationDTO pagination = new()
             {
                 Total = total,
                 CurrentPage = currentPage,

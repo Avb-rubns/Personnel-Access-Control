@@ -1,4 +1,4 @@
-﻿namespace Rubns.Application.UseCases.Scrapper.Get
+﻿namespace Rubns.Application.UseCases.Scrapper.Queries
 {
     internal sealed class GetMetasUseCase(IProxyServer proxyServer,
         ILogger logger,

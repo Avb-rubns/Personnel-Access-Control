@@ -1,4 +1,7 @@
-﻿namespace Personnel.Client.Client.Components.Link
+﻿using Personnel.Client.Shared.DTOs.Link.Commands;
+using Personnel.Client.Shared.DTOs.Link.Queries;
+
+namespace Personnel.Client.Client.Components.Link
 {
     public partial class DialogCreateLink
     {

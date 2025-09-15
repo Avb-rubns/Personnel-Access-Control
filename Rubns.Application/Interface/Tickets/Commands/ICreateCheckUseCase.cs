@@ -1,4 +1,4 @@
-﻿namespace Rubns.Application.Interface.Tickets.Post
+﻿namespace Rubns.Application.Interface.Tickets.Commands
 {
     public interface ICreateCheckUseCase
     {

@@ -7,10 +7,6 @@
         private string _slug = string.Empty;
         private string _content = string.Empty;
         private string _url = string.Empty;
-        private double _dotScale = 1.0;
-        private string _colorDark = string.Empty;
-        private string _colorLight = string.Empty;
-        private int _quietZone = 0;
         private bool _status;
         private DateTimeOffset _registered = DateTimeOffset.MinValue;
         private string _userRegisted = string.Empty;
@@ -23,10 +19,7 @@
         public LinkBuilder WithSlug(string slug) { _slug = slug; return this; }
         public LinkBuilder WithContent(string content) { _content = content; return this; }
         public LinkBuilder WithURL(string url) { _url = url; return this; }
-        public LinkBuilder WithDotScale(double dotscale) { _dotScale = dotscale; return this; }
-        public LinkBuilder WithColorDark(string colorDark) { _colorDark = colorDark; return this; }
-        public LinkBuilder WithColorLight(string colorLight) { _colorLight = colorLight; return this; }
-        public LinkBuilder WithQuietZone(int quietZone) { _quietZone = quietZone; return this; }
+
         public LinkBuilder WithStatus(bool status) { _status = status; return this; }
         public LinkBuilder WithRegistered(DateTimeOffset registered) { _registered = registered; return this; }
         public LinkBuilder WithUserRegisted(string userRegisted) { _userRegisted = userRegisted; return this; }
@@ -42,16 +35,10 @@
             link.Slug = _slug;
             link.Content = _content;
             link.Url = _url;
-            link.DotScale = _dotScale;
-            if (!string.IsNullOrEmpty(_colorDark)) { link.ColorDark = _colorDark; }
-            if (!string.IsNullOrEmpty(_colorLight)) { link.ColorLight = _colorLight; }
-            link.QuietZone = _quietZone;
             link.Status = _status;
             if (!_registered.Equals(DateTimeOffset.MinValue)) { link.Registered = _registered; }
-            if (!string.IsNullOrEmpty(_userRegisted)) { link.UserRegistered = _userRegisted; }
             link.UserIdRegistered = _userId;
             link.UserLastIdModificated = _userIdLast;
-            if (!string.IsNullOrEmpty(_userLastIdModificated)) { link.UserLastModificated = _userLastIdModificated; }
             return link;
         }
 

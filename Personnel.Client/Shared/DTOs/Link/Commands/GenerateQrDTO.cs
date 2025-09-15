@@ -1,4 +1,4 @@
-﻿namespace Personnel.Client.Shared.DTOs.Link
+﻿namespace Personnel.Client.Shared.DTOs.Link.Commands
 {
     public class GenerateQrDTO
     {
