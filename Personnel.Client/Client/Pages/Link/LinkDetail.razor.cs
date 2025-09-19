@@ -7,6 +7,7 @@
         [Inject] public IProxy Proxy { get; set; } = default!;
         [Inject] public IJSRuntime JS { get; set; } = default!;
         [Inject] public ISnackbar Snackbar { get; set; } = default!;
+        [Inject] public NavigationManager NavigationManager { get; set; } = default!;
 
 
         private LinkDetailDTO _link = new();
@@ -21,6 +22,7 @@
         private bool _isLoading = true;
         private bool _qrInitialized = false;
         private int _width = 0;
+        private bool refresh = false;
         private readonly DialogOptions dialogOptions = new()
         { BackdropClick = false, MaxWidth = MaxWidth.Medium, FullWidth = true };
         private readonly DialogOptions _fullScreen = new() { FullScreen = true };
@@ -55,10 +57,14 @@
 
         private void DetectChanges()
         {
-            _change =
+
+            var HaveChange =
                     !(_linkForm.Name != _linkBackup.Name ||
                     _linkForm.Content != _linkBackup.Content ||
                     _linkForm.Slug != _linkBackup.Slug);
+
+            _change = HaveChange;
+
         }
         public void Dispose()
         {
@@ -180,12 +186,38 @@
 
             try
             {
+                LinkUpdateDTO update = new()
+                {
+                    Name = _linkBackup.Name != _linkForm.Name ? _linkForm.Name : string.Empty,
+                    Content = _linkBackup.Content != _linkForm.Content ? _linkForm.Content : string.Empty,
+                };
 
+                if (_linkBackup.Slug != _linkForm.Slug)
+                {
+                    update.Slug = _linkForm.Slug;
+                    refresh = true;
+                }
+
+                var response = await Proxy.PatchAsync<Response, LinkUpdateDTO>($"api/v1/link/{_link.ID}", update);
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.OK:
+                        Snackbar.Add("Cambios realizados", Severity.Success);
+                        NavigationManager.NavigateTo($"/link/{update.Slug}", replace: refresh);
+                        break;
+                    case HttpStatusCode.BadRequest:
+                        Snackbar.Add("Error al realizar cambio, intente de nuevo", Severity.Error);
+                        break;
+                    case HttpStatusCode.NoContent:
+                        Snackbar.Add("Error el QR no existe", Severity.Error);
+                        break;
+                }
             }
             catch
             {
 
             }
+            _processing = false;
 
         }
         private async Task DownloadQrCode()

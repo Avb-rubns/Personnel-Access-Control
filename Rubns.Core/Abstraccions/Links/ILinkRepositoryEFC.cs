@@ -3,6 +3,7 @@
     public interface ILinkRepositoryEFC
     {
         Task<Link> AddAsync(Link link);
+        Task<int> UpdateAsync(Link link);
         Task<string> FindBySlugAsync(string slug);
         Task<int> CountLinksAsync();
         Task<List<LinkWithCountClick>> GetLinkWithClickByPaginationAsync(int page, int pageSize, string status);

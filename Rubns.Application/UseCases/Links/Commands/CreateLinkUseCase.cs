@@ -20,11 +20,11 @@
             {
                 if (!string.IsNullOrEmpty(createDTO.Slug))
                 {
-                    createDTO.Slug = await _slugHelper.GenerateUniqueSlugByNameOrSlugAsync(createDTO.Slug);
+                    createDTO.Slug = await _slugHelper.GenerateUniqueSlugByNameOrSlugAsync(createDTO.Slug.ToLower());
                 }
                 else
                 {
-                    createDTO.Slug = await _slugHelper.GenerateUniqueSlugByNameOrSlugAsync(createDTO.Name);
+                    createDTO.Slug = await _slugHelper.GenerateUniqueSlugByNameOrSlugAsync(createDTO.Name.ToLower());
                 }
 
                 var isExistSlug = await _repositoryEFC.FindBySlugAsync(createDTO.Slug);

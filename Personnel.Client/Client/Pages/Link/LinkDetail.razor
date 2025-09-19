@@ -31,13 +31,15 @@
             </div>
         </MudItem>
         <MudItem xs="12" sm="9">
-            <EditForm EditContext="_editContext" class="d-flex flex-column" style="gap:1rem;">
+            <EditForm EditContext="_editContext" class="d-flex flex-column" style="gap:1rem;" OnValidSubmit="SendUpdate">
                 <DataAnnotationsValidator />
                 <MudItem xs="12">
                     <MudTextField T="string"
                         Label="Nombre"
                         Margin="Margin.Dense"
                         Variant="Variant.Outlined"
+                        Required
+                        RequiredError="La nombre no puede ser vacia."
                         Immediate="true"
                         For="@(() => _linkForm.Name)"
                         @bind-Value="_linkForm.Name" />
@@ -53,6 +55,8 @@
                     OnAdornmentClick="ToggleOpen"
                     Variant="Variant.Outlined"
                     Immediate="true"
+                    Required
+                    RequiredError="La nombre descriptivo de destino no puede ser vacia."
                     For="@(() => _linkForm.Slug)"
                     @bind-Value="_linkForm.Slug" />
                     <MudPopover Open="@_open"
@@ -63,7 +67,7 @@
                                 AnchorOrigin="Origin.BottomLeft">
                         <div class="d-flex flex-column">
                             <MudText>
-                                Modificar el Nombre descriptivo puede provocar que el QR deje de funcionar.
+                                Modificar el Nombre descriptivo provoca que los QR compartidos dejen de funcionar.
                             </MudText>
                             <MudButton OnClick="@ToggleOpen" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Cerrar</MudButton>
                         </div>
@@ -77,6 +81,8 @@
                         AutoGrow
                         Variant="Variant.Outlined"
                         Immediate="true"
+                        Required
+                        RequiredError="La URL de destino no puede ser vacia."
                         For="@(() => _linkForm.Content)"
                         @bind-Value="_linkForm.Content" />
                 </MudItem>

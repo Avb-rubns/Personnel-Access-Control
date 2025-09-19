@@ -2,6 +2,6 @@
 {
     public interface IUpdateLinkUseCase
     {
-        Task ExecuteAsync(JsonPatchDocument<LinkDTO> link);
+        Task ExecuteAsync(string id, JsonPatchDocument<LinkUpdateDTO> link);
     }
 }

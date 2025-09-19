@@ -239,5 +239,24 @@
 
             return links;
         }
+
+        public Task<int> UpdateAsync(Link link)
+        {
+            LinkDb LinkUpdate = new()
+            {
+                ID = link.ID,
+                Name = link.Name,
+                Slug = link.Slug,
+                Content = link.Content
+            };
+
+            _context.Entry(LinkUpdate).Property(x => x.Name).IsModified = !string.IsNullOrEmpty(link.Name);
+            _context.Entry(LinkUpdate).Property(x => x.Slug).IsModified = !string.IsNullOrEmpty(link.Slug);
+            _context.Entry(LinkUpdate).Property(x => x.Content).IsModified = !string.IsNullOrEmpty(link.Content);
+
+            return _context.SaveChangesAsync();
+
+
+        }
     }
 }

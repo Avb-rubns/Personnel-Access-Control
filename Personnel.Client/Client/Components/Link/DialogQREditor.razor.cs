@@ -44,7 +44,7 @@
                     QuietZone = qrCode.QuietZone,
                     DotScale = _backUp.DotScale != qrCode.DotScale ? qrCode.DotScale : double.NaN,
                 };
-                var response = await Proxy.PatchAsync<Response, QRUpdateDTO>($"api/v1/link/{link.QR.Id}", qr);
+                var response = await Proxy.PatchAsync<Response, QRUpdateDTO>($"api/v1/link/qr/{link.QR.Id}", qr);
                 switch (response.StatusCode)
                 {
                     case HttpStatusCode.OK:

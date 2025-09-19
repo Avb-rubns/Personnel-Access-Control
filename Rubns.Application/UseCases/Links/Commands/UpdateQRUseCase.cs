@@ -42,7 +42,7 @@
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Error in UpdateQREditorPortAsync:{error}", e.Message);
+                _logger.Error(e, "Error in UpdateQRUseCase:{error}", e.Message);
                 throw;
             }
         }

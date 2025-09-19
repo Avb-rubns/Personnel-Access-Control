@@ -22,6 +22,8 @@
         private readonly IGetLinkBySlugUseCase _getLinkBySlugUseCase;
         private readonly IGetLinkBySlugOutputPort _getLinkBySlugOutputPort;
 
+        private readonly IUpdateLinkUseCase _updateLinkUseCase;
+
         public LinkController(IGenerateQRPort<MemoryStream> qrGeneratePort
             , ICreateLinkUseCase qrCreatePort
             , IGetLinksUseCase qRsGetPort
@@ -30,7 +32,8 @@
             , ISearchSlugUseCase searchSlugPort
             , IGetLinksOutputPort getLinksOurPort,
             IGetLinkBySlugUseCase getLinkUseCase,
-            IGetLinkBySlugOutputPort getLinkOutputPort)
+            IGetLinkBySlugOutputPort getLinkOutputPort,
+            IUpdateLinkUseCase updateLinkUseCase)
         {
             _generateQRPort = qrGeneratePort;
             _createLinkUseCase = qrCreatePort;
@@ -41,6 +44,7 @@
             _getLinksOutputPort = getLinksOurPort;
             _getLinkBySlugUseCase = getLinkUseCase;
             _getLinkBySlugOutputPort = getLinkOutputPort;
+            _updateLinkUseCase = updateLinkUseCase;
         }
 
         [HttpGet("links")]
@@ -56,6 +60,14 @@
             var result = await _generateQRPort.GenerateQRCodeAsync(generateQr);
             return File(result, "image/png", $"{generateQr.Content}.png");
         }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateLinkAsync(string id, JsonPatchDocument<LinkUpdateDTO> link)
+        {
+            await _updateLinkUseCase.ExecuteAsync(id, link);
+            return Ok();
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> CreateLinkAsync(LinkCreateDTO generateQr)
         {
@@ -64,10 +76,10 @@
             await _createLinkUseCase.ExecuteAsync(generateQr);
             return Created();
         }
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateQRAsync(string id, [FromBody] JsonPatchDocument<QRUpdateDTO> patchDocument)
+        [HttpPatch("qr/{id}")]
+        public async Task<IActionResult> UpdateQRAsync(string id, [FromBody] JsonPatchDocument<QRUpdateDTO> qr)
         {
-            await _updateQRUseCase.ExecuteAsync(id, patchDocument);
+            await _updateQRUseCase.ExecuteAsync(id, qr);
             return Ok();
 
         }
