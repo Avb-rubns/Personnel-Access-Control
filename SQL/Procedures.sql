@@ -102,7 +102,7 @@ BEGIN
 		FROM Links as link
 		LEFT JOIN Clicks as clic on link.ID = clic.LinkId
 		WHERE link.Status in(SELECT Value FROM @Statuses) AND
-		link.Name LIKE '%'+@search+'%'
+		link.Name LIKE '%'+@search+'%' OR link.slug LIKE '%'+@search+'%'
 
 	END
 	ELSE
