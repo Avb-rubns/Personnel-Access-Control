@@ -12,7 +12,7 @@
 
             QRDb findQR = new QRDb() { Id = id };
 
-            var data = await _authDbContextEFC.QRs.FindAsync(findQR);
+            var data = await _authDbContextEFC.QRs.SingleOrDefaultAsync(i => i.Id == id);
 
             if (data is { Id: > 0 })
             {
@@ -43,12 +43,11 @@
                 LastUserID = qr.LastUserID,
             };
 
-            _authDbContextEFC.Entry(qrUpdate).Property(u => u.DotScale).IsModified = true;
-            _authDbContextEFC.Entry(qrUpdate).Property(u => u.ColorDark).IsModified = true;
-            _authDbContextEFC.Entry(qrUpdate).Property(u => u.ColorLight).IsModified = true;
+            _authDbContextEFC.Entry(qrUpdate).Property(u => u.DotScale).IsModified = qr.DotScale is not double.NaN;
+            _authDbContextEFC.Entry(qrUpdate).Property(u => u.ColorDark).IsModified = !string.IsNullOrEmpty(qr.ColorDark);
+            _authDbContextEFC.Entry(qrUpdate).Property(u => u.ColorLight).IsModified = !string.IsNullOrEmpty(qr.ColorLight); ;
             _authDbContextEFC.Entry(qrUpdate).Property(u => u.QuietZone).IsModified = true;
             _authDbContextEFC.Entry(qrUpdate).Property(u => u.LastUserID).IsModified = true;
-
             return await _authDbContextEFC.SaveChangesAsync();
         }
     }

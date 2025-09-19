@@ -1,6 +1,6 @@
 ﻿namespace Rubns.Infrastructure.Persistence.DataModels.DB_Auth.Proyections
 {
-    public class LinkWithClick
+    public class LinkWithClickDb
     {
         public int ID { get; set; }
         public string Name { get; set; }

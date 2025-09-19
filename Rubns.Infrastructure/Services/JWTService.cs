@@ -20,55 +20,37 @@
             return new UserClaim();
         }
 
-        private IEnumerable<Claim> ParseClaimsFromJWT(string jwt)
-        {
-            var payload = jwt.Split('.')[1];
-            var jsonBytes = ParseBase64Withoutpadding(payload);
-            var keyValuesPairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-            List<Claim> result = new();
-            Claim aux;
-            foreach (var data in keyValuesPairs)
-            {
-                if (data.Key == "role")
-                {
-                    var aux_role = data.Value.ToString().Replace("[\"", "");
-                    aux_role = aux_role.Replace("\"]", "");
-                    aux = new Claim("role", aux_role);
-                    result.Add(aux);
-                }
-                else
-                {
-                    aux = new Claim(data.Key, data.Value.ToString());
-                    result.Add(aux);
-                }
-
-            }
-
-            return result;
-        }
-
         private UserClaim ParseUserFromJWT(string jwt)
         {
             UserClaim userInfo = new();
 
+            // Separa el JWT
             var payload = jwt.Split('.')[1];
-            var jsonBytes = ParseBase64Withoutpadding(payload);
-            var keyValuesPairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
 
-            userInfo.Email = keyValuesPairs["email"].ToString();
-            userInfo.FirstName = keyValuesPairs["firstName"].ToString();
-            userInfo.Status = Convert.ToBoolean(keyValuesPairs["status"].ToString());
-            userInfo.ID = Convert.ToInt32(keyValuesPairs["userId"].ToString());
-            userInfo.Expiration = Convert.ToInt64(keyValuesPairs["exp"].ToString());
-            var aux_role = keyValuesPairs["role"].ToString().Replace("[\"", "").Replace("\"]", "");
-            userInfo.Role = aux_role;
+            // Convierte Base64URL a Base64 estándar y decodifica
+            var jsonBytes = ParseBase64WithoutPadding(payload);
+            using var doc = JsonDocument.Parse(jsonBytes);
+            var root = doc.RootElement;
 
+            userInfo.FirstName = root.GetProperty("firstName").GetString();
+            userInfo.Email = root.GetProperty("email").GetString();
+            userInfo.Status = bool.Parse(root.GetProperty("status").GetString());
+            userInfo.FrindlyId = root.GetProperty("userId").GetString();
+            userInfo.FrindlyRolId = root.GetProperty("rolId").GetString();
+            userInfo.Expiration = root.GetProperty("exp").GetInt64();
+
+            // role puede ser un array
+            if (root.TryGetProperty("role", out var roleElement) && roleElement.ValueKind == JsonValueKind.Array)
+            {
+                userInfo.Role = roleElement[0].GetString(); // si siempre hay un solo rol
+            }
 
             return userInfo;
         }
 
-        private byte[] ParseBase64Withoutpadding(string base64)
+        private byte[] ParseBase64WithoutPadding(string base64)
         {
+            base64 = base64.Replace('-', '+').Replace('_', '/');
             switch (base64.Length % 4)
             {
                 case 2: base64 += "=="; break;
@@ -76,5 +58,6 @@
             }
             return Convert.FromBase64String(base64);
         }
+
     }
 }

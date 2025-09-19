@@ -1,12 +1,12 @@
 ﻿namespace Rubns.Infrastructure.Services
 {
-    public class LinkIdService
-        : ILinkIdService
+    public class SqidService
+        : ISqidService
     {
         private readonly SqidsEncoder<int> _sqids;
         private readonly IConfiguration _configuration;
 
-        public LinkIdService(IConfiguration configuration)
+        public SqidService(IConfiguration configuration)
         {
             _configuration = configuration;
             string alpha = _configuration.GetSection("AlphabetSqid").Get<string>();
@@ -22,7 +22,8 @@
 
         public string Encode(int id)
         {
-            return _sqids.Encode(id);
+            int salt = new Random().Next(0, int.MaxValue);
+            return _sqids.Encode(id, salt);
         }
     }
 }

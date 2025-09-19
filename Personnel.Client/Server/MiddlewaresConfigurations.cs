@@ -1,6 +1,4 @@
-﻿using Rubns.WebAPI.Middleware;
-
-namespace Personnel.Client.Server
+﻿namespace Personnel.Client.Server
 {
     internal static class MiddlewaresConfigurations
     {

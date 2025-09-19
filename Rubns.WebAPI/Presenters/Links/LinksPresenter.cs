@@ -19,7 +19,7 @@
                 QR = new QRDTO()
                 {
                     Id = link.QR.FriendlyId,
-                    LinkId = link.QR.FriendlyId,
+                    LinkId = link.QR.FriendlyLinkId,
                     DotScale = link.QR.DotScale,
                     ColorDark = link.QR.ColorDark,
                     ColorLight = link.QR.ColorLight,

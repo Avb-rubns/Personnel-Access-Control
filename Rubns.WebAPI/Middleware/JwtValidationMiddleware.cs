@@ -99,13 +99,13 @@
                                                            || c.Type.Equals("status", StringComparison.OrdinalIgnoreCase)
                                                            || c.Type.Equals("isActive", StringComparison.OrdinalIgnoreCase));
 
-                    var iD = principal.Claims
+                    var id = principal.Claims
                                         .FirstOrDefault(c => c.Type.Equals("userId", StringComparison.OrdinalIgnoreCase));
 
                     var name = principal.Claims
                                         .FirstOrDefault(c => c.Type.Equals("firstName", StringComparison.OrdinalIgnoreCase));
 
-                    userContext.UserId = iD.Value;
+                    userContext.UserId = id.Value.ToString();
                     userContext.Roles = roles;
                     userContext.Status = statusClaim.Value;
                     userContext.Name = name.Value;

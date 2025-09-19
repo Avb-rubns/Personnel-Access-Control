@@ -65,7 +65,7 @@
                 @context.Clicks
             </MudTd>
             <MudTd DataLabel="QR">
-                <MudButton Variant="Variant.Outlined" OnClick="@(async() => { await QREditor(context);})" StartIcon="@Icons.Material.Rounded.QrCode2" IconColor="Color.Error">
+                <MudButton Variant="Variant.Outlined" OnClick="@(async() => { await QRShow(context);})" StartIcon="@Icons.Material.Rounded.QrCode2" IconColor="Color.Error">
                     Ver
                 </MudButton>
             </MudTd>
@@ -75,7 +75,7 @@
             <MudTd >
                 <MudMenu Icon="@Icons.Material.Filled.MoreVert"
                          AriaLabel="Open user menu">
-                    <MudMenuItem Label="Editar" Icon="@Icons.Material.Rounded.Edit" />
+                    <MudMenuItem Label="Editar" Icon="@Icons.Material.Rounded.Edit" OnClick="@(() => Detail(context.Slug))" />
                     <MudDivider/>
                     <MudMenuItem IconColor="Color.Error"
                                  Label="Eliminar"

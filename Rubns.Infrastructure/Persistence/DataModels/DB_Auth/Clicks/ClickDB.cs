@@ -12,7 +12,6 @@
         public string? OS { get; set; }
         public string? Browser { get; set; }
         public string? IpAddress { get; set; }
-
-        public LinkDb Link {  get; set; }
+        public LinkDb Link { get; set; }
     }
 }

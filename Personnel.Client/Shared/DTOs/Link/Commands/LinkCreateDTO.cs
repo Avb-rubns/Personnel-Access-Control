@@ -13,6 +13,6 @@
         public string? Url { get; set; }
         public bool Status { get; set; } = true;
         [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
-        public int UserIDRegistered { get; set; }
+        public string UserIDRegistered { get; set; }
     }
 }

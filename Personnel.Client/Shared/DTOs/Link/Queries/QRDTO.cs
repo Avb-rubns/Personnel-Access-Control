@@ -1,4 +1,4 @@
-﻿namespace Personnel.Client.Shared.DTOs.Link.Commands
+﻿namespace Personnel.Client.Shared.DTOs.Link.Queries
 {
     public class QRDTO
     {
@@ -10,5 +10,6 @@
         public int QuietZone { get; set; }
         public DateTimeOffset LastModificated { get; set; }
         public string LastUserID { get; set; }
+        public string LastUser { get; set; }
     }
 }

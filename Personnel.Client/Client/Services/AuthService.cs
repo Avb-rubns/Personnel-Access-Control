@@ -29,7 +29,7 @@
                         var content = await httpResponse.Content.ReadAsStringAsync();
                         var response = JsonSerializer.Deserialize<UserInfoDTO>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                        if (response is { ID: > 0 })
+                        if (response is { ID: not null })
                         {
                             var claims = CreateClaims(response);
                             var user = new ClaimsPrincipal(claims);
@@ -46,7 +46,7 @@
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
         }
@@ -100,7 +100,7 @@
                     var content = await httpResponse.Content.ReadAsStringAsync();
                     var response = JsonSerializer.Deserialize<UserInfoDTO>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                    if (response is { ID: > 0 })
+                    if (response is { ID: not null })
                     {
                         var claims = CreateClaims(response);
                         return new ClaimsPrincipal(claims);
@@ -117,7 +117,7 @@
         {
             var claims = new List<Claim> {
                         new Claim(ClaimTypes.NameIdentifier, userInfo.ID.ToString()),
-                        new Claim("userId", userInfo.ID.ToString()),
+                        new Claim("userId", userInfo.ID),
                         new Claim(ClaimTypes.Name, userInfo.FirstName),
                         new Claim(ClaimTypes.Email, userInfo.Email),
                         new Claim(ClaimTypes.Expiration, userInfo.Expiration.ToString()),

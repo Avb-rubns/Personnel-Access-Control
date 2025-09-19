@@ -31,7 +31,6 @@
         }
         public string RemoveAccents(string text)
         {
-
             string normalizedString = text.Normalize(NormalizationForm.FormD);
 
             StringBuilder stringBuilder = new StringBuilder();
@@ -47,7 +46,6 @@
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
-
         public string GenerateSlug(string text)
         {
             if (string.IsNullOrEmpty(text))

@@ -1,12 +1,9 @@
-﻿using Personnel.Client.Shared.DTOs.Link.Commands;
-using Personnel.Client.Shared.DTOs.Link.Queries;
-
-namespace Personnel.Client.Client.Components.Link
+﻿namespace Personnel.Client.Client.Components.Link
 {
     public partial class DialogCreateLink
     {
         [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
-        [Parameter] public int UserId { get; set; }
+        [Parameter] public string UserId { get; set; }
 
         [Inject] public IJSRuntime JS { get; set; } = default!;
         [Inject] public IProxy Proxy { get; set; } = default!;
@@ -66,7 +63,7 @@ namespace Personnel.Client.Client.Components.Link
 
                 switch (response.StatusCode)
                 {
-                    case System.Net.HttpStatusCode.OK:
+                    case System.Net.HttpStatusCode.Created:
                         MudDialog.Close(DialogResult.Ok(true));
                         break;
                     case System.Net.HttpStatusCode.BadRequest:

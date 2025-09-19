@@ -9,10 +9,12 @@
         public string Url { get; set; }
         public bool Status { get; set; }
         public DateTimeOffset Registered { get; set; }
-        public int UserID { get; set; }
         public DateTimeOffset LastModificated { get; set; }
         public int LastUserID { get; set; }
         public QRDb QR { get; set; }
         public List<ClickDb> Clicks { get; set; }
+        public UserDb User { get; set; }
+        public UserDb LastUser { get; set; }
+        public int UserID { get; set; }
     }
 }

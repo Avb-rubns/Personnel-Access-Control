@@ -47,7 +47,7 @@ BEGIN
 		link.LastModificated
 	FROM Links as link
 	LEFT JOIN Clicks as clic on link.ID = clic.LinkId
-	INNER JOIN QR as qr on qr.LinkId = link.ID
+	INNER JOIN QRs as qr on qr.LinkId = link.ID
 	INNER JOIN  Users as usrRegisted on usrRegisted.UserID = link.UserID
 	INNER JOIN  Users as usrmodified on usrmodified.UserID = link.LastUserID
 	WHERE link.Status in(SELECT Value FROM @Statuses)
@@ -117,16 +117,17 @@ BEGIN
 		link.Slug,
 		link.Content,
 		link.Url,
-		link.ColorDark,
-		link.ColorLight,
-		link.DotScale,
-		link.QuietZone,
+		qr.ColorDark,
+		qr.ColorLight,
+		qr.DotScale,
+		qr.QuietZone,
 		link.Status,
 		usrRegisted.Name as 'userRegisted',
 		usrmodified.Name as 'userModified',
 		count(clic.id) as 'Clicks'
 	FROM Links as link
 	LEFT JOIN Clicks as clic on link.ID = clic.LinkId
+	inner join QRs as qr on qr.LinkId = link.ID
 	INNER JOIN  Users as usrRegisted on usrRegisted.UserID = link.UserID
 	INNER JOIN  Users as usrmodified on usrmodified.UserID = link.LastUserID
 	WHERE link.Slug = @slug
@@ -136,10 +137,10 @@ BEGIN
 		link.Slug,
 		link.Content,
 		link.Url,
-		link.ColorDark,
-		link.ColorLight,
-		link.DotScale,
-		link.QuietZone,
+		qr.ColorDark,
+		qr.ColorLight,
+		qr.DotScale,
+		qr.QuietZone,
 		link.Status,
 		link.Registered,
 		link.LastModificated,
@@ -162,6 +163,7 @@ BEGIN
 		,LevelPermission
 		,usr.Status
 		,Phone
+		,usr.Registed
     FROM Users as usr
 	INNER JOIN Rols as rol on usr.RolID = rol.RolID
     WHERE 
@@ -183,6 +185,7 @@ BEGIN
 		,LevelPermission
 		,usr.Status
 		,Phone
+		,usr.Registed
     FROM Users as usr
 	INNER JOIN Rols as rol on usr.RolID = rol.RolID
     WHERE 
@@ -229,6 +232,7 @@ BEGIN
 		,Value
 		,LevelPermission
 		,usr.Status
+		,usr.Registed
     FROM Users as usr
 	INNER JOIN Rols as rol on usr.RolID = rol.RolID
     WHERE 
@@ -401,7 +405,7 @@ BEGIN
 
 	SELECT @Result AS Result;
 END
-goGO
+go
 IF OBJECT_ID(N'p_InsertCheckOutPersonal', N'P') IS NOT NULL
     DROP PROCEDURE p_InsertCheckOutPersonal;
 GO

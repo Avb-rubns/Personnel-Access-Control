@@ -1,7 +1,4 @@
-﻿using Personnel.Client.Shared.DTOs.Link.Commands;
-using Personnel.Client.Shared.DTOs.Link.Queries;
-
-namespace Personnel.Client.Client.Pages.Link
+﻿namespace Personnel.Client.Client.Pages.Link
 {
     public partial class CreateQR
     {
@@ -37,7 +34,7 @@ namespace Personnel.Client.Client.Pages.Link
 
                     var id = user.Claims
                                         .FirstOrDefault(c => c.Type.Equals("userId", StringComparison.OrdinalIgnoreCase));
-                    model.UserIDRegistered = int.TryParse(id.Value, out int idUser) ? idUser : 0;
+                    model.UserIDRegistered = id.Value;
                 }
 
                 await JS.InvokeVoidAsync("createQR", "qrcode", qrCode);

@@ -43,11 +43,13 @@
                 { "iss", Configuration["JWT:Issuer"] },
                 { "validAudience", Configuration["JWT:Audience"] },
                 { "iat", DateTimeOffset.UtcNow.ToUnixTimeSeconds() },
-                { "exp", DateTimeOffset.UtcNow.AddMinutes(Convert.ToInt64(Configuration["JWT:Expiration"])).ToUnixTimeSeconds() },
+                { "exp", DateTimeOffset.UtcNow.AddMinutes
+                    (Convert.ToInt64(Configuration["JWT:Expiration"])).ToUnixTimeSeconds() },
                 { "role", new List<string> { user.RolName } },
                 { "levelPermission", user.LevelPermission.ToString() },
                 { "status", user.Status.ToString() },
-                { "userId", user.UserId }
+                { "userId", user.FriendlyUserId },
+                { "rolId", user.FriendlyRolId }
             };
             if (Configuration["Enviroment"] == "dev")
             {

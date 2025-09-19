@@ -39,32 +39,43 @@ function downloadQRcode(id, name) {
     link.click();
 }
 
-//function shareQRCode(id) {
-//    // Verifica si la API de Web Share está disponible en el navegador.
-//    if (navigator.share) {
+window.shareHelper = {
+    shareQR: async function (id, title, text, name) {
+        try {
 
-//        console.log('Web Share es compatible en este navegador.');
-//        // Configura los datos que se van a compartir.
-//        const shareData = {
-//            title: 'Mi increíble sitio web',
-//            text: 'Echa un vistazo a este sitio web que encontré!',
-//            url: 'https://www.ejemplo.com',
-//        };
+            const element = document.getElementById(id);
+            if (!element) {
+                return false;
+            }
+            let canvas = element.querySelector('canvas');
+            if (!canvas) {
+                return;
+            }
 
-//        try {
-//            // Intenta compartir.
-//            await navigator.share(shareData);
-//            console.log('Contenido compartido con éxito.');
-//        } catch (err) {
-//            // Maneja errores, como cuando el usuario cancela.
-//            console.error('Error al compartir:', err);
-//       }
-//    } else {
-//        // Si la API no está disponible, proporciona una alternativa.
-//       // Por ejemplo, mostrar un modal con enlaces a redes sociales.
-//        console.log('Web Share no es compatible en este navegador.');
-//    }
-//}
+            // Convertir canvas a blob
+            const dataUrl = canvas.toDataURL("image/png");
+            const response = await fetch(dataUrl);
+            const blob = await response.blob();
+            const file = new File([blob], name, { type: "image/png" });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    title: title,
+                    text: text,
+                    files: [file]
+                });
+                return true;
+            } else {
+                console.warn("Web Share API no soporta archivos en este navegador.");
+                return false;
+            }
+        } catch (err) {
+            console.error("Error al compartir canvas:", err);
+            return false;
+        }
+    }
+};
+
 
 function width(){
     return window.innerWidth

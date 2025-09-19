@@ -6,18 +6,21 @@
         private readonly IUserRepositoryDapper _logInRepository;
         private readonly ILogInService _logInService;
         private readonly ILogger _logger;
+        private readonly ISqidService _sqidService;
         private readonly IRefreshJWTOutputPort _refreshJWTOutPort;
 
         public RefreshJWTUseCase(ISessionUserRepositoryEFC sessionUserRepository,
             IUserRepositoryDapper logInRepository,
             ILogInService logInService,
             ILogger logger,
+            ISqidService sqidService,
             IRefreshJWTOutputPort refreshJWTOutPort)
         {
             _sessionUserRepository = sessionUserRepository;
             _logInRepository = logInRepository;
             _logInService = logInService;
             _logger = logger;
+            _sqidService = sqidService;
             _refreshJWTOutPort = refreshJWTOutPort;
         }
         public async Task ExecuteAsync(string refreshRequest)
@@ -40,7 +43,8 @@
                     _logger.Information("El usuario:{0} no existe.", session.ID);
                     throw new ArgumentException("Los datos proporcionados no son correctos.");
                 }
-
+                user.FriendlyUserId = _sqidService.Encode(user.UserId);
+                user.FriendlyRolId = _sqidService.Encode(user.RolId);
                 var newJwt = _logInService.CreateJWT(user);
 
                 long expiration = new DateTimeOffset(session.Expiration, nzTimeZone.GetUtcOffset(session.Expiration)).ToUnixTimeSeconds();

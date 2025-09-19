@@ -2,6 +2,6 @@
 {
     public interface IDeleteLinkUseCase
     {
-        Task ExecuteAsync(int id);
+        Task ExecuteAsync(string id);
     }
 }

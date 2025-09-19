@@ -53,8 +53,12 @@
                 e.Property(p => p.LastModificated)
                 .HasDefaultValueSql("SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)'")
                 .ValueGeneratedOnAdd();
+                e.ToTable(link => link.HasTrigger("trg_UpdateLastModificated_Links"));
                 e.HasOne(link => link.QR).WithOne(qr => qr.Link).HasForeignKey<QRDb>(qr => qr.LinkId);
                 e.HasMany(click => click.Clicks).WithOne(link => link.Link).HasForeignKey(link => link.LinkId);
+                e.HasOne(user => user.User).WithMany().HasForeignKey(link => link.UserID);
+                e.HasOne(user => user.LastUser).WithMany().HasForeignKey(link => link.LastUserID);
+
             });
 
             modelBuilder.Entity<QRDb>(e =>
@@ -78,6 +82,8 @@
                 e.Property(p => p.LastModificated)
                 .HasDefaultValueSql("SYSDATETIMEOFFSET() AT TIME ZONE 'Central Standard Time (Mexico)'")
                 .ValueGeneratedOnAdd();
+                e.ToTable(qr => qr.HasTrigger("trg_UpdateLastModificated_QRs"));
+                e.HasOne(user => user.User).WithMany().HasForeignKey(qr => qr.LastUserID);
             });
 
             modelBuilder.Entity<ClickDb>(e =>

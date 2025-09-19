@@ -1,0 +1,42 @@
+﻿.card-skeleton {
+    border: 1px solid #eee;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 150px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.skeleton-text {
+    height: 15px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.skeleton-text-long {
+    width: 80%; /* Example for a longer line of text */
+}
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton-image,
+.skeleton-text {
+    background: linear-gradient(90deg, #e0e0e0 8%, #f0f0f0 18%, #e0e0e0 33%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+}

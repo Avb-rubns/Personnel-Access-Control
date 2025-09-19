@@ -3,7 +3,9 @@
     public class Click
     {
         public int ID { get; set; }
+        public string FriendlyId { get; set; }
         public int LinkId { get; set; }
+        public string FriendlyLinkId { get; set; }
         public DateTimeOffset ClickedAt { get; set; }
         public string? Country { get; set; }
         public string? Region { get; set; }

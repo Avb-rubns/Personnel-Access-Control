@@ -1,0 +1,32 @@
+﻿.link-header-container
+{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+}
+.link-header-btn {
+    display: flex;
+    justify-content: space-between;
+}
+.link-qr-seccion-code {
+    display: grid;
+    place-content: center;
+    padding:1rem;
+    width:100%;
+}
+.link-loader-container {
+    display: grid;
+    grid-template-rows: 5dvh 80dvh;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+@media (width <= 550px) {
+    .link-header-container {
+        display: flex;
+        flex-direction: column;
+        text-align:center;
+        align-items:normal;
+    }
+}

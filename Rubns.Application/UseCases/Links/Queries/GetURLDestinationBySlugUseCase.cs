@@ -32,7 +32,7 @@
             catch (Exception e)
             {
                 _logger.Error(e, "Error SearchLinkforSlug", e.Message);
-
+                throw;
             }
 
         }

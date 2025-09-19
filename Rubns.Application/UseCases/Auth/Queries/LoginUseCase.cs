@@ -9,13 +9,15 @@
         private readonly IConfiguration _configuration;
         private readonly ISessionUserRepositoryEFC _sessionUserRepository;
         private readonly ILoginOutputPort _logInOutPort;
+        private readonly ISqidService _sqidService;
         public LogInUseCase(IEncryptionService encryptionService,
             IUserRepositoryDapper logInRepository,
             ILogInService logInService,
             ILogger logger,
             ISessionUserRepositoryEFC sessionUserRepository,
             IConfiguration configuration,
-            ILoginOutputPort logInOutPort)
+            ILoginOutputPort logInOutPort,
+            ISqidService sqidService)
         {
             _encryptionService = encryptionService;
             _logInRepository = logInRepository;
@@ -24,6 +26,7 @@
             _sessionUserRepository = sessionUserRepository;
             _configuration = configuration;
             _logInOutPort = logInOutPort;
+            _sqidService = sqidService;
         }
 
         public async Task ExecuteAsync(LoginRequestDTO login)
@@ -49,7 +52,8 @@
                 {
                     throw new LoginException("Credenciales incorrectas o usuario no registrado.", "Datos incorrectos");
                 }
-
+                user.FriendlyUserId = _sqidService.Encode(user.UserId);
+                user.FriendlyRolId = _sqidService.Encode(user.RolId);
                 JWT = _logInService.CreateJWT(user);
                 RefreshToken = _logInService.CreateRefreshToken();
                 if (JWT is null && string.IsNullOrEmpty(RefreshToken))

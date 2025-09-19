@@ -8,11 +8,13 @@
         [Inject] public IJSRuntime JS { get; set; } = default!;
         [Inject] public ISnackbar Snackbar { get; set; } = default!;
         [Inject] public Utils Utils { get; set; } = default!;
+        [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+
 
         private MudTable<LinkDTO> _table { get; set; } = new();
         private List<LinkDTO> _links { get; set; } = new();
         private int totalItems;
-        private int _userID = default!;
+        private string _userID = default!;
         private string _filter = "all";
 
         private readonly DialogOptions dialogOptions = new()
@@ -28,7 +30,7 @@
                     var user = authState?.User;
 
                     var id = user.Claims.FirstOrDefault(c => c.Type.Equals("userId", StringComparison.OrdinalIgnoreCase));
-                    _userID = int.TryParse(id.Value, out int idUser) ? idUser : 0;
+                    _userID = id.Value;
                 }
             }
         }
@@ -83,7 +85,7 @@
                 await _table.ReloadServerData();
             }
         }
-        private async Task QREditor(LinkDTO link)
+        private async Task QRShow(LinkDTO link)
         {
             QRCode qrCode = new()
             {
@@ -98,7 +100,7 @@
                 QuietZone = link.QR.QuietZone,
 
             };
-            var parameters = new DialogParameters<DialogQREditor>
+            var parameters = new DialogParameters<DialogQRShow>
             {
                 {x => x.link, link},
                 {x => x.qrCode, qrCode}
@@ -107,7 +109,7 @@
             int width = await JS.InvokeAsync<int>("width");
 
 
-            var dialog = await Dialog.ShowAsync<DialogQREditor>("Editor", parameters, width < 550 ? _fullScreen : dialogOptions);
+            var dialog = await Dialog.ShowAsync<DialogQRShow>("Show", parameters, dialogOptions);
             var result = await dialog.Result;
             if (!result.Canceled)
             {
@@ -120,7 +122,7 @@
 
             var parameters = new DialogParameters<DialogConfirmDelete>
             {
-                {x => x.Message, $"Eliminar Link{link.Name}"},
+                {x => x.Message, $"Eliminar enlace: {link.Name}"},
             };
 
 
@@ -132,12 +134,12 @@
                 switch (delete.StatusCode)
                 {
                     case HttpStatusCode.OK:
-                        Snackbar.Add("Link eliminado", severity: Severity.Success);
+                        Snackbar.Add("Enlace eliminado", severity: Severity.Success);
                         await _table.ReloadServerData();
                         StateHasChanged();
                         break;
                     case HttpStatusCode.NotFound:
-                        Snackbar.Add("Error al eliminar link", severity: Severity.Error);
+                        Snackbar.Add("El enlace ya no existe.", severity: Severity.Error);
                         break;
                     default:
                         Snackbar.Add(delete.Message, severity: Severity.Warning);
@@ -146,7 +148,6 @@
 
             }
         }
-
         private async Task ClipboardCopy(string url)
         {
             var result = await JS.InvokeAsync<bool>("copyText", url);
@@ -157,11 +158,16 @@
             }
             else { Snackbar.Add("Su equipo no permite copiar al portapapeles", severity: Severity.Error); }
         }
-
         private async Task UpdateFilter(string mudSelect)
         {
             _filter = mudSelect;
             await _table.ReloadServerData();
+        }
+
+        private void Detail(string slug)
+        {
+
+            NavigationManager.NavigateTo($"link/{slug}");
         }
 
     }

@@ -2,8 +2,8 @@
 {
     public class ClickDTO
     {
-        public int ID { get; set; }
-        public int LinkId { get; set; }
+        public string ID { get; set; }
+        public string LinkId { get; set; }
         public DateTimeOffset ClickedAt { get; set; }
         public string Country { get; set; }
         public string Region { get; set; }

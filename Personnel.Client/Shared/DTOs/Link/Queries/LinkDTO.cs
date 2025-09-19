@@ -2,17 +2,18 @@
 {
     public class LinkDTO
     {
+        [Required]
         public string ID { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string Slug { get; set; }
+        [Required]
         public string Content { get; set; }
         public string Url { get; set; }
         public QRDTO QR { get; set; }
         public bool Status { get; set; }
         public DateTimeOffset Registered { get; set; }
-        public string UserRegistered { get; set; }
-        public DateTimeOffset LastModificated { get; set; }
-        public string UserLastModificated { get; set; }
         public int Clicks { get; set; }
 
     }

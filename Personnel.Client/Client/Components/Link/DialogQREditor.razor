@@ -73,7 +73,8 @@
                             </ChildContent>
 
                         </MudExpansionPanel>
-                </MudExpansionPanels>    
+                </MudExpansionPanels>
+                    
                     <MudPaper Class="mt-4 d-flex justify-content-end g-5" Elevation="0">
                         <MudButton Variant="Variant.Filled"
                                    Color="Color.Secondary"
@@ -124,6 +125,11 @@
                         </MudTooltip>
                     </MudPaper>
                 </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="12">
+                    <MudText Typo="Typo.body2">
+                        Ultima modificacion por: @link.QR.LastUser el @link.QR.LastModificated.ToString("dd/MM/yyy")
+                    </MudText>
             </MudItem>
         </MudGrid>
         </EditForm>

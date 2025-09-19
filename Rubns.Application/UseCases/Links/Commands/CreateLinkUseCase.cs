@@ -1,11 +1,10 @@
-﻿using Personnel.Client.Shared.DTOs.Link.Commands;
-
-namespace Rubns.Application.UseCases.Links.Commands
+﻿namespace Rubns.Application.UseCases.Links.Commands
 {
     internal class CreateLinkUseCase(ILinkRepositoryEFC repositoryEFC,
         ILogger logger,
         ISlugHelper slugHelper,
-        LinkBuilder linkBuilder)
+        LinkBuilder linkBuilder,
+        ISqidService sqidService)
         : ICreateLinkUseCase
 
     {
@@ -13,6 +12,7 @@ namespace Rubns.Application.UseCases.Links.Commands
         private readonly LinkBuilder _linkBuilder = linkBuilder;
         private readonly ILogger _logger = logger;
         private readonly ISlugHelper _slugHelper = slugHelper;
+        private readonly ISqidService _sqidService = sqidService;
 
         public async Task ExecuteAsync(LinkCreateDTO createDTO)
         {
@@ -40,8 +40,8 @@ namespace Rubns.Application.UseCases.Links.Commands
                                .WithContent(createDTO.Content)
                                .WithURL(createDTO.Url)
                                .WithStatus(createDTO.Status)
-                               .WithUserIdRegisted(createDTO.UserIDRegistered)
-                               .WithUserLastIdModificated(createDTO.UserIDRegistered)
+                               .WithUserIdRegisted(_sqidService.Decode(createDTO.UserIDRegistered))
+                               .WithUserLastIdModificated(_sqidService.Decode(createDTO.UserIDRegistered))
                                .Build();
 
                 await _repositoryEFC.AddAsync(create);

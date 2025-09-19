@@ -1,6 +1,4 @@
-﻿using Rubns.Application.Interface.Auth.Queries;
-
-namespace Rubns.WebAPI.Presenters.Auth
+﻿namespace Rubns.WebAPI.Presenters.Auth
 {
     internal sealed class UserInformationPresenter : IGetUserInformationOutputPort
     {
@@ -13,9 +11,9 @@ namespace Rubns.WebAPI.Presenters.Auth
                 FirstName = userClaim.FirstName,
                 Email = userClaim.Email,
                 Phone = userClaim.Phone,
-                ID = userClaim.ID,
+                ID = userClaim.FrindlyId,
                 Role = userClaim.Role,
-                RolID = userClaim.RolID,
+                RolID = userClaim.FrindlyRolId,
                 Status = userClaim.Status,
                 Expiration = userClaim.Expiration,
             };

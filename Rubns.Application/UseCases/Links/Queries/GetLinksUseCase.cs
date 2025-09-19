@@ -3,7 +3,7 @@
     internal class GetLinksUseCase(ILinkRepositoryDapper linkRepositoryDapper
         , ILinkRepositoryEFC linkRepositoryEFC
         , ILogger logger
-        , ILinkIdService linkIdService
+        , ISqidService linkIdService
         , IGetLinksOutputPort getLinksOurPort)
         : IGetLinksUseCase
     {
@@ -13,7 +13,7 @@
         private readonly ILogger _logger = logger;
         private readonly ILinkRepositoryEFC _linkRepositoryEFC = linkRepositoryEFC;
         private readonly IGetLinksOutputPort _getLinksOurPort = getLinksOurPort;
-        private readonly ILinkIdService _linkIdService = linkIdService;
+        private readonly ISqidService _linkIdService = linkIdService;
         public async Task ExecuteAsync(int page, int pagesize, string filter)
         {
             try
@@ -44,6 +44,7 @@
                     {
                         s.FriendlyId = _linkIdService.Encode(s.ID);
                         s.QR.FriendlyId = _linkIdService.Encode(s.QR.Id);
+                        s.QR.FriendlyLinkId = s.FriendlyId;
                         s.QR.FriendLastUserID = _linkIdService.Encode(s.QR.LastUserID);
                     });
                 }

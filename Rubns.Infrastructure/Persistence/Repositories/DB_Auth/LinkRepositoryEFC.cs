@@ -81,8 +81,11 @@
                 link.ID = id;
                 link.Name = data.Name;
                 link.Slug = data.Slug;
+                link.Content = data.Content;
                 link.Url = data.Url;
                 link.Status = data.Status;
+                link.UserIdRegistered = data.UserID;
+                link.UserLastIdModificated = data.LastUserID;
                 link.Registered = data.Registered;
             }
 
@@ -93,8 +96,13 @@
         {
             Link link = new();
 
-            var data = await _context.Links.AsNoTracking()
-                            .SingleOrDefaultAsync(i => i.Slug == slug);
+            var data = await _context.Links
+                .AsNoTracking()
+                .Include(qr => qr.QR).ThenInclude(userLast => userLast.User)
+                .Include(click => click.Clicks)
+                .Include(user => user.User)
+                .Include(lastUser => lastUser.LastUser)
+                .SingleOrDefaultAsync(i => i.Slug == slug);
 
             if (data is { ID: > 0 })
             {
@@ -108,6 +116,34 @@
                 link.LastModificated = data.LastModificated;
                 link.UserIdRegistered = data.UserID;
                 link.UserLastIdModificated = data.LastUserID;
+                link.UserRegistered = data.User.Name;
+                link.UserLastModificated = data.LastUser.Name;
+                link.QR = new QR()
+                {
+                    Id = data.QR.Id,
+                    LinkId = data.QR.LinkId,
+                    DotScale = data.QR.DotScale,
+                    ColorDark = data.QR.ColorDark,
+                    ColorLight = data.QR.ColorLight,
+                    QuietZone = data.QR.QuietZone,
+                    LastModificated = data.QR.LastModificated,
+                    LastUserID = data.QR.LastUserID,
+                    LastUser = data.QR.User.Name,
+                };
+                link.Clicks = data.Clicks.Select(clic => new Click()
+                {
+                    ID = clic.ID,
+                    LinkId = clic.LinkId,
+                    ClickedAt = clic.ClickedAt,
+                    Country = clic.Country,
+                    Region = clic.Region,
+                    City = clic.City,
+                    DeviceType = clic.DeviceType,
+                    OS = clic.OS,
+                    Browser = clic.Browser,
+                    IpAddress = clic.IpAddress
+
+                }).ToList();
             }
 
 
@@ -117,14 +153,13 @@
         public async Task<List<LinkWithCountClick>> GetLinkWithClickByPaginationAsync(int page, int pageSize, string filter)
         {
             List<LinkWithCountClick> links = new();
-            IEnumerable<LinkWithClick> data;
+            IEnumerable<LinkWithClickDb> data;
 
             if (filter.Equals("all"))
             {
                 data = await _context.Links
                             .AsNoTracking()
-                            .Include(link => link.QR)
-                            .Select(link => new LinkWithClick
+                            .Select(link => new LinkWithClickDb
                             {
                                 ID = link.ID,
                                 Name = link.Name,
@@ -150,9 +185,8 @@
                 bool status = filter.Equals("true") ? true : false;
                 data = await _context.Links
                         .AsNoTracking()
-                        .Include(i => i.QR)
                         .Where(i => i.Status == status)
-                        .Select(link => new LinkWithClick
+                        .Select(link => new LinkWithClickDb
                         {
                             ID = link.ID,
                             Name = link.Name,

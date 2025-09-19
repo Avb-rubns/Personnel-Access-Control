@@ -32,6 +32,8 @@
                     result.LevelPermission = user.LevelPermission;
                     result.Status = user.Status;
                     result.Phone = user.Phone;
+                    result.Registed = user.Registed;
+                    result.RolId = user.RolId;
                 }
 
             }
@@ -65,6 +67,8 @@
                     result.RolName = user.Value;
                     result.LevelPermission = user.LevelPermission;
                     result.Status = user.Status;
+                    result.Registed = user.Registed;
+                    result.RolId = user.RolId;
 
                 }
 
@@ -100,6 +104,8 @@
                     result.LevelPermission = user.LevelPermission;
                     result.Status = user.Status;
                     result.Phone = user.Phone;
+                    result.RolId = user.RolId;
+                    result.Registed = user.Registed;
                 }
 
             }

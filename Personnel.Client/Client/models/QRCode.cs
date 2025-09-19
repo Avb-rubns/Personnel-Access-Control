@@ -7,6 +7,8 @@
         public string PI { get; set; } = "#000000";
         public string PO { get; set; } = "#000000";
         public string ColorLight { get; set; } = "#FFFFFF";
+        public int Width { get; set; } = 256;
+        public int Height { get; set; } = 256;
 
         public double DotScale { get; set; } = 1.0;
         public double DotScaleTiming { get; set; } = 1.0;

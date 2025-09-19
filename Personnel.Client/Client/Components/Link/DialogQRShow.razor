@@ -1,0 +1,33 @@
+﻿<MudDialog ContentClass="dialog-editor-container">
+    <TitleContent>
+        <MudText Typo="Typo.body2">Enlaces > QR</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" sm="12">
+                <MudPaper Class="pa-2" Elevation="0">
+                    <section id="qrcode" class="editor-qr-seccion-code-show" />
+                    <MudPaper Elevation="0" Class="d-flex justify-center gap-3 mt-3">
+                        <MudTooltip Text="Descargar">
+                            <MudFab StartIcon="@Icons.Material.Filled.Download"
+                                           Label="Descargar"
+                                           Size="Size.Small"
+                                           IconSize="Size.Small"
+                                           OnClick="DownloadQrCode"
+                                           Color="Color.Primary" />
+                        </MudTooltip>
+                        <MudTooltip Text="@Resource.CreateQrBtnShare">
+                            <MudFab StartIcon="@Icons.Material.Filled.Share"
+                                           Label="Compartir"
+                                           IconSize="Size.Small"
+                                           Size="Size.Small"
+                                           OnClick="ShareQrCode"
+                                           Color="Color.Info" />
+                        </MudTooltip>
+
+                    </MudPaper>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+</MudDialog>

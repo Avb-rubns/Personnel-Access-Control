@@ -10,6 +10,7 @@
         public int QuietZone { get; set; }
         public DateTimeOffset LastModificated { get; set; }
         public int LastUserID { get; set; }
+        public UserDb User { get; set; }
         public LinkDb Link { get; set; }
     }
 }

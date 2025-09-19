@@ -3,7 +3,7 @@
     public partial class DialogQREditor
     {
         [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
-        [Parameter] public LinkDTO link { get; set; }
+        [Parameter] public LinkDetailDTO link { get; set; }
         [Parameter] public QRCode qrCode { get; set; } = new();
         [Inject] public IJSRuntime JS { get; set; } = default!;
         [Inject] public IProxy Proxy { get; set; } = default!;
@@ -37,14 +37,14 @@
             _processing = true;
             try
             {
-                QRDTO qr = new()
+                QRUpdateDTO qr = new()
                 {
-                    ColorDark = qrCode.ColorDark,
-                    ColorLight = qrCode.ColorLight,
+                    ColorDark = _backUp.ColorDark != qrCode.ColorDark ? qrCode.ColorDark : null,
+                    ColorLight = _backUp.ColorLight != qrCode.ColorLight ? qrCode.ColorLight : null,
                     QuietZone = qrCode.QuietZone,
-                    DotScale = qrCode.DotScale,
+                    DotScale = _backUp.DotScale != qrCode.DotScale ? qrCode.DotScale : double.NaN,
                 };
-                var response = await Proxy.PatchAsync<Response, QRDTO>($"api/v1/link/{link.ID}", qr);
+                var response = await Proxy.PatchAsync<Response, QRUpdateDTO>($"api/v1/link/{link.QR.Id}", qr);
                 switch (response.StatusCode)
                 {
                     case HttpStatusCode.OK:
@@ -121,7 +121,7 @@
             {
                 return;
             }
-            await JS.InvokeVoidAsync("shareQRCode", "qrcode");
+            await JS.InvokeAsync<bool>("shareHelper.shareQR", "qrcode", "Mi dibujo", "Mira lo que hice en Blazor 😎", $"{link.Name}.png");
         }
         private async Task ResetQrCode()
         {

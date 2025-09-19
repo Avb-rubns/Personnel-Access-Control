@@ -1,6 +1,4 @@
-﻿using Personnel.Client.Shared.DTOs.Link.Commands;
-
-namespace Rubns.WebAPI.Controllers.V1
+﻿namespace Rubns.WebAPI.Controllers.V1
 {
     [ApiController]
     [ApiVersion("1.0")]
@@ -8,13 +6,19 @@ namespace Rubns.WebAPI.Controllers.V1
     [RoleAndStatusAuth("Administrador,root")]
     public class LinkController : ControllerBase
     {
+        private readonly IGenerateQRPort<MemoryStream> _generateQRPort;
+
         private readonly IGetLinksUseCase _getLinksUseCase;
         private readonly IGetLinksOutputPort _getLinksOutputPort;
-        private readonly IGenerateQRPort<MemoryStream> _generateQRPort;
+
         private readonly ICreateLinkUseCase _createLinkUseCase;
+
         private readonly IUpdateQRUseCase _updateQRUseCase;
+
         private readonly IDeleteLinkUseCase _deleteLinkUseCase;
+
         private readonly ISearchSlugUseCase _searchSlugUseCase;
+
         private readonly IGetLinkBySlugUseCase _getLinkBySlugUseCase;
         private readonly IGetLinkBySlugOutputPort _getLinkBySlugOutputPort;
 
@@ -61,14 +65,14 @@ namespace Rubns.WebAPI.Controllers.V1
             return Created();
         }
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateQRAsync(int id, [FromBody] JsonPatchDocument<QRDTO> patchDocument)
+        public async Task<IActionResult> UpdateQRAsync(string id, [FromBody] JsonPatchDocument<QRUpdateDTO> patchDocument)
         {
             await _updateQRUseCase.ExecuteAsync(id, patchDocument);
             return Ok();
 
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLinkAsync(int id)
+        public async Task<IActionResult> DeleteLinkAsync(string id)
         {
             await _deleteLinkUseCase.ExecuteAsync(id);
             return Ok();
