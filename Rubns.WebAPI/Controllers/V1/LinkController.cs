@@ -48,9 +48,9 @@
         }
 
         [HttpGet("links")]
-        public async Task<IActionResult> GetQrsAsync(int? page = 1, int? pageSize = 10, string? filter = "all")
+        public async Task<IActionResult> GetQrsAsync(int? page = 1, int? pageSize = 10, string? filter = "all", string? search = "")
         {
-            await _getLinksUseCase.ExecuteAsync(page.Value, pageSize.Value, filter);
+            await _getLinksUseCase.ExecuteAsync(page.Value, pageSize.Value, filter, search);
             var links = _getLinksOutputPort.Result;
             return links?.Links.Count > 0 ? Ok(links) : NoContent();
         }

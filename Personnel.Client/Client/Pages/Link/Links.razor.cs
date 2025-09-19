@@ -16,6 +16,7 @@
         private int totalItems;
         private string _userID = default!;
         private string _filter = "all";
+        private string _search = string.Empty;
 
         private readonly DialogOptions dialogOptions = new()
         { BackdropClick = false, MaxWidth = MaxWidth.Medium, FullWidth = true };
@@ -37,7 +38,7 @@
         private async Task<TableData<LinkDTO>> ServerReload(TableState state, CancellationToken token)
         {
             int page = state.Page == 0 ? 1 : state.Page;
-            var data = await Proxy.GetAsync<ResponseData<LinksDTO>>($"/api/v1/link/links?page={page}&pageSize={state.PageSize}&filter={_filter}");
+            var data = await Proxy.GetAsync<ResponseData<LinksDTO>>($"/api/v1/link/links?page={page}&pageSize={state.PageSize}&filter={_filter}&search={_search}");
             switch (data.StatusCode)
             {
                 case HttpStatusCode.OK:
@@ -169,6 +170,13 @@
 
             NavigationManager.NavigateTo($"link/{slug}");
         }
+
+        private async Task OnSearch(string text)
+        {
+            _search = text;
+            await _table.ReloadServerData();
+        }
+
 
     }
 }

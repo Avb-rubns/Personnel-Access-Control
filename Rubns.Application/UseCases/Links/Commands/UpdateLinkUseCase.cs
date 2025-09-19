@@ -35,6 +35,7 @@
                     ID = IdDecode,
                     Name = LinkUpdate.Name != LinEdit.Name ? LinEdit.Name : string.Empty,
                     Content = LinkUpdate.Content != LinEdit.Content ? LinEdit.Content : string.Empty,
+                    UserLastIdModificated = UserId
                 };
                 if (!string.IsNullOrWhiteSpace(LinEdit.Slug)
                     &&

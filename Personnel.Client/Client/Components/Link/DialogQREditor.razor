@@ -1,12 +1,17 @@
 ﻿<MudDialog ContentClass="dialog-editor-container">
     <TitleContent>
-        <MudText Typo="Typo.body2">Enlaces > QR editor</MudText>
+        <MudText Typo="Typo.body2"><strong>Enlaces > QR editor</strong> </MudText>
     </TitleContent>
     <DialogContent>
-        <EditForm Model="qrCode" >
+        <EditForm EditContext="_editContext" OnValidSubmit="UpdataQRAsync">
             <DataAnnotationsValidator/>
             <MudGrid>
                 <MudItem xs="12" sm="6">
+                    @if (!_checkContrast)
+                    {
+                        <MudAlert Severity="Severity.Warning" Dense="true" Class="rounded-0 rounded-t">Los colores del qr no cumple accesibilidad mínima</MudAlert>
+                        
+                    }
                 <MudExpansionPanels MultiExpansion="true">
                         <MudExpansionPanel @bind-Expanded="_openPanel1" Disabled="_processing">
                             <TitleContent>
@@ -56,6 +61,7 @@
                                            Value="qrCode.DotScale"
                                            Color="Color.Info"
                                            TickMarks="true"
+                                           Immediate="true"
                                            ValueChanged="UpdateSliderDot">
                                     @qrCode.DotScale.ToString()
                                 </MudSlider>
@@ -65,6 +71,7 @@
                                            Max="50"
                                            Value="qrCode.QuietZone"
                                            Step="1"
+                                           Immediate="true"
                                            TickMarks="true"
                                            ValueChanged="@(UpdateSliderPaper)"
                                            Color="Color.Info">
@@ -75,19 +82,18 @@
                         </MudExpansionPanel>
                 </MudExpansionPanels>
                     
-                    <MudPaper Class="mt-4 d-flex justify-content-end g-5" Elevation="0">
+                    <MudPaper Class="mt-4 d-flex justify-content-end" Style="gap:1rem;" Elevation="0">
                         <MudButton Variant="Variant.Filled"
                                    Color="Color.Secondary"
-                                   Class="ms-2"
                                    ButtonType="ButtonType.Reset"
+                                   FullWidth="@(Width <= 550)"
                                    OnClick="Cancel">
                             <MudText>Cancelar</MudText>
                         </MudButton>
                         <MudButton Color="Color.Primary"
-                                   Disabled="_processing"
+                                   Disabled="_change"
                                    Variant="Variant.Filled"
-                                   Class="ms-2 w-20"
-                                   OnClick="UpdataQRAsync"
+                                   FullWidth="@(Width <= 550)"
                                    ButtonType="ButtonType.Submit">
                             @if (_processing)
                             {

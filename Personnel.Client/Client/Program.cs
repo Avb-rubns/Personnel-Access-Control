@@ -13,6 +13,7 @@ builder.Services.TryAddScoped<AuthenticationStateProvider, AuthService>();
 builder.Services.TryAddScoped<AuthService>();
 builder.Services.TryAddScoped<Utils>();
 builder.Services.TryAddScoped<PublicRoutesService>();
+builder.Services.TryAddScoped<ContrastChecker>();
 builder.Services.TryAddScoped<IProxy, Proxy>();
 
 await builder.Build().RunAsync();

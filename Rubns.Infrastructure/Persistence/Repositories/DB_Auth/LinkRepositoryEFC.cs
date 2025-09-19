@@ -150,42 +150,25 @@
             return link;
         }
 
-        public async Task<List<LinkWithCountClick>> GetLinkWithClickByPaginationAsync(int page, int pageSize, string filter)
+        public async Task<List<LinkWithCountClick>> GetLinkWithClickByPaginationAsync(int page, int pageSize,
+            string filter, string? search)
         {
             List<LinkWithCountClick> links = new();
-            IEnumerable<LinkWithClickDb> data;
 
-            if (filter.Equals("all"))
+
+            var query = _context.Links.AsNoTracking();
+
+            if (!string.IsNullOrEmpty(search))
+                query = query.Where(link =>
+                    EF.Functions.Like(link.Name, $"%{search}%") ||
+                    EF.Functions.Like(link.Slug, $"%{search}%"));
+
+            if (filter != "all")
             {
-                data = await _context.Links
-                            .AsNoTracking()
-                            .Select(link => new LinkWithClickDb
-                            {
-                                ID = link.ID,
-                                Name = link.Name,
-                                Slug = link.Slug,
-                                Content = link.Content,
-                                Url = link.Url,
-                                Status = link.Status,
-                                Registered = link.Registered,
-                                UserID = link.UserID,
-                                LastModificated = link.LastModificated,
-                                LastUserID = link.LastUserID,
-                                QR = link.QR,
-                                Clicks = link.Clicks.Count(),
-                            })
-                            .OrderBy(link => link.ID)
-                            .Skip((page - 1) * pageSize)
-                            .Take(pageSize)
-                            .ToListAsync();
-
+                bool status = filter == "true";
+                query = query.Where(link => link.Status == status);
             }
-            else
-            {
-                bool status = filter.Equals("true") ? true : false;
-                data = await _context.Links
-                        .AsNoTracking()
-                        .Where(i => i.Status == status)
+            var projectedQuery = query
                         .Select(link => new LinkWithClickDb
                         {
                             ID = link.ID,
@@ -201,13 +184,12 @@
                             QR = link.QR,
                             Clicks = link.Clicks.Count(),
                         })
-                            .OrderBy(link => link.ID)
-                            .Skip((page - 1) * pageSize)
-                            .Take(pageSize)
-                            .ToListAsync();
+                        .OrderBy(link => link.ID)
+                        .Skip((page - 1) * pageSize)
+                        .Take(pageSize);
 
-            }
 
+            var data = await projectedQuery.ToListAsync();
             if (data.Count() > 0)
             {
                 links = data.Select(link => new LinkWithCountClick()
@@ -253,6 +235,7 @@
             _context.Entry(LinkUpdate).Property(x => x.Name).IsModified = !string.IsNullOrEmpty(link.Name);
             _context.Entry(LinkUpdate).Property(x => x.Slug).IsModified = !string.IsNullOrEmpty(link.Slug);
             _context.Entry(LinkUpdate).Property(x => x.Content).IsModified = !string.IsNullOrEmpty(link.Content);
+            _context.Entry(LinkUpdate).Property(x => x.LastUserID).IsModified = true;
 
             return _context.SaveChangesAsync();
 

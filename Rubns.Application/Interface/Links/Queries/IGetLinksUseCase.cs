@@ -2,6 +2,6 @@
 {
     public interface IGetLinksUseCase
     {
-        Task ExecuteAsync(int page, int pagesize, string filter);
+        Task ExecuteAsync(int page, int pagesize, string filter, string? search);
     }
 }

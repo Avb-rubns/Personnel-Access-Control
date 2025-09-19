@@ -5,7 +5,7 @@
     {
         private readonly IConfiguration _configuration = configuration;
 
-        public async Task<int> CountLinks(string filter)
+        public async Task<int> CountLinks(string filter, string search)
         {
             try
             {
@@ -16,7 +16,7 @@
 
                 var proc = "p_CountLinks";
 
-                total = await connection.ExecuteScalarAsync<int>(proc, new { filter }, commandType: CommandType.StoredProcedure);
+                total = await connection.ExecuteScalarAsync<int>(proc, new { filter, search }, commandType: CommandType.StoredProcedure);
 
                 await connection.CloseAsync();
 

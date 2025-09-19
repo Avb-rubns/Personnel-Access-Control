@@ -1,5 +1,6 @@
 ﻿.space {
     padding: 1rem;
-    background: var(--mud-palette-background-grey);
-    height: calc(100dvh - var(--mud-appbar-height));
+    background: var(--mud-palette-background);
+    min-height: calc(100dvh - var(--mud-appbar-height));
+
 }

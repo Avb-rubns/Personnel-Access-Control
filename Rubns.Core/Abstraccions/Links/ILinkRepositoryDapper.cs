@@ -2,7 +2,7 @@
 {
     public interface ILinkRepositoryDapper
     {
-        Task<int> CountLinks(string filter);
+        Task<int> CountLinks(string filter, string search);
 
     }
 }

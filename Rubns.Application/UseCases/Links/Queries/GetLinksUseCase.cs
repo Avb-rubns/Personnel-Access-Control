@@ -14,7 +14,7 @@
         private readonly ILinkRepositoryEFC _linkRepositoryEFC = linkRepositoryEFC;
         private readonly IGetLinksOutputPort _getLinksOurPort = getLinksOurPort;
         private readonly ISqidService _linkIdService = linkIdService;
-        public async Task ExecuteAsync(int page, int pagesize, string filter)
+        public async Task ExecuteAsync(int page, int pagesize, string filter, string? search)
         {
             try
             {
@@ -28,14 +28,14 @@
                 }
 
                 int total = 0;
-                var links = await _linkRepositoryEFC.GetLinkWithClickByPaginationAsync(page, pagesize, filter);
-                if (filter.Equals("all"))
+                var links = await _linkRepositoryEFC.GetLinkWithClickByPaginationAsync(page, pagesize, filter, search);
+                if (filter.Equals("all") && string.IsNullOrEmpty(search))
                 {
                     total = await _linkRepositoryEFC.CountLinksAsync();
                 }
                 else
                 {
-                    total = await _linkRepositoryDapper.CountLinks(filter);
+                    total = await _linkRepositoryDapper.CountLinks(filter, search);
                 }
 
                 if (links.Count() > 0)

@@ -8,7 +8,7 @@
     <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="_table" FixedHeader="true" >
         <ToolBarContent>
             <MudSpacer/>
-            <MudTextField T="string" Placeholder="Buscar" Label="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>
+            <MudTextField T="string" Placeholder="Buscar" ValueChanged="@( s => OnSearch(s))" Label="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>
             
             <MudSelect Class="m-1" T="string" Label="Filtrar por Estatus" TextChanged="UpdateFilter" Value="_filter" FitContent="true" Dense="true">
                 <MudSelectItem Value="@("all")">Todos</MudSelectItem>

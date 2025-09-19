@@ -166,7 +166,8 @@
             var parameters = new DialogParameters<DialogQREditor>
             {
                 {x => x.link, _link},
-                {x => x.qrCode, qrCode}
+                {x => x.qrCode, qrCode},
+                {x => x.Width, _width }
             };
 
 

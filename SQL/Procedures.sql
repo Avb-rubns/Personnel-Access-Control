@@ -71,11 +71,10 @@ BEGIN
 	FETCH NEXT @rows ROWS ONLY
 END
 GO
-GO
 IF OBJECT_ID(N'p_CountLinks', N'P') IS NOT NULL
     DROP PROCEDURE p_CountLinks;
 GO
-CREATE PROCEDURE p_CountLinks @filter NVARCHAR(10)
+CREATE PROCEDURE p_CountLinks @filter NVARCHAR(10), @search NVARCHAR(100)
 AS
 BEGIN
 	SET LANGUAGE 'SPANISH';
@@ -96,11 +95,25 @@ BEGIN
 		VALUES (1);
 	END
 
+	if(@search is not null)
+	BEGIN
+		SELECT 
+			COUNT(link.ID)
+		FROM Links as link
+		LEFT JOIN Clicks as clic on link.ID = clic.LinkId
+		WHERE link.Status in(SELECT Value FROM @Statuses) AND
+		link.Name LIKE '%'+@search+'%'
+
+	END
+	ELSE
+	BEGIN 
 	SELECT 
-		COUNT(link.ID)
-	FROM Links as link
-	LEFT JOIN Clicks as clic on link.ID = clic.LinkId
-	WHERE link.Status in(SELECT Value FROM @Statuses)
+			COUNT(link.ID)
+		FROM Links as link
+		LEFT JOIN Clicks as clic on link.ID = clic.LinkId
+		WHERE link.Status in(SELECT Value FROM @Statuses)
+	END
+
 END
 GO
 IF OBJECT_ID(N'p_GetLink', N'P') IS NOT NULL
