@@ -58,6 +58,17 @@
                 c.BaseAddress = new Uri("https://smtp.maileroo.com");
                 c.DefaultRequestHeaders.Add("X-API-Key", builder.Configuration.GetSection("Maileroo")["ApiKey"]);
             });
+
+            builder.Services.AddHttpClient("ip-api", c =>
+            {
+                c.BaseAddress = new Uri("http://ip-api.com/json/");
+            });
+
+            builder.Services.AddHttpClient("ipwhois", c =>
+            {
+                c.BaseAddress = new Uri("http://ipwho.is/");
+            });
+
             builder.Services.AddHttpClient("clean");
             builder.Services.AddAuthorization(options =>
             {

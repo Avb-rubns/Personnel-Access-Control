@@ -1,2 +1,2 @@
-﻿global using Personnel.Client.Shared.DTOs.Link.Commands;
+﻿global using Personnel.Client.Shared.POCO.Abstractions;
 global using System.ComponentModel.DataAnnotations;

@@ -42,15 +42,15 @@
                     !string.Equals(LinkUpdate.Slug, LinEdit.Slug, StringComparison.OrdinalIgnoreCase))
                 {
                     Update.Slug = await _slugHelper.GenerateUniqueSlugByNameOrSlugAsync(LinEdit.Slug.ToLower());
+
+                    Update.Url = LinkUpdate.Url.Replace(LinkUpdate.Slug, Update.Slug);
                 }
                 else
                 {
-                    Update.Slug = LinkUpdate.Slug; // mantener el actual si no cambió
+                    Update.Slug = LinkUpdate.Slug != LinEdit.Slug ? LinEdit.Slug : string.Empty;
                 }
 
-                // reconstruir URL con el nuevo slug
-                var baseUrl = LinkUpdate.Url.Substring(0, LinkUpdate.Url.LastIndexOf(LinkUpdate.Slug));
-                Update.Url = $"{baseUrl}{Update.Slug}";
+
 
                 await _linkRepositoryEFC.UpdateAsync(Update);
 

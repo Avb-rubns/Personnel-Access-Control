@@ -1,6 +1,6 @@
 ﻿namespace Rubns.Infrastructure.Services
 {
-    internal class SlugHelper(IUtils utils
+    internal class SlugService(IUtils utils
         , ILinkRepositoryEFC linkRepositoryEFC)
         : ISlugHelper
     {

@@ -18,6 +18,7 @@ global using Rubns.Application.Exceptions;
 global using Rubns.Application.Interface.Auth.Commands;
 global using Rubns.Application.Interface.Auth.Queries;
 global using Rubns.Application.Interface.Checker.Queries;
+global using Rubns.Application.Interface.Clicks.Queries;
 global using Rubns.Application.Interface.Links.Commands;
 global using Rubns.Application.Interface.Links.Queries;
 global using Rubns.Application.Interface.Rols.Queries;

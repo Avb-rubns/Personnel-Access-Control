@@ -229,7 +229,8 @@
                 ID = link.ID,
                 Name = link.Name,
                 Slug = link.Slug,
-                Content = link.Content
+                Content = link.Content,
+                LastUserID = link.UserLastIdModificated
             };
 
             _context.Entry(LinkUpdate).Property(x => x.Name).IsModified = !string.IsNullOrEmpty(link.Name);

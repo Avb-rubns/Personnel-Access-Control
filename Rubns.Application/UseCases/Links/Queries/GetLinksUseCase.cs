@@ -48,9 +48,9 @@
                         s.QR.FriendLastUserID = _linkIdService.Encode(s.QR.LastUserID);
                     });
                 }
-
                 bool hasNextPage = page * pagesize < total;
                 bool hasPreviousPage = page > 1;
+
                 await _getLinksOurPort.Success(links, total, page, pagesize, hasNextPage, hasPreviousPage);
             }
             catch (Exception ex)
