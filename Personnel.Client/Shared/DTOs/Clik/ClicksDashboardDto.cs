@@ -4,7 +4,6 @@
     {
         public int TotalClicks { get; set; }
         public string Id { get; set; }
-        public string LinkId { get; set; }
         public string Slug { get; set; }
         public string URL { get; set; }
 

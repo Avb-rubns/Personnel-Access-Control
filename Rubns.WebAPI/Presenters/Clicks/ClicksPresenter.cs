@@ -1,7 +1,4 @@
-﻿using Personnel.Client.Shared.DTOs.Clik;
-using Rubns.Core.Entities.Clicks;
-
-namespace Rubns.WebAPI.Presenters.Clicks
+﻿namespace Rubns.WebAPI.Presenters.Clicks
 {
     internal class ClicksPresenter : IGetClicksOutputPort
     {
@@ -13,7 +10,6 @@ namespace Rubns.WebAPI.Presenters.Clicks
 
             Results.TotalClicks = clicks.TotalClicks;
             Results.Id = clicks.FriendlyId;
-            Results.LinkId = clicks.FriendlyLinkId;
             Results.Slug = clicks.Slug;
             Results.URL = clicks.URL;
 

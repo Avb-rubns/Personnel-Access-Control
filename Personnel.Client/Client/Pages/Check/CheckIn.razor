@@ -22,18 +22,18 @@
                 <div class="w-100 check-registration">
                     <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
                         <DataAnnotationsValidator />
-                        <MudText Typo="Typo.h5" Align="Align.Center">@Resource.CheckInTitleHi</MudText>
-                        <MudText Typo="Typo.body1" Align="Align.Center">@Resource.CheckInTitle</MudText>
-                        <MudText Typo="Typo.body2" Align="Align.Center">@Resource.CheckInSubtitle</MudText>
+                        <MudText Typo="Typo.h5" Align="MudBlazor.Align.Center">@Resource.CheckInTitleHi</MudText>
+                        <MudText Typo="Typo.body1" Align="MudBlazor.Align.Center">@Resource.CheckInTitle</MudText>
+                        <MudText Typo="Typo.body2" Align="MudBlazor.Align.Center">@Resource.CheckInSubtitle</MudText>
                         <MudTextField Label="Correo" Class="mt-3" Disabled="@_processing"
                                       @bind-Value="model.Email" For="@(() => model.Email)" />
                         <MudTextField Label="Teléfono" Class="mt-3" Disabled="@_processing"
                                       @bind-Value="model.Phone" For="@(() => model.Phone)" />
-                        <MudButton Disabled="@_processing" Class="mt-3" Color="Color.Primary" FullWidth="true"
+                        <MudButton Disabled="@_processing" Class="mt-3" Color="MudBlazor.Color.Primary" FullWidth="true"
                                    Variant="Variant.Filled" ButtonType="ButtonType.Submit">
                             @if (_processing)
                             {
-                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
                                 <MudText Class="ms-2">@Resource.BtnSending</MudText>
                             }
                             else

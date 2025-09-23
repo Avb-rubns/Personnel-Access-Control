@@ -1,14 +1,14 @@
 @page "/links"
 
 <Space>
-    <div class="p-1 mb-2 d-flex justify-content-between ">
+    <div class="p-1 mb-2 d-flex justify-content-between">
         <MudText Typo="Typo.h5">Enlaces</MudText>
-        <MudButton OnClick="CreateLink" Variant="Variant.Outlined" Color="Color.Primary">Crear</MudButton>
+        <MudButton OnClick="CreateLink" Variant="Variant.Outlined" Color="MudBlazor.Color.Primary">Crear</MudButton>
     </div>
     <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="_table" FixedHeader="true" >
         <ToolBarContent>
             <MudSpacer/>
-            <MudTextField T="string" Placeholder="Buscar" ValueChanged="@( s => OnSearch(s))" Label="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>
+            <MudTextField T="string" Placeholder="Buscar" ValueChanged="@(s => OnSearch(s))" Label="Buscar" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="MudBlazor.Size.Medium" Class="mt-0" />
             
             <MudSelect Class="m-1" T="string" Label="Filtrar por Estatus" TextChanged="UpdateFilter" Value="_filter" FitContent="true" Dense="true">
                 <MudSelectItem Value="@("all")">Todos</MudSelectItem>
@@ -34,7 +34,7 @@
             </MudTh>
             <MudTh>
                 <MudTableSortLabel SortLabel="clicks" T="LinkDTO">
-                    Clics
+                    Visitas
                 </MudTableSortLabel>
             </MudTh>
             <MudTh>
@@ -55,17 +55,24 @@
                     <MudText HtmlTag="a"  style="cursor:pointer;" Typo="Typo.body2">
                          @(context.Slug)
                     </MudText>
-                    <MudIconButton OnClick="@(async() => { await ClipboardCopy(context.Url);})" Size="Size.Small" Icon="@Icons.Material.Rounded.CopyAll" Color="Color.Info" />
+                    <MudIconButton OnClick="@(async () => { await Utils.CopyToClipboardAsync(context.Url); })" Size="MudBlazor.Size.Small" Icon="@Icons.Material.Rounded.CopyAll" Color="MudBlazor.Color.Info" />
                 </span>
             </MudTd>
             <MudTd DataLabel="URL Destino">
                 <MudText HtmlTag="a" style="cursor:pointer;"  Typo="Typo.caption">@context.Content</MudText>
             </MudTd>
-            <MudTd DataLabel="Clics">
-                @context.Clicks
+            <MudTd DataLabel="Visitas">
+                <MudFab Size="MudBlazor.Size.Small"
+                        Class="d-flex align-center justify-content-center"
+                        Style="text-transform:uppercase;"
+                        Label="@($"{@context.Clicks}" )"
+                        DropShadow="false"
+                        OnClick="@(() => Analytics(context.Slug))"
+                        Color="MudBlazor.Color.Info"
+                        StartIcon="@Icons.Material.Rounded.AdsClick" /> 
             </MudTd>
             <MudTd DataLabel="QR">
-                <MudButton Variant="Variant.Outlined" OnClick="@(async() => { await QRShow(context);})" StartIcon="@Icons.Material.Rounded.QrCode2" IconColor="Color.Error">
+                <MudButton Variant="Variant.Outlined" OnClick="@(async () => { await QRShow(context); })" StartIcon="@Icons.Material.Rounded.QrCode2" IconColor="MudBlazor.Color.Error">
                     Ver
                 </MudButton>
             </MudTd>
@@ -76,11 +83,6 @@
                 <MudMenu Icon="@Icons.Material.Filled.MoreVert"
                          AriaLabel="Open user menu">
                     <MudMenuItem Label="Editar" Icon="@Icons.Material.Rounded.Edit" OnClick="@(() => Detail(context.Slug))" />
-                    <MudDivider/>
-                    <MudMenuItem IconColor="Color.Error"
-                                 Label="Eliminar"
-                                 OnClick="@(async() => { await DeleteLinkAsync(context.ID);})"
-                                 Icon="@Icons.Material.Rounded.DeleteForever" />
                 </MudMenu>
             </MudTd>
         </RowTemplate>

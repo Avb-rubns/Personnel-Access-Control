@@ -16,8 +16,10 @@
                         <MudExpansionPanel @bind-Expanded="_openPanel1" Disabled="_processing">
                             <TitleContent>
                                 <div class="d-flex align-center g-2">
-                                    <MudIcon Color="@(_openPanel1? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.ColorLens" />
-                                    <MudText Class="ml-2" Color="@(_openPanel1? Color.Primary: Color.Default)" Typo="Typo.h6">Colores</MudText>
+                                    <MudIcon Color="@(_openPanel1? MudBlazor.Color.Primary: MudBlazor.Color.Default)" Icon="@Icons.Material.Filled.ColorLens" />
+                                    <MudText Class="ml-2" 
+                                        Color="@(_openPanel1? MudBlazor.Color.Primary: MudBlazor.Color.Default)" 
+                                        Typo="Typo.h6">Colores</MudText>
                                 </div>
                             </TitleContent>
                             <ChildContent>
@@ -48,8 +50,8 @@
                         <MudExpansionPanel @bind-Expanded="_openPanel2" Disabled="_processing">
                             <TitleContent>
                                 <div class="d-flex align-center">
-                                    <MudIcon Color="@(_openPanel2? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.Adjust" />
-                                    <MudText Class="ml-2" Color="@(_openPanel2? Color.Primary: Color.Default)" Typo="Typo.h6">Tamaño de los puntos</MudText>
+                                    <MudIcon Color="@(_openPanel2? MudBlazor.Color.Primary: MudBlazor.Color.Default)" Icon="@Icons.Material.Filled.Adjust" />
+                                    <MudText Class="ml-2" Color="@(_openPanel2? MudBlazor.Color.Primary: MudBlazor.Color.Default)" Typo="Typo.h6">Tamaño de los puntos</MudText>
                                 </div>
                             </TitleContent>
                             <ChildContent>
@@ -59,7 +61,7 @@
                                            Max="1"
                                            Step="0.1"
                                            Value="qrCode.DotScale"
-                                           Color="Color.Info"
+                                           Color="MudBlazor.Color.Info"
                                            TickMarks="true"
                                            Immediate="true"
                                            ValueChanged="UpdateSliderDot">
@@ -74,7 +76,7 @@
                                            Immediate="true"
                                            TickMarks="true"
                                            ValueChanged="@(UpdateSliderPaper)"
-                                           Color="Color.Info">
+                                           Color="MudBlazor.Color.Info">
                                     @qrCode.QuietZone.ToString()
                                 </MudSlider>
                             </ChildContent>
@@ -84,20 +86,20 @@
                     
                     <MudPaper Class="mt-4 d-flex justify-content-end" Style="gap:1rem;" Elevation="0">
                         <MudButton Variant="Variant.Filled"
-                                   Color="Color.Secondary"
+                                   Color="MudBlazor.Color.Secondary"
                                    ButtonType="ButtonType.Reset"
                                    FullWidth="@(Width <= 550)"
                                    OnClick="Cancel">
                             <MudText>Cancelar</MudText>
                         </MudButton>
-                        <MudButton Color="Color.Primary"
+                        <MudButton Color="MudBlazor.Color.Primary"
                                    Disabled="_change"
                                    Variant="Variant.Filled"
                                    FullWidth="@(Width <= 550)"
                                    ButtonType="ButtonType.Submit">
                             @if (_processing)
                             {
-                                <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
                                 <MudText Class="ms-2">@Resource.BtnSending</MudText>
                             }
                             else
@@ -115,19 +117,19 @@
                             <MudIconButton Icon="@Icons.Material.Filled.Download"
                                            aria-label="download"
                                            OnClick="DownloadQrCode"
-                                           Color="Color.Primary" />
+                                               Color="MudBlazor.Color.Primary" />
                         </MudTooltip>
                         <MudTooltip Text="@Resource.CreateQrBtnShare">
                             <MudIconButton Icon="@Icons.Material.Filled.Share"
                                            aria-label="share"
                                            OnClick="ShareQrCode"
-                                           Color="Color.Info" />
+                                               Color="MudBlazor.Color.Info" />
                         </MudTooltip>
                         <MudTooltip Text="@Resource.CreateQRBtnReset">
                             <MudIconButton Icon="@Icons.Material.Filled.Cached"
                                            aria-label="reset"
                                            OnClick="ResetQrCode"
-                                           Color="Color.Warning" />
+                                               Color="MudBlazor.Color.Warning" />
                         </MudTooltip>
                     </MudPaper>
                 </MudPaper>

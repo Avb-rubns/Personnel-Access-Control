@@ -11,14 +11,14 @@
 
                         <TitleContent>
                             <div class="d-flex align-center g-4">
-                                <MudIcon Color="@(openPanel1? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.TravelExplore" />
-                                <MudText Class="ml-2" Typo="Typo.h6" Color="@(openPanel1? Color.Primary: Color.Default)">@Resource.CreateQrLabelContent</MudText>
+                                <MudIcon Color="@(openPanel1? MudBlazor.Color.Primary: MudBlazor.Color.Default)" Icon="@Icons.Material.Filled.TravelExplore" />
+                                <MudText Class="ml-2" Typo="Typo.h6" Color="@(openPanel1? MudBlazor.Color.Primary: MudBlazor.Color.Default)">@Resource.CreateQrLabelContent</MudText>
                             </div>
                            
                         </TitleContent>
                         <ChildContent>
                             @if(_scanURL){
-                            <MudProgressLinear Color="Color.Primary"  Size="Size.Large" Indeterminate="true">
+                            <MudProgressLinear Color="MudBlazor.Color.Primary"  Size="MudBlazor.Size.Large" Indeterminate="true">
                                 <MudText Typo="Typo.body2" Style="font-size:.8rem;" >Analisando URL</MudText>
                             </MudProgressLinear>
                             }
@@ -54,8 +54,8 @@
                     <MudExpansionPanel @bind-Expanded="openPanel2" Disabled="_processing">
                         <TitleContent>
                             <div class="d-flex align-center g-2">
-                                <MudIcon Color="@(openPanel2? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.ColorLens" />
-                                <MudText Class="ml-2" Color="@(openPanel2? Color.Primary: Color.Default)" Typo="Typo.h6">Colores</MudText>
+                                <MudIcon Color="@(openPanel2? MudBlazor.Color.Primary: MudBlazor.Color.Default)" Icon="@Icons.Material.Filled.ColorLens" />
+                                <MudText Class="ml-2" Color="@(openPanel2? MudBlazor.Color.Primary: MudBlazor.Color.Default)" Typo="Typo.h6">Colores</MudText>
                             </div>
                         </TitleContent>
                         <ChildContent>
@@ -82,8 +82,8 @@
                     <MudExpansionPanel @bind-Expanded="openPanel3" Disabled="_processing">
                         <TitleContent>
                             <div class="d-flex align-center">
-                                <MudIcon Color="@(openPanel3? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.Adjust" />
-                                <MudText Class="ml-2" Color="@(openPanel3? Color.Primary: Color.Default)" Typo="Typo.h6">Tamaño de los puntos</MudText>
+                                <MudIcon Color="@(openPanel3? MudBlazor.Color.Primary: MudBlazor.Color.Default)" Icon="@Icons.Material.Filled.Adjust" />
+                                <MudText Class="ml-2" Color="@(openPanel3? MudBlazor.Color.Primary: MudBlazor.Color.Default)" Typo="Typo.h6">Tamaño de los puntos</MudText>
                             </div>
                         </TitleContent>
                         <ChildContent>
@@ -93,7 +93,7 @@
                                         Max="1"
                                         Step="0.1"
                                         Value="qrCode.DotScale"
-                                        Color="Color.Info"
+                                       Color="MudBlazor.Color.Info"
                                         TickMarks="true"
                                         ValueChanged="UpdateSliderDot">
                                 @qrCode.DotScale.ToString()
@@ -106,7 +106,7 @@
                                         Step="1"
                                         TickMarks="true"
                                        ValueChanged="@(UpdateSliderPaper)"
-                                       Color="Color.Info">
+                                       Color="MudBlazor.Color.Info">
                                 @qrCode.QuietZone.ToString()
                             </MudSlider>
                         </ChildContent>
@@ -115,8 +115,8 @@
                     <MudExpansionPanel @bind-Expanded="openPanel4" Disabled="_processing">
                         <TitleContent>
                             <div class="d-flex align-center">
-                                <MudIcon Color="@(openPanel4? Color.Primary: Color.Default)" Icon="@Icons.Material.Filled.Panorama" />
-                                <MudText Class="ml-2" Color="@(openPanel4? Color.Primary: Color.Default)" Typo="Typo.h6">Logo</MudText>
+                                <MudIcon Color="@(openPanel4? MudBlazor.Color.Primary: MudBlazor.Color.Default)" Icon="@Icons.Material.Filled.Panorama" />
+                                <MudText Class="ml-2" Color="@(openPanel4? MudBlazor.Color.Primary: MudBlazor.Color.Default)" Typo="Typo.h6">Logo</MudText>
                             </div>
                         </TitleContent>
                         <ChildContent >
@@ -128,7 +128,7 @@
                                                     MaximumFileCount="1">
                                         <ActivatorContent>
                                             <MudButton Variant="Variant.Filled"
-                                                       Color="Color.Primary"
+                                                       Color="MudBlazor.Color.Primary"
                                                        StartIcon="@Icons.Material.Filled.Image">
                                                 Subir logo
                                             </MudButton>
@@ -138,7 +138,7 @@
                                 <MudTooltip Text="Eliminar Logo">
                                     <MudIconButton Icon="@Icons.Material.Filled.Delete"
                                                    aria-label="delete"
-                                                   Color="Color.Error"
+                                                   Color="MudBlazor.Color.Error"
                                                    OnClick="DeleteLogo"
                                                    />
                                 </MudTooltip>
@@ -147,13 +147,13 @@
                         
                     </MudExpansionPanel>
                 </MudExpansionPanels>
-                <MudButton  Class="mt-3" Color="Color.Primary" FullWidth="true"
+                <MudButton Class="mt-3" Color="MudBlazor.Color.Primary" FullWidth="true"
                            Disabled="_processing || _scanURL"
                            Variant="Variant.Filled"
                            ButtonType="ButtonType.Submit">
                     @if (_processing)
                     {
-                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
                         <MudText Class="ms-2">@Resource.BtnSending</MudText>
                     }
                     else
@@ -172,19 +172,19 @@
                             <MudIconButton Icon="@Icons.Material.Filled.Download"
                                             aria-label="download"
                                            OnClick="DownloadQrCode"
-                                            Color="Color.Primary"/>
+                                       Color="MudBlazor.Color.Primary" />
                         </MudTooltip>
                         <MudTooltip Text="@Resource.CreateQrBtnShare">
                             <MudIconButton Icon="@Icons.Material.Filled.Share"
                                             aria-label="share"
                                            OnClick="ShareQrCode"
-                                            Color="Color.Info" />
+                                       Color="MudBlazor.Color.Info" />
                         </MudTooltip>
                         <MudTooltip Text="@Resource.CreateQRBtnReset">
                             <MudIconButton Icon="@Icons.Material.Filled.Cached"
                                             aria-label="reset"
                                            OnClick="ResetQrCode"
-                                            Color="Color.Warning"/>
+                                       Color="MudBlazor.Color.Warning" />
                         </MudTooltip>
                     </MudPaper>
                 </MudPaper>    

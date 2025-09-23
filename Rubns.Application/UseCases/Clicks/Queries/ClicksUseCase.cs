@@ -14,17 +14,30 @@
         private readonly IGetClicksOutputPort _getClicksOutputPort = getClicksOutputPort;
         private readonly ILinkRepositoryEFC _linkRepositoryEFC = linkRepositoryEFC;
 
-        public async Task ExecuteAsync(string id, DateTime? starDate, DateTime? endDate)
+        public async Task ExecuteAsync(string slug, DateTime? starDate, DateTime? endDate)
         {
             try
             {
+                if (string.IsNullOrEmpty(slug))
+                {
+                    throw new ArgumentException("Datos invalidos");
+                }
+
+
+                var LinkInfo = await _linkRepositoryEFC.GetLinkBySlugAsync(slug);
+                if (LinkInfo is { ID: <= 0 })
+                {
+                    throw new NotFoundException("No se encontro el enlace.", "Sin informacion");
+                }
+
+
                 DateTime StarDate = DateTime.Today;
                 DateTime EndDate = DateTime.Today.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999);
 
                 if (starDate.HasValue && endDate.HasValue)
                 {
                     StarDate = starDate.Value;
-                    EndDate = endDate.Value;
+                    EndDate = endDate.Value.AddHours(23).AddMinutes(59).AddSeconds(59).AddMilliseconds(999);
                 }
 
                 if (StarDate > EndDate)
@@ -32,34 +45,21 @@
                     throw new ArgumentException("El rango de fechas no es correcto.");
                 }
 
-
                 ClicksDashboard clicks = new();
+                var clics = await _clickRepositoryEFC.GetClicksByLinkIdAsync(LinkInfo.ID, StarDate, EndDate);
 
-                if (string.IsNullOrEmpty(id))
-                {
-                    throw new ArgumentException("Datos invalidos");
-                }
-
-                var IdClic = _sqidService.Decode(id);
-
-                var clics = await _clickRepositoryEFC.GetClicksAsync(IdClic, StarDate, EndDate);
-
-                if (clics.FirstOrDefault() is { LinkId: < 0 })
-                {
-                    throw new NotFoundException("No se encontro el enlace.", "Sin informacion");
-                }
-
+                clicks.Slug = LinkInfo.Slug;
+                clicks.URL = LinkInfo.Url;
+                clicks.FriendlyId = _sqidService.Encode(LinkInfo.ID);
 
                 if (clics.Count() > 0)
                 {
-                    var LinkInfo = await _linkRepositoryEFC.GetLinkByIdAsync(clics[0].LinkId);
 
-                    clicks.Slug = LinkInfo.Slug;
-                    clicks.URL = LinkInfo.Url;
+
+
 
                     clicks.TotalClicks = clics.Count();
-                    clicks.FriendlyId = _sqidService.Encode(IdClic);
-                    clicks.FriendlyLinkId = _sqidService.Encode(clics[0].LinkId);
+
 
                     clicks.ByDate = clics.GroupBy(clic => clic.ClickedAt.Date)
                         .ToDictionary(g => g.Key.Date.ToString("d"), g => g.Count());

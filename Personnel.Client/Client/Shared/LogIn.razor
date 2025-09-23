@@ -18,7 +18,7 @@ else
         <div class="w-100 log-in-form ">
             <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
                 <DataAnnotationsValidator />
-                <MudText Typo="Typo.h5" Align="Align.Center">@Resource.LogInTitle</MudText>
+                <MudText Typo="Typo.h5" Align="MudBlazor.Align.Center">@Resource.LogInTitle</MudText>
                 <MudTextField Label="@Resource.MailText"
                               Class="mt-4"
                               Disabled="@_processing"
@@ -28,10 +28,10 @@ else
                 <MudTextField Class="mt-4" Label="@Resource.PasswordTitle" @bind-Value="model.Password" Disabled="@_processing" For="@(() => model.Password)"
                               Variant="Variant.Text" InputType="@PasswordInput" Adornment="Adornment.End"
                               AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="Visibility" AdornmentAriaLabel="ver" />
-                <MudButton Variant="Variant.Filled" DropShadow="false" FullWidth="true" Color="Color.Primary" Class="mt-4" ButtonType="ButtonType.Submit">
+                <MudButton Variant="Variant.Filled" DropShadow="false" FullWidth="true" Color="MudBlazor.Color.Primary" Class="mt-4" ButtonType="ButtonType.Submit">
                     @if (_processing)
                     {
-                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
                         <MudText Class="ms-2">@Resource.BtnValiding</MudText>
                     }
                     else

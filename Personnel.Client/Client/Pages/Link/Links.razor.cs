@@ -149,16 +149,6 @@
 
             }
         }
-        private async Task ClipboardCopy(string url)
-        {
-            var result = await JS.InvokeAsync<bool>("copyText", url);
-            if (result)
-            {
-                Snackbar.Add("URL copiado al portapapeles", severity: Severity.Success);
-
-            }
-            else { Snackbar.Add("Su equipo no permite copiar al portapapeles", severity: Severity.Error); }
-        }
         private async Task UpdateFilter(string mudSelect)
         {
             _filter = mudSelect;
@@ -169,6 +159,10 @@
         {
 
             NavigationManager.NavigateTo($"link/{slug}");
+        }
+        private void Analytics(string slug)
+        {
+            NavigationManager.NavigateTo($"link/analytics/{slug}");
         }
 
         private async Task OnSearch(string text)

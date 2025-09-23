@@ -238,6 +238,10 @@
             await JS.InvokeAsync<bool>("shareHelper.shareQR", "qrcodeLink", "Mi dibujo", "Mira lo que hice en Blazor 😎", $"{_link.Name}.png");
         }
 
+        private void Analytics(string slug)
+        {
+            NavigationManager.NavigateTo($"link/analytics/{slug}");
+        }
         private void ToggleOpen() => _open = !_open;
     }
 }

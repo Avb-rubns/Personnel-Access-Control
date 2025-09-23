@@ -1,0 +1,120 @@
+﻿@page "/link/analytics/{slug}"
+
+<Space>
+    @if (_isLoading)
+    {
+        <div class="link-loader-container">
+            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100%" />
+            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100%" />
+        </div>
+    }
+    else
+    {
+        <MudGrid>
+            <MudItem xs="12">
+                <MudText Typo="Typo.h6"><strong>Analiticas</strong></MudText>
+            </MudItem>
+
+            <MudItem xs="12">
+                <MudGrid>
+                    <MudItem xs="12" sm="10" Class="d-flex align-center">
+                        <MudText Typo="Typo.h6"><strong>Enlace: @Slug </strong></MudText>
+                        <MudIconButton OnClick="@(async () => { await Utils.CopyToClipboardAsync(_click.URL); })" Size="MudBlazor.Size.Small" Icon="@Icons.Material.Rounded.CopyAll" Color="MudBlazor.Color.Info" />
+                    </MudItem>
+                    <MudItem xs="12" sm="2">
+                        <MudSelect T="FilterOption" Label="Filtro"
+                                   Variant="Variant.Text"
+                                   Dense="true"
+                                   Value="_filterOption"
+                                   ValueChanged="ChangeRange"
+                                   FitContent="true"
+                                   Placeholder="Rango de fecha">
+                            @foreach (var filter in Filters)
+                            {
+                                <MudSelectItem Value="filter">@filter.Label</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+
+                </MudGrid>
+            </MudItem>
+            <MudItem xs="12">
+                <MudPaper MaxHeight="550px">
+                    <ApexChart TItem="DataPoint"
+                               Title="Visitas"
+                               @ref="_chart"
+                               Height="550"
+                               XAxisType=" XAxisType.Datetime"
+                               Options="_optionsAPEXChart">
+                        <ApexPointSeries TItem="DataPoint"
+                                         Items="@dataPoints"
+                                         Name="Valor"
+                                         SeriesType="SeriesType.Line"
+                                         XValue="@(e => e.Date)"
+                                         YValue="@(e => e.Value)"
+                                         ShowDataLabels="true" />
+                    </ApexChart>
+                </MudPaper>
+
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudPaper>
+                    <MudTabs Outlined="true" Rounded="true" ApplyEffectsToContainer="true" Centered="true">
+                    <MudTabPanel Text="Pais" Icon="@Icons.Material.Filled.Api">
+                        <MudDataGrid Items="@_click.ByCountry">
+                            <Columns>
+                                <PropertyColumn Property="x => x.Key" Title="Pais" />
+                                <PropertyColumn Property="x => x.Value" Title="Visitas" />
+                            </Columns>
+                        </MudDataGrid>
+                    </MudTabPanel>
+                    <MudTabPanel Text="Region" Icon="@Icons.Material.Filled.Build">
+                        <MudDataGrid Items="@_click.ByRegion">
+                            <Columns>
+                                <PropertyColumn Property="x => x.Key" Title="Region" />
+                                <PropertyColumn Property="x => x.Value" Title="Visitas" />
+                            </Columns>
+                        </MudDataGrid>
+                    </MudTabPanel>
+                    <MudTabPanel Text="Ciudad" Icon="@Icons.Material.Filled.Villa">
+                        <MudDataGrid Items="@_click.ByCity">
+                            <Columns>
+                                <PropertyColumn Property="x => x.Key" Title="Ciudad" />
+                                <PropertyColumn Property="x => x.Value" Title="Visitas" />
+                            </Columns>
+                        </MudDataGrid>
+                    </MudTabPanel>
+                </MudTabs>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudTabs Outlined="true" Rounded="true" ApplyEffectsToContainer="true" Centered="true">
+                    <MudTabPanel Text="Dispositivo" Icon="@Icons.Material.Filled.Api">
+                        <MudDataGrid Items="@_click.ByDevice">
+                            <Columns>
+                                <PropertyColumn Property="x => x.Key" Title="Dispositivo" />
+                                <PropertyColumn Property="x => x.Value" Title="Visitas" />
+                            </Columns>
+                        </MudDataGrid>
+                    </MudTabPanel>
+                    <MudTabPanel Text="Sistema" Icon="@Icons.Material.Filled.Build">
+                        <MudDataGrid Items="@_click.ByOS">
+                            <Columns>
+                                <PropertyColumn Property="x => x.Key" Title="Sistema" />
+                                <PropertyColumn Property="x => x.Value" Title="Visitas" />
+                            </Columns>
+                        </MudDataGrid>
+                    </MudTabPanel>
+                    <MudTabPanel Text="Navegador" Icon="@Icons.Material.Filled.Build">
+                        <MudDataGrid Items="@_click.ByBrowser">
+                            <Columns>
+                                <PropertyColumn Property="x => x.Key" Title="Navegador" />
+                                <PropertyColumn Property="x => x.Value" Title="Visitas" />
+                            </Columns>
+                        </MudDataGrid>
+                    </MudTabPanel>
+                </MudTabs>
+            </MudItem>
+        </MudGrid>
+    }
+</Space>

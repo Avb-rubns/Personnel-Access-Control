@@ -16,7 +16,7 @@ else
     <MudExpansionPanels>
         <MudExpansionPanel Expanded="true">
             <TitleContent>
-                <MudText Typo="Typo.h5" Align="Align.Center">Registrar nuevo usuario</MudText>
+                <MudText Typo="Typo.h5" Align="MudBlazor.Align.Center">Registrar nuevo usuario</MudText>
             </TitleContent>
             <ChildContent>
                 <EditForm Model="UserDTO" OnValidSubmit="RegisterUserAsync">
@@ -28,7 +28,7 @@ else
                                           Required="true"
                                           Variant="Variant.Text"
                                           InputType="InputType.Text"
-                                          Margin="Margin.Dense"
+                                          Margin="MudBlazor.Margin.Dense"
                                           For="@(() => UserDTO.UserName)" />
                         </MudItem>
                         <MudItem xs="12" sm="3">
@@ -37,7 +37,7 @@ else
                                           Label="Apellido"
                                           Variant="Variant.Text"
                                           InputType="InputType.Text"
-                                          Margin="Margin.Dense"
+                                          Margin="MudBlazor.Margin.Dense"
                                           For="@(() => UserDTO.LastName)" />
                         </MudItem>
                         <MudItem xs="12" sm="3">
@@ -46,7 +46,7 @@ else
                                           Label="Correo"
                                           InputType="InputType.Email"
                                           Variant="Variant.Text"
-                                          Margin="Margin.Dense"
+                                          Margin="MudBlazor.Margin.Dense"
                                           For="@(() => UserDTO.Email)" />
                         </MudItem>
                         <MudItem xs="12" sm="3">
@@ -56,7 +56,7 @@ else
                                           Required="true"
                                           InputType="InputType.Telephone"
                                           onKeypress=" if (!(event.charCode >= 48 && event.charCode <= 57)) event.preventDefault()"
-                                          Margin="Margin.Dense"
+                                          Margin="MudBlazor.Margin.Dense"
                                           For="@(() => UserDTO.Phone)" />
                         </MudItem>
                         <MudItem xs="12" sm="3">
@@ -89,15 +89,15 @@ else
                             </MudSelect>
                         </MudItem>
                         <MudItem xs="12" sm="12" Class="d-flex justify-content-end g-4">
-                            <MudButton Disabled="@_processing" Class="mr-3" Color="Color.Secondary"
+                            <MudButton Disabled="@_processing" Class="mr-3" Color="MudBlazor.Color.Secondary"
                                        Variant="Variant.Filled" OnClick="ClearFormUser">
                                 <MudText>Limpiar</MudText>
                             </MudButton>
-                            <MudButton Disabled="@_processing" Color="Color.Primary"
+                            <MudButton Disabled="@_processing" Color="MudBlazor.Color.Primary"
                                        Variant="Variant.Filled" ButtonType="ButtonType.Submit">
                                 @if (_processing)
                                 {
-                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                    <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
                                     <MudText Class="ms-2">Registrando</MudText>
                                 }
                                 else
@@ -118,7 +118,7 @@ else
             <MudText Typo="Typo.h6">Usuarios registrados</MudText>
             <MudSpacer />
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="MudBlazor.Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortLabel="Nombre" T="UserRegistedDTO">Nombre</MudTableSortLabel></MudTh>
@@ -180,7 +180,7 @@ else
             </MudTd>
         </RowEditingTemplate>
         <EditButtonContent Context="button">
-            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
+            <MudIconButton Size="@MudBlazor.Size.Small" Icon="@Icons.Material.Outlined.Edit" Class="pa-0" OnClick="@button.ButtonAction" Disabled="@button.ButtonDisabled" />
         </EditButtonContent>
         <NoRecordsContent>
             <MudText>No se encontro el registro</MudText>

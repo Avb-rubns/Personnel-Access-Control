@@ -15,17 +15,18 @@
             <div class="link-header-container">
                 <MudText Typo="Typo.h6"><strong>Enlaces > @_link.Name</strong></MudText>
                 <div class="link-header-btn">
-                    <MudFab Size="Size.Small"
+                            <MudFab Size="MudBlazor.Size.Small"
                             Label="Copiar enlace"
                             DropShadow="false"
                             StartIcon="@Icons.Material.Rounded.CopyAll"
                             OnClick="ClipboardCopy"
                             />
-                    <MudFab Size="Size.Small"
+                            <MudFab Size="MudBlazor.Size.Small"
                             Style="text-transform:uppercase;"
-                            Label="@($"{_clicks} clics" )"
+                            Label="@($"{_clicks} vistas" )"
+                            OnClick="@(() => Analytics(Slug))"
                             DropShadow="false"
-                            Color="Color.Info"
+                                    Color="MudBlazor.Color.Info"
                             StartIcon="@Icons.Material.Rounded.AdsClick" />
                 </div>
             </div>
@@ -36,10 +37,10 @@
                 <MudItem xs="12">
                     <MudTextField T="string"
                         Label="Nombre"
-                        Margin="Margin.Dense"
+                        Margin="MudBlazor.Margin.Dense"
                         Variant="Variant.Outlined"
                         Required
-                        RequiredError="La nombre no puede ser vacia."
+                        RequiredError="La nombre no puede ser vacio."
                         Immediate="true"
                         For="@(() => _linkForm.Name)"
                         @bind-Value="_linkForm.Name" />
@@ -48,15 +49,15 @@
                 <MudItem xs="12">
                     <MudTextField T="string"
                     Label="Nombre descriptivo"
-                    Margin="Margin.Dense"
+                    Margin="MudBlazor.Margin.Dense"
                     AdornmentIcon="@Icons.Material.Outlined.Info"
                     Adornment="Adornment.End"
-                    AdornmentColor="Color.Warning"
+                    AdornmentColor="MudBlazor.Color.Warning"
                     OnAdornmentClick="ToggleOpen"
                     Variant="Variant.Outlined"
                     Immediate="true"
                     Required
-                    RequiredError="La nombre descriptivo de destino no puede ser vacia."
+                    RequiredError="La nombre descriptivo de destino no puede ser vacio."
                     For="@(() => _linkForm.Slug)"
                     @bind-Value="_linkForm.Slug" />
                     <MudPopover Open="@_open"
@@ -69,7 +70,7 @@
                             <MudText>
                                 Modificar el Nombre descriptivo provoca que los QR compartidos dejen de funcionar.
                             </MudText>
-                            <MudButton OnClick="@ToggleOpen" Class="ml-auto mr-n3 mb-1" Color="Color.Error">Cerrar</MudButton>
+                                    <MudButton OnClick="@ToggleOpen" Class="ml-auto mr-n3 mb-1" Color="MudBlazor.Color.Error">Cerrar</MudButton>
                         </div>
                     </MudPopover>
                 </MudItem>
@@ -77,7 +78,7 @@
                 <MudItem xs="12">
                     <MudTextField T="string"
                         Label="URL de destino"
-                        Margin="Margin.Dense"
+                        Margin="MudBlazor.Margin.Dense"
                         AutoGrow
                         Variant="Variant.Outlined"
                         Immediate="true"
@@ -89,20 +90,20 @@
 
                 <MudPaper Class="mt-4 d-flex justify-content-end" Style="gap:1rem;" Elevation="0">
                     <MudButton Variant="Variant.Filled"
-                                Color="Color.Secondary"
+                                       Color="MudBlazor.Color.Secondary"
                                 ButtonType="ButtonType.Reset"
                                 FullWidth="@(_width <= 550)"
                                 OnClick="Reset">
                         <MudText>Cancelar</MudText>
                     </MudButton>
-                    <MudButton Color="Color.Primary"
+                            <MudButton Color="MudBlazor.Color.Primary"
                                 Variant="Variant.Filled"
                                 Disabled="_change"
                                 FullWidth="@(_width <= 550)"
                                 ButtonType="ButtonType.Submit">
                         @if (_processing)
                         {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                    <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
                             <MudText Class="ms-2">@Resource.BtnSending</MudText>
                         }
                         else
@@ -120,7 +121,7 @@
                         <MudText Typo="Typo.body2">
                             QR
                         </MudText>
-                        <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Edit" OnClick="QREdit" />
+                            <MudIconButton Size="MudBlazor.Size.Small" Icon="@Icons.Material.Filled.Edit" OnClick="QREdit" />
                     </div>
                     <div class="link-qr-seccion-code">
                         <section id="qrcodeLink"  />
@@ -129,13 +130,13 @@
                                 <MudIconButton Icon="@Icons.Material.Filled.Download"
                                                aria-label="download"
                                                OnClick="DownloadQrCode"
-                                               Color="Color.Primary" />
+                                                   Color="MudBlazor.Color.Primary" />
                             </MudTooltip>
                             <MudTooltip Text="@Resource.CreateQrBtnShare">
                                 <MudIconButton Icon="@Icons.Material.Filled.Share"
                                                aria-label="share"
                                                OnClick="ShareQrCode"
-                                               Color="Color.Info" />
+                                                   Color="MudBlazor.Color.Info" />
                             </MudTooltip>
                         </MudPaper>
                     </div>

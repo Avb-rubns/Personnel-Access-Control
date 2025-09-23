@@ -3,6 +3,6 @@
     public interface IClickRepositoryEFC
     {
         Task<int> InsertAsync(Click click);
-        Task<List<Click>> GetClicksAsync(int id, DateTime starDate, DateTime endDate);
+        Task<List<Click>> GetClicksByLinkIdAsync(int id, DateTime starDate, DateTime endDate);
     }
 }

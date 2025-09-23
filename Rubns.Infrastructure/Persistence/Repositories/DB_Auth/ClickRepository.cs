@@ -6,7 +6,7 @@ namespace Rubns.Infrastructure.Persistence.Repositories.DB_Auth
     {
         private readonly AuthDbContextEFC _contextEFC = authDbContextEFC;
 
-        public async Task<List<Click>> GetClicksAsync(int id, DateTime starDate, DateTime endDate)
+        public async Task<List<Click>> GetClicksByLinkIdAsync(int id, DateTime starDate, DateTime endDate)
         {
             List<Click> clicks = new List<Click>();
 

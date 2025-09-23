@@ -7,7 +7,7 @@
         <DataAnnotationsValidator/>
         @if (_scanURL)
         {
-            <MudProgressLinear Color="Color.Primary" Size="Size.Large" Indeterminate="true">
+            <MudProgressLinear Color="MudBlazor.Color.Primary" Size="MudBlazor.Size.Large" Indeterminate="true">
                 <MudText Typo="Typo.body2" Style="font-size:.8rem;">Analisando URL</MudText>
             </MudProgressLinear>
         }
@@ -47,20 +47,20 @@
         </MudSelect>
         <MudPaper Class="mt-4 d-flex justify-content-end g-5">
             <MudButton Variant="Variant.Filled"
-                        Color="Color.Secondary"
+                        Color="MudBlazor.Color.Secondary"
                         Class="ms-2"
                         ButtonType="ButtonType.Reset"
                         OnClick="Cancel">
                     <MudText Class="ms-2">Cancelar</MudText>
             </MudButton>
-            <MudButton Color="Color.Primary" 
-                        Disabled="_processing || _scanURL"
+            <MudButton Color="MudBlazor.Color.Primary"
+                           Disabled="_processing || _scanURL"
                         Variant="Variant.Filled"
                         Class="ms-2 w-20"
                         ButtonType="ButtonType.Submit">
                 @if (_processing)
                 {
-                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
                     <MudText Class="ms-2">@Resource.BtnSending</MudText>
                 }
                 else

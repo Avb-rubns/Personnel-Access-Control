@@ -5,7 +5,6 @@
         public int TotalClicks { get; set; }
         public int Id { get; set; }
         public string FriendlyId { get; set; }
-        public string FriendlyLinkId { get; set; }
         public string Slug { get; set; }
         public string URL { get; set; }
 

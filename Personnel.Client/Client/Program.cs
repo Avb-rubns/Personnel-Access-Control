@@ -15,5 +15,6 @@ builder.Services.TryAddScoped<Utils>();
 builder.Services.TryAddScoped<PublicRoutesService>();
 builder.Services.TryAddScoped<ContrastChecker>();
 builder.Services.TryAddScoped<IProxy, Proxy>();
+builder.Services.AddApexCharts();
 
 await builder.Build().RunAsync();

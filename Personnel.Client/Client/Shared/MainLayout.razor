@@ -5,15 +5,16 @@
 <MudDialogProvider CloseButton="true" MaxWidth="MaxWidth.Large" />
 <MudSnackbarProvider />
 
-<AuthorizeView>
+<CascadingValue Value="_isDarkMode" Name="IsDarkMode">
+    <AuthorizeView>
      <Authorized>
         <MudLayout>
             <MudAppBar Elevation="1">
-                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="DrawerToggle" />
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="MudBlazor.Color.Inherit" Edge="Edge.Start" OnClick="DrawerToggle" />
                 <MudSpacer />
-                <MudMenu  Dense="true" Icon="@Icons.Material.Outlined.Settings" Color="Color.Inherit" >
+                <MudMenu Dense="true" Icon="@Icons.Material.Outlined.Settings" Color="MudBlazor.Color.Inherit">
                     <ActivatorContent>
-                        <MudAvatar Color="Color.Secondary" Variant="Variant.Outlined" Size="Size.Small">@context.User.Identity?.Name[0]</MudAvatar>
+                        <MudAvatar Color="MudBlazor.Color.Secondary" Variant="Variant.Outlined" Size="MudBlazor.Size.Small">@context.User.Identity?.Name[0]</MudAvatar>
                         
                     </ActivatorContent>
                     <ChildContent>
@@ -51,4 +52,5 @@
         <LogIn/>
     </NotAuthorized>
 </AuthorizeView>
+</CascadingValue>
 
