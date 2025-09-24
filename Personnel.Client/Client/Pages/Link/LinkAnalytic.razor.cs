@@ -25,7 +25,15 @@
             new FilterOption("month", "Último mes", DateTime.Today.AddMonths(-1).ToString("yyyy-MM-dd")),
             new FilterOption("custom", "Por rango", DateTime.Today.ToString("yyyy-MM-dd"))
         };
+
+        private string _star = string.Empty;
+        private string _end = string.Empty;
+        private bool _DisablePickerRange = true;
+        private DateRange _dateRange { get; set; } = new DateRange();
+        private MudDateRangePicker _picker;
+
         private bool _previousIsDarkMode;
+
         private List<DataPoint> dataPoints = new();
         private ApexChartOptions<DataPoint> _optionsAPEXChart;
         private ApexChart<DataPoint> _chart;
@@ -78,7 +86,11 @@
                     }
                 }
             };
+            _dateRange.Start = DateTime.Parse(_filterOption.Date);
+            _dateRange.End = DateTime.Parse(Filters[0].Date);
 
+            _star = _filterOption.Date;
+            _end = Filters[0].Date;
 
             await GetDataAsync();
             _isLoading = false;
@@ -133,13 +145,32 @@
         private async Task ChangeRange(FilterOption select)
         {
             _filterOption = select;
+            if (select.Key.Equals("custom"))
+            {
+                _DisablePickerRange = false;
+                StateHasChanged();
+                await _picker.OpenAsync();
+                _star = _dateRange.Start?.ToString("yyyy-MM-dd");
+                _end = _dateRange.End?.ToString("yyyy-MM-dd");
+            }
+            else
+            {
+                _DisablePickerRange = true;
+                _dateRange.Start = DateTime.Parse(select.Date);
+                _dateRange.End = DateTime.Parse(Filters[0].Date);
+                _filterOption = select;
+                _star = _dateRange.Start?.ToString("yyyy-MM-dd");
+                _end = _dateRange.End?.ToString("yyyy-MM-dd");
+
+            }
             await GetDataAsync();
             StateHasChanged();
         }
 
         private async Task GetDataAsync()
         {
-            var data = await Proxy.GetAsync<ResponseData<ClicksDashboardDto>>($"/api/v1/click/{Slug}?starDate={_filterOption.Date}&endDate={Filters[0].Date}");
+
+            var data = await Proxy.GetAsync<ResponseData<ClicksDashboardDto>>($"/api/v1/click/{Slug}?starDate={_star}&endDate={_end}");
             switch (data.StatusCode)
             {
                 case HttpStatusCode.OK:
