@@ -3,10 +3,15 @@
 <Space>
     @if (_isLoading)
     {
-        <div class="link-loader-container">
+        <section class="container-skeleton-analytics">
+            <MudSkeleton Width="20%" Height="100%" />
+            <div class="d-flex flex-column flex-md-row justify-content-md-between">
+                <MudSkeleton Width="20%" Height="32px" />
+                <MudSkeleton Width="20%" Height="32px" />
+            </div>
             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100%" />
             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="100%" />
-        </div>
+        </section>
     }
     else
     {
@@ -20,10 +25,11 @@
             <MudItem xs="12">
                 <MudGrid>
                     <MudItem xs="12" sm="8" Class="d-flex align-center">
-                        <MudText Typo="Typo.h6"><strong>Enlace: @Slug </strong></MudText>
+                        <MudText Typo="Typo.h5"><strong>Enlace: @Slug </strong></MudText>
                         <MudIconButton OnClick="@(async () => { await Utils.CopyToClipboardAsync(_click.URL); })" Size="MudBlazor.Size.Small" Icon="@Icons.Material.Rounded.CopyAll" Color="MudBlazor.Color.Info" />
+                        
                     </MudItem>
-                    <MudItem xs="12" sm="4" Class="d-flex align-baseline justify-content-end" Style="gap:1rem; ">
+                    <MudItem xs="12" sm="4" Class="d-flex align-baseline" Style="gap:1rem; ">
                         @if (!_DisablePickerRange)
                         {
                             <MudDateRangePicker PickerVariant="PickerVariant.Dialog"
@@ -37,6 +43,7 @@
                         <MudSelect T="FilterOption" Label="Filtro"
                                    Variant="Variant.Text"
                                    Dense="true"
+                                   FullWidth="_DisablePickerRange"
                                    Value="_filterOption"
                                    ValueChanged="ChangeRange"
                                    FitContent="true"
@@ -50,13 +57,15 @@
 
                 </MudGrid>
             </MudItem>
-            <MudItem xs="12">
-                <MudPaper MaxHeight="550px">
+            <MudItem xs="12" sm="2">
+                <MudText Typo="Typo.h6"><strong>Visitas: @_click.TotalClicks </strong></MudText>
+            </MudItem>
+            <MudItem xs="12" >
+                <MudPaper MaxHeight="550px" Height="550px">
                     <ApexChart TItem="DataPoint"
-                               Title="Visitas"
                                @ref="_chart"
                                Height="550"
-                               XAxisType=" XAxisType.Datetime"
+                               XAxisType="XAxisType.Datetime"
                                Options="_optionsAPEXChart">
                         <ApexPointSeries TItem="DataPoint"
                                          Items="@dataPoints"
@@ -65,64 +74,94 @@
                                          XValue="@(e => e.Date)"
                                          YValue="@(e => e.Value)"
                                          ShowDataLabels="true" />
+
                     </ApexChart>
                 </MudPaper>
-
             </MudItem>
-            <MudItem xs="12" sm="6">
+            <MudItem xs="12" sm="12" md="6">
                 <MudPaper>
                     <MudTabs Outlined="true" Rounded="true" ApplyEffectsToContainer="true" Centered="true">
-                    <MudTabPanel Text="Pais" Icon="@Icons.Material.Filled.Api">
-                        <MudDataGrid Items="@_click.ByCountry">
-                            <Columns>
+                    <MudTabPanel Text="Pais" >
+                            <MudDataGrid Items="@_click.ByCountry" Dense=true Striped="true" ReadOnly="true" ColumnResizeMode="ResizeMode.Column">
+                            <Columns >
                                 <PropertyColumn Property="x => x.Key" Title="Pais" />
                                 <PropertyColumn Property="x => x.Value" Title="Visitas" />
                             </Columns>
+                            <PagerContent>
+                                <MudStack Row AlignItems="AlignItems.End" Justify="Justify.FlexEnd">
+                                    <MudText Class="px-2">Total: @(_click.TotalClicks)</MudText>
+                                </MudStack>
+                            </PagerContent>
                         </MudDataGrid>
                     </MudTabPanel>
-                    <MudTabPanel Text="Region" Icon="@Icons.Material.Filled.Build">
-                        <MudDataGrid Items="@_click.ByRegion">
+                    <MudTabPanel Text="Region" >
+                            <MudDataGrid Items="@_click.ByRegion" Dense=true Striped="true" ReadOnly="true" ColumnResizeMode="ResizeMode.Column">
                             <Columns>
                                 <PropertyColumn Property="x => x.Key" Title="Region" />
                                 <PropertyColumn Property="x => x.Value" Title="Visitas" />
                             </Columns>
+                            <PagerContent>
+                                <MudStack Row AlignItems="AlignItems.End" Justify="Justify.FlexEnd" Class="ml-2">
+                                        <MudText Class="px-2">Total: @(_click.TotalClicks)</MudText>
+                                    </MudStack>
+                            </PagerContent>
                         </MudDataGrid>
                     </MudTabPanel>
-                    <MudTabPanel Text="Ciudad" Icon="@Icons.Material.Filled.Villa">
-                        <MudDataGrid Items="@_click.ByCity">
+                    <MudTabPanel Text="Ciudad" >
+                            <MudDataGrid Items="@_click.ByCity" Dense=true Striped="true" ReadOnly="true" ColumnResizeMode="ResizeMode.Column">
                             <Columns>
                                 <PropertyColumn Property="x => x.Key" Title="Ciudad" />
                                 <PropertyColumn Property="x => x.Value" Title="Visitas" />
                             </Columns>
+                            <PagerContent>
+                                <MudStack Row AlignItems="AlignItems.End" Justify="Justify.FlexEnd" Class="ml-2">
+                                        <MudText Class="px-2">Total: @(_click.TotalClicks)</MudText>
+                                    </MudStack>
+                            </PagerContent>
                         </MudDataGrid>
                     </MudTabPanel>
                 </MudTabs>
                 </MudPaper>
             </MudItem>
-            <MudItem xs="12" sm="6">
+            <MudItem xs="12" sm="12" md="6">
                 <MudTabs Outlined="true" Rounded="true" ApplyEffectsToContainer="true" Centered="true">
-                    <MudTabPanel Text="Dispositivo" Icon="@Icons.Material.Filled.Api">
-                        <MudDataGrid Items="@_click.ByDevice">
+                    <MudTabPanel Text="Dispositivo">
+                        <MudDataGrid Items="@_click.ByDevice" Dense=true Striped="true" SortMode="SortMode.Single"  ReadOnly="true" ColumnResizeMode="ResizeMode.Column">
                             <Columns>
-                                <PropertyColumn Property="x => x.Key" Title="Dispositivo" />
+                                <PropertyColumn Property="x => x.Key"  Title="Dispositivo" />
                                 <PropertyColumn Property="x => x.Value" Title="Visitas" />
                             </Columns>
+                            <PagerContent>
+                                <MudStack Row AlignItems="AlignItems.End" Justify="Justify.FlexEnd" Class="ml-2">
+                                    <MudText Class="px-2">Total: @(_click.TotalClicks)</MudText>
+                                </MudStack>
+                            </PagerContent>
                         </MudDataGrid>
                     </MudTabPanel>
-                    <MudTabPanel Text="Sistema" Icon="@Icons.Material.Filled.Build">
-                        <MudDataGrid Items="@_click.ByOS">
+                    <MudTabPanel Text="Sistema" >
+                        <MudDataGrid Items="@_click.ByOS" Dense=true Striped="true" ReadOnly="true" ColumnResizeMode="ResizeMode.Column">
                             <Columns>
                                 <PropertyColumn Property="x => x.Key" Title="Sistema" />
                                 <PropertyColumn Property="x => x.Value" Title="Visitas" />
                             </Columns>
+                            <PagerContent>
+                                <MudStack Row AlignItems="AlignItems.End" Justify="Justify.FlexEnd" Class="ml-2">
+                                    <MudText Class="px-2">Total: @(_click.TotalClicks)</MudText>
+                                </MudStack>
+                            </PagerContent>
                         </MudDataGrid>
                     </MudTabPanel>
-                    <MudTabPanel Text="Navegador" Icon="@Icons.Material.Filled.Build">
-                        <MudDataGrid Items="@_click.ByBrowser">
+                    <MudTabPanel Text="Navegador" >
+                        <MudDataGrid Items="@_click.ByBrowser" Dense=true Striped="true" ReadOnly="true" ColumnResizeMode="ResizeMode.Column">
                             <Columns>
                                 <PropertyColumn Property="x => x.Key" Title="Navegador" />
                                 <PropertyColumn Property="x => x.Value" Title="Visitas" />
                             </Columns>
+                            <PagerContent>
+                                <MudStack Row AlignItems="AlignItems.End" Justify="Justify.FlexEnd" Class="ml-2">
+                                    <MudText Class="px-2">Total: @(_click.TotalClicks)</MudText>
+                                </MudStack>
+                            </PagerContent>
                         </MudDataGrid>
                     </MudTabPanel>
                 </MudTabs>

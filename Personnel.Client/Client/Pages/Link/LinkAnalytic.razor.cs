@@ -34,7 +34,7 @@
 
         private bool _previousIsDarkMode;
 
-        private List<DataPoint> dataPoints = new();
+        private List<DataPoint> dataPoints;
         private ApexChartOptions<DataPoint> _optionsAPEXChart;
         private ApexChart<DataPoint> _chart;
 
@@ -44,16 +44,20 @@
             if (_previousIsDarkMode != IsDarkMode)
             {
                 _previousIsDarkMode = IsDarkMode;
-
                 ApplyTheme();
-
-                if (_chart is not null)
-                {
-                    StateHasChanged();
-                    await _chart.RenderAsync();
-                }
+                await ForceRenderChart();
             }
 
+        }
+
+        private async Task ForceRenderChart()
+        {
+            if (_chart is not null)
+            {
+                StateHasChanged();
+                await _chart.UpdateSeriesAsync(true);
+                await _chart.RenderAsync();
+            }
         }
 
         private void ApplyTheme()
@@ -65,82 +69,54 @@
 
         protected override async Task OnInitializedAsync()
         {
-            var global = ApexChartService.GlobalOptions;
+            _dateRange.Start = DateTime.Parse(_filterOption.Date);
+            _dateRange.End = DateTime.Parse(Filters[0].Date);
+
+            _star = _filterOption.Date;
+            _end = Filters[0].Date;
+            SetupChartOptions();
+            await LoadDataAsync();
+            _isLoading = false;
+        }
+
+        private void SetupChartOptions()
+        {
+            var theme = new Theme { Mode = IsDarkMode ? Mode.Dark : Mode.Light };
+
             _optionsAPEXChart = new ApexChartOptions<DataPoint>
             {
-                Theme = global.Theme,
+                Theme = theme,
                 Chart = new Chart
                 {
                     Animations = new Animations
                     {
                         Easing = Easing.Linear,
                         DynamicAnimation = new DynamicAnimation { Speed = 900 }
+                    },
+                    DropShadow = new DropShadow
+                    {
+                        Enabled = true,
+                        Top = 18,
+                        Left = 7,
+                        Blur = 10,
+                        Opacity = 0.2d
                     }
                 },
                 NoData = new NoData { Text = "Sin información" },
-                Yaxis = new List<YAxis>
+                Yaxis = new List<YAxis> { new YAxis { DecimalsInFloat = 0 } },
+                Markers = new Markers { Shape = MarkerShape.Circle, Size = 5, FillOpacity = 0.8d },
+                Stroke = new Stroke { Curve = Curve.Smooth },
+                Legend = new Legend
                 {
-                    new YAxis()
-                    {
-                        DecimalsInFloat = 0
-                    }
+                    Position = LegendPosition.Top,
+                    HorizontalAlign = ApexCharts.Align.Right,
+                    Floating = true,
+                    OffsetX = -5,
+                    OffsetY = -25,
                 }
             };
-            _dateRange.Start = DateTime.Parse(_filterOption.Date);
-            _dateRange.End = DateTime.Parse(Filters[0].Date);
-
-            _star = _filterOption.Date;
-            _end = Filters[0].Date;
-
-            await GetDataAsync();
-            _isLoading = false;
         }
 
-        private async Task LineApexChart()
-        {
-            dataPoints = _click.ByDate
-                .Select(kv => new DataPoint
-                {
-                    Date = DateTime.ParseExact(kv.Key, "dd/MM/yyyy", null),
-                    Value = kv.Value
-                })
-            .OrderBy(p => p.Date)
-            .ToList();
-
-
-            _optionsAPEXChart.Chart = new ApexCharts.Chart
-            {
-                DropShadow = new DropShadow
-                {
-                    Enabled = true,
-                    Top = 18,
-                    Left = 7,
-                    Blur = 10,
-                    Opacity = 0.2d
-                }
-            };
-
-            _optionsAPEXChart.Xaxis = new XAxis
-            {
-                Title = new AxisTitle
-                {
-                    Text = DateTime.Parse(_filterOption.Date).ToString("MMMM")
-                }
-            };
-
-            _optionsAPEXChart.Markers = new Markers { Shape = MarkerShape.Circle, Size = 5, FillOpacity = new Opacity(0.8d) };
-
-            _optionsAPEXChart.Stroke = new Stroke { Curve = Curve.Smooth };
-            _optionsAPEXChart.Legend = new Legend
-            {
-                Position = LegendPosition.Top,
-                HorizontalAlign = ApexCharts.Align.Right,
-                Floating = true,
-                OffsetX = -5,
-                OffsetY = -25,
-            };
-            await _chart.RenderAsync();
-        }
 
         private async Task ChangeRange(FilterOption select)
         {
@@ -163,11 +139,11 @@
                 _end = _dateRange.End?.ToString("yyyy-MM-dd");
 
             }
-            await GetDataAsync();
-            StateHasChanged();
+            await LoadDataAsync();
+            await ForceRenderChart();
         }
 
-        private async Task GetDataAsync()
+        private async Task LoadDataAsync()
         {
 
             var data = await Proxy.GetAsync<ResponseData<ClicksDashboardDto>>($"/api/v1/click/{Slug}?starDate={_star}&endDate={_end}");
@@ -175,7 +151,15 @@
             {
                 case HttpStatusCode.OK:
                     _click = data.Data;
-                    LineApexChart();
+                    dataPoints = _click.ByDate
+
+                    .Select(kv => new DataPoint
+                    {
+                        Date = DateTime.ParseExact(kv.Key, "dd/MM/yyyy", null),
+                        Value = kv.Value
+                    })
+                    .OrderBy(p => p.Date)
+                    .ToList();
                     break;
                 default:
                     Snackbar.Add("Error al obtener la informacion, recargue de nuevo, si el error persiste contacte a un administrador.", Severity.Error);

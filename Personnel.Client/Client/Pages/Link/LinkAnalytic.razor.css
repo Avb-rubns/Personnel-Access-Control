@@ -1,0 +1,6 @@
+﻿.container-skeleton-analytics {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-row-gap: 1rem;
+    grid-template-rows: 32px 32px 40dvh 30dvh;
+}

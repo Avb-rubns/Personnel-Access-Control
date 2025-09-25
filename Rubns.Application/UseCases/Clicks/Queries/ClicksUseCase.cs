@@ -57,7 +57,7 @@
                     clicks.TotalClicks = clics.Count();
 
                     clicks.ByDate = clics.GroupBy(clic => clic.ClickedAt.Date)
-                        .ToDictionary(g => g.Key.Date.ToString("dd/MM/yyyy", new System.Globalization.CultureInfo("es-MX")), g => g.Count());
+                        .ToDictionary(g => g.Key.Date.ToString("dd/MM/yyyy"), g => g.Count());
 
                     clicks.ByDevice = clics.GroupBy(clic => string.IsNullOrEmpty(clic.DeviceType) ?
                     "Unknown" : clic.DeviceType)
