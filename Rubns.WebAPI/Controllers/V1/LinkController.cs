@@ -48,7 +48,7 @@
         }
 
         [HttpGet("links")]
-        public async Task<IActionResult> GetQrsAsync(int? page = 1, int? pageSize = 10, string? filter = "all", string? search = "")
+        public async Task<IActionResult> GetQrsAsync([FromQuery] int? page = 1, [FromQuery] int? pageSize = 10, string? filter = "all", string? search = "")
         {
             await _getLinksUseCase.ExecuteAsync(page.Value, pageSize.Value, filter, search);
             var links = _getLinksOutputPort.Result;

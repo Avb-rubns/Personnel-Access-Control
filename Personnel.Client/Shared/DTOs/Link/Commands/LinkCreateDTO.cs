@@ -3,11 +3,11 @@
     public class LinkCreateDTO
     {
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "El nombre es obligatorio")]
         [StringLength(500, ErrorMessage = "Content cannot exceed 500 characters and minimumLength 10 characters.", MinimumLength = 3)]
         public string Name { get; set; }
         public string Slug { get; set; }
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El campo {0} es obligatorio")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "La Url de destino es obligatorio")]
         [StringLength(500, ErrorMessage = "Content cannot exceed 500 characters and minimumLength 10 characters.", MinimumLength = 10)]
         public string Content { get; set; }
         public string? Url { get; set; }

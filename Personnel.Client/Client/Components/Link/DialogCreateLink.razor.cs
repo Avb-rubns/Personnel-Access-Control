@@ -10,9 +10,11 @@
         [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
         LinkCreateDTO model = new();
-        bool _scanURL = false;
-        bool _processing = false;
+        private bool _scanURL = false;
+        private bool _processing = false;
+        private bool _open;
 
+        private void ToggleOpen() => _open = !_open;
         protected override void OnAfterRender(bool firstRender)
         {
             if (firstRender)

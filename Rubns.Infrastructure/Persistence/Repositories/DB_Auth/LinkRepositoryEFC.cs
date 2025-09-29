@@ -43,6 +43,30 @@
             { throw; }
         }
 
+        public async Task<int> CountLinksTodayByPaginationAsync()
+        {
+            int total = 0;
+            total = await _context.Links
+                .AsNoTracking()
+                .SelectMany(link => link.Clicks
+                .Where(click => click.ClickedAt >= DateTime.Today)
+                .Select(click => new LinkByDashboard
+                {
+                    Slug = link.Slug,
+                    Name = link.Name,
+                    ClickAt = click.ClickedAt,
+                    Country = click.Country,
+                    Region = click.Region,
+                    DeviceType = click.DeviceType,
+                    City = click.City,
+                    Os = click.OS,
+                    Browser = click.Browser,
+
+                }))
+                .CountAsync();
+            return total;
+        }
+
         public async Task<int> DeleteAsync(int id)
         {
             LinkDb remove = new()
@@ -148,6 +172,35 @@
 
 
             return link;
+        }
+
+        public async Task<List<LinkByDashboard>> GetLinksTodayByPaginationAsync(int page, int pageSize)
+        {
+            List<LinkByDashboard> Links = new();
+
+            Links = await _context.Links
+                .AsNoTracking()
+                .SelectMany(link => link.Clicks
+                    .Where(click => click.ClickedAt >= DateTime.Today)
+                    .Select(click => new LinkByDashboard
+                    {
+                        Slug = link.Slug,
+                        Name = link.Name,
+                        ClickAt = click.ClickedAt,
+                        Country = click.Country,
+                        Region = click.Region,
+                        DeviceType = click.DeviceType,
+                        City = click.City,
+                        Os = click.OS,
+                        Browser = click.Browser,
+
+                    }))
+                .OrderByDescending(link => link.ClickAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return Links;
         }
 
         public async Task<List<LinkWithCountClick>> GetLinkWithClickByPaginationAsync(int page, int pageSize,

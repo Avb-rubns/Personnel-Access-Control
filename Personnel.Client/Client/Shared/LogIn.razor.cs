@@ -17,6 +17,10 @@
 
         private LoginRequestDTO model = new();
 
+        protected override void OnInitialized()
+        {
+            NavigationManager.NavigateTo("/login", replace: true);
+        }
 
 
         void Visibility()
@@ -49,7 +53,10 @@
                         NavigationManager.NavigateTo("", true);
                         break;
                     case System.Net.HttpStatusCode.Unauthorized:
-                        Snackbar.Add(response.Message, Severity.Error);
+                        Snackbar.Add("Credenciales incorrectas o usuario no registrado.", Severity.Error);
+                        break;
+                    case System.Net.HttpStatusCode.BadRequest:
+                        Snackbar.Add("Credenciales incorrectas o usuario no registrado.", Severity.Error);
                         break;
                     default:
                         Snackbar.Add("Ocurrió un error inesperado, informe a su jefe", Severity.Error);

@@ -36,6 +36,9 @@
                 case ArgumentException e:
                     await WriteProblemDetails(context, StatusCodes.Status400BadRequest, "Datos no validos", exception.Message);
                     return;
+                case LoginException e:
+                    await WriteProblemDetails(context, StatusCodes.Status400BadRequest, "Datos no validos", exception.Message);
+                    return;
                 default:
                     await WriteProblemDetails(context, StatusCodes.Status500InternalServerError, "Error interno", "Ocurrió un error inesperado. Intente nuevamente más tarde.");
                     return;

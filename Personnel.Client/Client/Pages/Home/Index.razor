@@ -2,50 +2,116 @@
 <Space>
     @if (_loader)
     {
-        <MudSkeleton SkeletonType="SkeletonType.Text"/>
-        <MudSkeleton SkeletonType="SkeletonType.Rectangle" />
+        <MudStack>
+            <MudSkeleton SkeletonType="SkeletonType.Text" Width="20%" Height="2rem;"/>
+            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="250px"  />
+
+            <MudSkeleton SkeletonType="SkeletonType.Text" Width="20%" Height="2rem;"/>
+            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="250px"  />
+        </MudStack>
 
     }
     else
     {
-        <section>
-            <MudTable ServerData="ServerReload" Dense="true" Hover="true" @ref="table" Class="mt-2" Height="250px">
-                <ToolBarContent>
-                    <MudText Typo="Typo.h6">Entradas del día</MudText>
-                </ToolBarContent>
-                <HeaderContent>
-                    <MudTh><MudTableSortLabel SortLabel="Nombre" T="CheckUserTodayDTO">Nombre</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="Rol" T="CheckUserTodayDTO">Rol</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="Hora de entreda" T="CheckUserTodayDTO">Hora de entreda</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="Distancia" T="CheckUserTodayDTO">Distancia</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="Entrada" T="CheckUserTodayDTO">Entrada</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="Hora de salida" T="CheckUserTodayDTO">Hora de salida</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="Distancia" T="CheckUserTodayDTO">Distancia</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="Salida" T="CheckUserTodayDTO">Salida</MudTableSortLabel></MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd DataLabel="Nombre">@context.Name</MudTd>
-                    <MudTd DataLabel="Rol">@context.Rol</MudTd>
-                    <MudTd DataLabel="Hora de entreda">@context.HourCheckIn</MudTd>
-                    <MudTd DataLabel="Distancia">@( float.TryParse(context.DistanceCheckIn, out var d1) ? $"{d1.ToString("N2",new CultureInfo("en-us"))} mts":context.DistanceCheckIn)</MudTd>
-                    <MudTd DataLabel="Entrada">@context.AccessIn</MudTd>
-                    <MudTd DataLabel="Hora de salida">@(context.HourCheckOut < DateTime.Today ? "Sin Registro" : context.HourCheckOut)</MudTd>
-                    <MudTd DataLabel="Distancia">@( float.TryParse(context.DistanceCheckOut, out var d2) ? $"{d2.ToString("N2",new CultureInfo("en-us"))} mts":context.DistanceCheckOut)</MudTd>
-                    <MudTd DataLabel="Salida">@context.AccessOut</MudTd>
-                </RowTemplate>
-                <LoadingContent>
-                    <MudText>cargando...</MudText>
-                </LoadingContent>
-                <NoRecordsContent>
-                    <MudText>Sin informacion por el momento</MudText>
-                </NoRecordsContent>
-                <PagerContent>
-                    <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }"
-                                   RowsPerPageString="Filas por pagina:"
-                                   InfoFormat="{first_item}-{last_item} de {all_items}" />
-                </PagerContent>
-            </MudTable>
-        </section>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTable ServerData="ServerChecker" Dense="true" Hover="true" @ref="_tableChecker" FixedHeader="true"  Height="250px">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">Entradas del día</MudText>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh><MudTableSortLabel SortLabel="Nombre" T="CheckUserTodayDTO">Nombre</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortLabel="Rol" T="CheckUserTodayDTO">Rol</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortLabel="Hora de entreda" T="CheckUserTodayDTO">Hora de entreda</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortLabel="Distancia" T="CheckUserTodayDTO">Distancia</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortLabel="Entrada" T="CheckUserTodayDTO">Entrada</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortLabel="Hora de salida" T="CheckUserTodayDTO">Hora de salida</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortLabel="Distancia" T="CheckUserTodayDTO">Distancia</MudTableSortLabel></MudTh>
+                        <MudTh><MudTableSortLabel SortLabel="Salida" T="CheckUserTodayDTO">Salida</MudTableSortLabel></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Nombre">@context.Name</MudTd>
+                        <MudTd DataLabel="Rol">@context.Rol</MudTd>
+                        <MudTd DataLabel="Hora de entreda">@context.HourCheckIn</MudTd>
+                        <MudTd DataLabel="Distancia">@( float.TryParse(context.DistanceCheckIn, out var d1) ? $"{d1.ToString("N2",new CultureInfo("en-us"))} mts":context.DistanceCheckIn)</MudTd>
+                        <MudTd DataLabel="Entrada">@context.AccessIn</MudTd>
+                        <MudTd DataLabel="Hora de salida">@(context.HourCheckOut < DateTime.Today ? "Sin Registro" : context.HourCheckOut)</MudTd>
+                        <MudTd DataLabel="Distancia">@( float.TryParse(context.DistanceCheckOut, out var d2) ? $"{d2.ToString("N2",new CultureInfo("en-us"))} mts":context.DistanceCheckOut)</MudTd>
+                        <MudTd DataLabel="Salida">@context.AccessOut</MudTd>
+                    </RowTemplate>
+                    <LoadingContent>
+                        <MudText>cargando...</MudText>
+                    </LoadingContent>
+                    <NoRecordsContent>
+                        <MudText>Sin informacion por el momento</MudText>
+                    </NoRecordsContent>
+                    <PagerContent>
+                        <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }"
+                                       RowsPerPageString="Filas por pagina:"
+                                       InfoFormat="{first_item}-{last_item} de {all_items}" />
+                    </PagerContent>
+                </MudTable>
+            </MudItem>
+            <MudItem xs="12">
+                <MudTable ServerData="ServerLinks" Dense="true" Hover="true" @ref="_tableLinks" FixedHeader="true" Height="250px">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">Visitas del día</MudText>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh>
+                            <MudTableSortLabel SortLabel="Fecha" T="LinkByDashboardDTO">Fecha</MudTableSortLabel>
+                        </MudTh>
+                        <MudTh>
+                            <MudTableSortLabel SortLabel="Nombre" T="LinkByDashboardDTO">Nombre</MudTableSortLabel>
+                        </MudTh>
+                        <MudTh>
+                            <MudTableSortLabel SortLabel="Nombre descriptivo" T="LinkByDashboardDTO">Nombre descriptivo</MudTableSortLabel>
+                        </MudTh>
+                        <MudTh>
+                            <MudTableSortLabel SortLabel="Pais" T="LinkByDashboardDTO">Pais</MudTableSortLabel>
+                        </MudTh>
+                        <MudTh>
+                            <MudTableSortLabel SortLabel="Region" T="LinkByDashboardDTO">Region</MudTableSortLabel>
+                        </MudTh>
+                        <MudTh>
+                            <MudTableSortLabel SortLabel="Ciudad" T="LinkByDashboardDTO">Ciudad</MudTableSortLabel>
+                        </MudTh>
+                        <MudTh>
+                            <MudTableSortLabel SortLabel="Dispositivo" T="LinkByDashboardDTO">Dispositivo</MudTableSortLabel>
+                        </MudTh>
+                        <MudTh>
+                            <MudTableSortLabel SortLabel="Sistema" T="LinkByDashboardDTO">Sistema</MudTableSortLabel>
+                        </MudTh>
+                        <MudTh>
+                            <MudTableSortLabel SortLabel="Navegador" T="LinkByDashboardDTO">Navegador</MudTableSortLabel>
+                        </MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Fecha">@context.ClickAt</MudTd>
+                        <MudTd DataLabel="Nombre">@context.Name</MudTd>
+                        <MudTd DataLabel="Nombre descriptivo">@context.Slug</MudTd>
+                        <MudTd DataLabel="Pais">@context.Country</MudTd>
+                        <MudTd DataLabel="region">@context.Region</MudTd>
+                        <MudTd DataLabel="Ciudad">@context.City</MudTd>
+                        <MudTd DataLabel="Dispositivo">@context.DeviceType</MudTd>
+                        <MudTd DataLabel="Sistema">@context.Os</MudTd>
+                        <MudTd DataLabel="Navegador">@context.Browser</MudTd>
+                    </RowTemplate>
+                    <LoadingContent>
+                        <MudText>cargando...</MudText>
+                    </LoadingContent>
+                    <NoRecordsContent>
+                        <MudText>Sin informacion por el momento</MudText>
+                    </NoRecordsContent>
+                    <PagerContent>
+                        <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }"
+                                       RowsPerPageString="Filas por pagina:"
+                                       InfoFormat="{first_item}-{last_item} de {all_items}" />
+                    </PagerContent>
+                </MudTable>
+            </MudItem>
+            
+        </MudGrid>
     }
 
 </Space>

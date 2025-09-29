@@ -7,6 +7,8 @@
         Task<string> FindBySlugAsync(string slug);
         Task<int> CountLinksAsync();
         Task<List<LinkWithCountClick>> GetLinkWithClickByPaginationAsync(int page, int pageSize, string status, string? search);
+        Task<List<LinkByDashboard>> GetLinksTodayByPaginationAsync(int page, int pageSize);
+        Task<int> CountLinksTodayByPaginationAsync();
         Task<Link> GetLinkByIdAsync(int id);
         Task<Link> GetLinkBySlugAsync(string slug);
         Task<int> DeleteAsync(int id);

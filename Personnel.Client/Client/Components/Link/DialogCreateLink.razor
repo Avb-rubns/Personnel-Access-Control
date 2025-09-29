@@ -1,6 +1,6 @@
 ﻿<MudDialog>
     <TitleContent>
-        <MudText Typo="Typo.body2">Enlaces > Crear</MudText>
+        <MudText Typo="Typo.body2"><strong>Enlaces > Crear</strong> </MudText>
     </TitleContent>
     <DialogContent>
         <EditForm Model="model" OnValidSubmit="CreateAsync">
@@ -11,23 +11,44 @@
                 <MudText Typo="Typo.body2" Style="font-size:.8rem;">Analisando URL</MudText>
             </MudProgressLinear>
         }
-        <MudTextField T="string" Label="URL de destino" Variant="Variant.Text" ValueChanged="GetTagUrl"
-                        For="@(() => model.Content)" Disabled="_processing || _scanURL" />
+        <MudTextField T="string" Required Label="URL de destino" Variant="Variant.Text" ValueChanged="GetTagUrl"
+                          For="@(() => model.Content)" Disabled="_processing || _scanURL" FullWidth="true" />
         <MudTextField T="string"
                         Label="Nombre"
+                        Required
                         Variant="Variant.Text"
+                        FullWidth="true"
                         For="@(() => model.Name)"
                         @bind-Value="model.Name"
                         Disabled="_processing" />
-        <MudTooltip Text="Puede dejar en blanco para que se genere uno en automatico">
+        <MudPaper Elevation="0">
             <MudTextField T="string"
                           Label="Nombre descriptivo"
                           Variant="Variant.Text"
                           For="@(() => model.Slug)"
+                          FullWidth="true"
                           Value="model.Slug"
+                          AdornmentIcon="@Icons.Material.Outlined.Info"
+                          Adornment="Adornment.End"
+                          AdornmentColor="MudBlazor.Color.Warning"
+                          OnAdornmentClick="ToggleOpen"
                           ValueChanged="UpdateSlug"
-                          Disabled="_processing || _scanURL" />
-        </MudTooltip>
+                          Disabled="_processing || _scanURL" >
+            </MudTextField>
+            <MudPopover Open="@_open"
+                        Fixed="true"
+                        RelativeWidth="@DropdownWidth.Relative"
+                        Class="px-4 pt-4"
+                        TransformOrigin="Origin.TopLeft"
+                        AnchorOrigin="Origin.BottomLeft">
+                <div class="d-flex flex-column">
+                    <MudText>
+                    Puede dejar en blanco para que se genere uno en automatico
+                </MudText>
+                    <MudButton OnClick="@ToggleOpen" Class="ml-auto mr-n3 mb-1" Color="MudBlazor.Color.Error">Cerrar</MudButton>
+                </div>
+            </MudPopover>
+        </MudPaper>
 
         <MudSelect T="bool"
                     Label="Estatus"
@@ -45,7 +66,7 @@
             </MudSelectItem>
 
         </MudSelect>
-        <MudPaper Class="mt-4 d-flex justify-content-end g-5">
+        <MudPaper Class="mt-4 d-flex justify-content-end g-5" Elevation="0">
             <MudButton Variant="Variant.Filled"
                         Color="MudBlazor.Color.Secondary"
                         Class="ms-2"
