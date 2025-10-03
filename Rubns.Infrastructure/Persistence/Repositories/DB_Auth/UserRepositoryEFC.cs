@@ -106,7 +106,7 @@
 
         public async Task<int> UpdateUserforIDAsync(User user)
         {
-            User updateUser = new()
+            UserDb updateUser = new()
             {
                 UserID = user.UserID,
                 Name = user.Name,

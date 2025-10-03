@@ -17,7 +17,7 @@
         public string Phone { get; set; }
 
         [Required(ErrorMessage = "El usuario debe de tener un rol.")]
-        public int RolID { get; set; }
+        public string RolID { get; set; }
         [Required(ErrorMessage = "El usuario debe de tener un estatus")]
         public bool Status { get; set; }
 

@@ -12,6 +12,7 @@
         {
             try
             {
+
                 var data = await _rolRepository.GetAllAsync();
                 await _getRolsOutPort.Success(data);
 

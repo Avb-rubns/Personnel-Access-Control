@@ -8,12 +8,13 @@
         private readonly ITemplateRepositoryDapper _templateRepositoryDapper;
         private readonly IProxyServer _proxyServer;
         private readonly IConfiguration _configuration;
-
+        private readonly ISqidService _sqidService;
         public UserUseCase(IEncryptionService encryptionService,
             IUserRepositoryEFC userRepository,
             ILogger logger,
             ITemplateRepositoryDapper templateRepositoryDapper,
             IProxyServer proxyServer,
+            ISqidService sqidService,
             IConfiguration configuration)
         {
             _userRepository = userRepository;
@@ -22,6 +23,7 @@
             _templateRepositoryDapper = templateRepositoryDapper;
             _proxyServer = proxyServer;
             _configuration = configuration;
+            _sqidService = sqidService;
         }
 
         public async Task ExecuteAsync(RegisterUserDTO registerUser)
@@ -42,7 +44,7 @@
                     Email = registerUser.Email,
                     LastName = registerUser.LastName,
                     Phone = registerUser.Phone,
-                    RolID = registerUser.RolID,
+                    RolID = _sqidService.Decode(registerUser.RolID),
                     Status = registerUser.Status,
 
                 };

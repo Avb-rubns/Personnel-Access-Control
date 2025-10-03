@@ -40,7 +40,7 @@
                 if (user is { Status: false })
                 {
                     _logger.Information("Usuario no esta activo");
-                    throw new LoginException("Credenciales incorrectas o usuario no registrado.", "Datos incorrectos");
+                    throw new LoginException("El usuario esta desactivado", "Usuario no esta activo");
                 }
 
                 if (user.Email is null)

@@ -1,13 +1,13 @@
 ﻿namespace Personnel.Client.Client.Pages.Admin
 {
-    public partial class User
+    public partial class Users
     {
         [Inject] public IProxy Proxy { get; set; } = default!;
         [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
         List<RolDTO> RolDTOs { get; set; } = new();
         RegisterUserDTO UserDTO { get; set; } = new();
-        List<UserRegistedDTO> Users { get; set; }
+        private List<UserRegistedDTO> _users { get; set; }
         private MudTable<UserRegistedDTO> table { get; set; } = new();
         private UserRegistedDTO selectedItem1 = null;
         private UserRegistedDTO elementBeforeEdit = new();
@@ -22,7 +22,7 @@
 
         protected override async Task OnInitializedAsync()
         {
-            var response = await Proxy.GetAsync<ResponseData<List<RolDTO>>>("api/v1/rols");
+            var response = await Proxy.GetAsync<ResponseData<List<RolDTO>>>("api/v1/rol/rols");
 
             switch (response.StatusCode)
             {
@@ -77,24 +77,25 @@
 
         private async Task<TableData<UserRegistedDTO>> ServerReload(TableState state, CancellationToken token)
         {
-            var data = await Proxy.GetAsync<ResponseData<TableUserDTO>>($"api/v1/user/users?page={state.Page}&pageSize={state.PageSize}&search={searchString}");
+            int page = state.Page + 1;
+            var data = await Proxy.GetAsync<ResponseData<TableUserDTO>>($"api/v1/user/users?page={page}&pageSize={state.PageSize}&search={searchString}");
 
             switch (data.StatusCode)
             {
                 case System.Net.HttpStatusCode.OK:
-                    Users = data.Data.RegisteredUsers.Skip(state.Page * state.PageSize).Take(state.PageSize).ToList();
-                    Users.ForEach(s =>
+                    _users = data.Data.RegisteredUsers;
+                    _users.ForEach(s =>
                     {
                         s.LevelPermission = RolDTOs.Single(f => f.RolID == s.RolID).LevelPermission;
                     });
-                    totalItems = data.Data.Total;
+                    totalItems = data.Data.Pagination.Total;
                     break;
                 case HttpStatusCode.NoContent:
                     IsFinishPage = true;
                     break;
 
             }
-            return new TableData<UserRegistedDTO>() { TotalItems = totalItems, Items = Users };
+            return new TableData<UserRegistedDTO>() { TotalItems = totalItems, Items = _users };
         }
 
         private void OnSearch(string text)

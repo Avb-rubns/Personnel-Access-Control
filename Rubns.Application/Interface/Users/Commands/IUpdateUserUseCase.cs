@@ -2,6 +2,6 @@
 {
     public interface IUpdateUserUseCase
     {
-        Task Executeasync(int userID, JsonPatchDocument<UserRegistedDTO> patchDocument);
+        Task Executeasync(string userID, JsonPatchDocument<UserRegistedDTO> patchDocument);
     }
 }

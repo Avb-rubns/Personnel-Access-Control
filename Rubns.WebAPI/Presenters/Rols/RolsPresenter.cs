@@ -1,14 +1,25 @@
-﻿using Rubns.Application.Interface.Rols.Queries;
-
-namespace Rubns.WebAPI.Presenters.Rols
+﻿namespace Rubns.WebAPI.Presenters.Rols
 {
     internal class RolsPresenter : IGetRolsOutputPort
     {
-        public List<Rol> Result { get; private set; }
+        public List<RolDTO> Result { get; private set; }
 
         public Task Success(List<Rol> rols)
         {
-            Result = rols;
+            List<RolDTO> result = new();
+
+            result = rols.Select(rol => new RolDTO()
+            {
+                RolID = rol.RolID,
+                Name = rol.Name,
+                Value = rol.Value,
+                LevelPermission = rol.LevelPermission,
+                Status = rol.Status
+
+            }).ToList();
+
+            Result = result;
+
             return Task.CompletedTask;
         }
     }

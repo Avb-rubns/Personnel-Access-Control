@@ -2,6 +2,6 @@
 {
     public interface IGetUsersOutputPort : IPresenter<TableUserDTO>
     {
-        Task Success(List<User> users, int total);
+        Task Success(List<User> users, int total, int currentPage, int pageSize, bool hasNextPage, bool hasPreviousPage);
     }
 }

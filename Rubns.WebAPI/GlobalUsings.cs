@@ -12,6 +12,7 @@ global using Personnel.Client.Shared.DTOs.Clik;
 global using Personnel.Client.Shared.DTOs.Link.Commands;
 global using Personnel.Client.Shared.DTOs.Link.Queries;
 global using Personnel.Client.Shared.DTOs.LogIn;
+global using Personnel.Client.Shared.DTOs.Rol;
 global using Personnel.Client.Shared.DTOs.Ticket;
 global using Personnel.Client.Shared.DTOs.Users;
 global using Personnel.Client.Shared.POCO.ResponseAPI;

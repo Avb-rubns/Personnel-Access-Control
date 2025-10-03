@@ -39,9 +39,10 @@
                    });
                }
            );
+            // Esto permite que rutas como /qr/{slug} lleguen a su controlador
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers(); // Esto permite que rutas como /qr/{slug} lleguen a su controlador
+                endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
 

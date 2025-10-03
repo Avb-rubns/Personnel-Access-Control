@@ -2,12 +2,14 @@
 {
     internal class GetUsersUseCase(IUserRepositoryEFC repositoryEFC
         , IGetUsersOutputPort getUsersOutPort
+        , ISqidService sqidService
         , ILogger logger)
         : IGetUsersUseCase
     {
         private readonly IUserRepositoryEFC _repositoryEFC = repositoryEFC;
         private readonly ILogger _logger = logger;
         private readonly IGetUsersOutputPort _getUsersOutPort = getUsersOutPort;
+        private readonly ISqidService _sqidService = sqidService;
 
         public async Task ExecuteAsync(string search, int? page, int? pageSize)
         {
@@ -32,9 +34,23 @@
                 {
                     Users = await _repositoryEFC.GetAllUsersforPageAsync(page, pageSize);
                 }
-                Total = await _repositoryEFC.TotalUsersAsync();
 
-                await _getUsersOutPort.Success(Users, Total);
+                if (Users.Any())
+                {
+                    Total = await _repositoryEFC.TotalUsersAsync();
+
+                    Users.ForEach(user =>
+                    {
+                        user.FriendlyUserID = _sqidService.Encode(user.UserID);
+                    });
+
+                }
+
+                bool hasNextPage = page * pageSize < Total;
+                bool hasPreviousPage = page > 1;
+
+
+                await _getUsersOutPort.Success(Users, Total, page.Value, pageSize.Value, hasNextPage, hasPreviousPage);
 
 
             }

@@ -7,7 +7,7 @@
     {
         private readonly IGetRolsUseCase _getRolsUseCase = getRolsPort;
         private readonly IGetRolsOutputPort _getRolsOutputPort = getRolsOutPort;
-        [HttpGet]
+        [HttpGet("rols")]
         public async Task<IActionResult> GetRolsAsync()
         {
 

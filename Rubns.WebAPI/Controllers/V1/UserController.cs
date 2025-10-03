@@ -29,11 +29,11 @@
             await _getUsersUseCase.ExecuteAsync(search, page, pageSize);
             tableUser = _getUsersOutputPort.Result;
 
-            return tableUser.Total > 0 ? Ok(tableUser) : NoContent();
+            return tableUser.Pagination.Total > 0 ? Ok(tableUser) : NoContent();
 
         }
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateUserAsync(int id, [FromBody] JsonPatchDocument<UserRegistedDTO> patchDoc)
+        public async Task<IActionResult> UpdateUserAsync(string id, [FromBody] JsonPatchDocument<UserRegistedDTO> patchDoc)
         {
             await _updateUserUseCase.Executeasync(id, patchDoc);
             return Ok();
